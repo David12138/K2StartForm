@@ -1,0 +1,1137 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>KStar.BPMService</name>
+    </assembly>
+    <members>
+        <member name="T:KStar.BPMService.App_Start.Bootstrapper">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:KStar.BPMService.App_Start.Bootstrapper.Register">
+            <summary>
+            负责调用autofac框架实现业务逻辑层和数据仓储层程序集中的类型对象的创建
+            负责创建MVC控制器类的对象(调用控制器中的有参构造函数),接管DefaultControllerFactory的工作
+            </summary>
+        </member>
+        <member name="M:KStar.BPMService.App_Start.Bootstrapper.MinLogLevel">
+            <summary>
+            根据配置获取最小的日志级别
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:KStar.BPMService.BundleConfig.RegisterBundles(System.Web.Optimization.BundleCollection)">
+            <summary>
+            有关捆绑的详细信息，请访问 https://go.microsoft.com/fwlink/?LinkId=301862
+            </summary>
+            <param name="bundles"></param>
+        </member>
+        <member name="T:KStar.BPMService.FilterConfig">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:KStar.BPMService.FilterConfig.RegisterGlobalFilters(System.Web.Mvc.GlobalFilterCollection)">
+            <summary>
+            
+            </summary>
+            <param name="filters"></param>
+        </member>
+        <member name="T:KStar.BPMService.JsonSplit">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:KStar.BPMService.JsonSplit.IsJsonStart(System.String@)">
+            <summary>
+            
+            </summary>
+            <param name="json"></param>
+            <returns></returns>
+        </member>
+        <member name="M:KStar.BPMService.JsonSplit.IsJson(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="json"></param>
+            <returns></returns>
+        </member>
+        <member name="M:KStar.BPMService.JsonSplit.IsJson(System.String,System.Int32@)">
+            <summary>
+            
+            </summary>
+            <param name="json"></param>
+            <param name="errIndex"></param>
+            <returns></returns>
+        </member>
+        <member name="M:KStar.BPMService.JsonSplit.GetValueLength(System.String,System.Boolean,System.Int32@)">
+            <summary>
+            获取值的长度（当Json值嵌套以"{"或"["开头时）
+            </summary>
+        </member>
+        <member name="T:KStar.BPMService.JsonSplit.CharState">
+            <summary>
+            字符状态
+            </summary>
+        </member>
+        <member name="F:KStar.BPMService.JsonSplit.CharState.arrayStart">
+            <summary>
+            数组开始【仅第一开头才算】，值嵌套的以【childrenStart】来标识。
+            </summary>
+        </member>
+        <member name="F:KStar.BPMService.JsonSplit.CharState.state">
+            <summary>
+            【0 初始状态，或 遇到“,”逗号】；【1 遇到“：”冒号】
+            </summary>
+        </member>
+        <member name="F:KStar.BPMService.JsonSplit.CharState.keyStart">
+            <summary>
+            【-1 取值结束】【0 未开始】【1 无引号开始】【2 单引号开始】【3 双引号开始】
+            </summary>
+        </member>
+        <member name="F:KStar.BPMService.JsonSplit.CharState.valueStart">
+            <summary>
+            【-1 取值结束】【0 未开始】【1 无引号开始】【2 单引号开始】【3 双引号开始】
+            </summary>
+        </member>
+        <member name="M:KStar.BPMService.JsonSplit.SetCharState(System.Char,KStar.BPMService.JsonSplit.CharState@)">
+            <summary>
+            设置字符状态(返回true则为关键词，返回false则当为普通字符处理）
+            </summary>
+        </member>
+        <member name="T:KStar.BPMService.RouteConfig">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:KStar.BPMService.RouteConfig.RegisterRoutes(System.Web.Routing.RouteCollection)">
+            <summary>
+            
+            </summary>
+            <param name="routes"></param>
+        </member>
+        <member name="T:KStar.BPMService.SwaggerConfig">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:KStar.BPMService.SwaggerConfig.Register">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:KStar.BPMService.SwaggerConfig.GetXmlCommentsPath(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="name"></param>
+            <returns></returns>
+        </member>
+        <member name="T:KStar.BPMService.WebApiConfig">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:KStar.BPMService.WebApiConfig.Register(System.Web.Http.HttpConfiguration)">
+            <summary>
+            
+            </summary>
+            <param name="config"></param>
+        </member>
+        <member name="T:KStar.BPMService.AutoMapperConfig.AutoMapperExt">
+            <summary>
+            Create by：Awen
+            Create Time：2017-11-14
+            Description：AutoMapper 
+            </summary>
+        </member>
+        <member name="M:KStar.BPMService.AutoMapperConfig.AutoMapperExt.MapTo``1(System.Object)">
+            <summary>
+             类型映射
+            </summary>
+        </member>
+        <member name="M:KStar.BPMService.AutoMapperConfig.AutoMapperExt.MapToList``1(System.Collections.IEnumerable)">
+            <summary>
+            集合列表类型映射
+            </summary>
+        </member>
+        <member name="M:KStar.BPMService.AutoMapperConfig.AutoMapperExt.MapToList``2(System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            集合列表类型映射
+            </summary>
+        </member>
+        <member name="M:KStar.BPMService.AutoMapperConfig.AutoMapperExt.MapTo``2(``0,``1)">
+            <summary>
+            类型映射
+            </summary>
+        </member>
+        <member name="M:KStar.BPMService.AutoMapperConfig.AutoMapperExt.ExpressionMap``2(System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}})">
+            <summary>
+            表达式映射
+            </summary>
+            <typeparam name="DtoModel"></typeparam>
+            <typeparam name="DomainModel"></typeparam>
+            <param name="selector"></param>
+            <returns></returns>
+        </member>
+        <member name="M:KStar.BPMService.AutoMapperConfig.AutoMapperExt.ExpressionMap``2(System.Linq.Expressions.Expression{System.Func{``0,``0}})">
+            <summary>
+            表达式映射
+            </summary>
+            <typeparam name="DtoModel"></typeparam>
+            <typeparam name="DomainModel"></typeparam>
+            <param name="selector"></param>
+            <returns></returns>
+        </member>
+        <member name="T:KStar.BPMService.AutoMapperConfig.MobileMapperProfile">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:KStar.BPMService.AutoMapperConfig.MobileMapperProfile._dictionaryContext">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:KStar.BPMService.AutoMapperConfig.MobileMapperProfile.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:KStar.BPMService.AutoMapperConfig.Mappings">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:KStar.BPMService.AutoMapperConfig.Mappings.RegisterMappings">
+            <summary>
+            注册所有程序集的Profile
+            </summary>
+        </member>
+        <member name="T:KStar.BPMService.Controllers.AuthController">
+            <summary>
+            第三方系统交互做认证
+            </summary>
+        </member>
+        <member name="M:KStar.BPMService.Controllers.AuthController.#ctor(KStar.Platform.Service.IAuthService)">
+            <summary>
+            
+            </summary>
+            <param name="_iAuthService"></param>
+        </member>
+        <member name="M:KStar.BPMService.Controllers.AuthController.Base64Encrypt(System.String,System.String)">
+            <summary>
+            模拟客户端生成Base64加密(appkey + secret + time)
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:KStar.BPMService.Controllers.AuthController.Base64Decrypt(System.String)">
+             <summary>
+            Base64解密
+             </summary>
+             <returns></returns>
+        </member>
+        <member name="M:KStar.BPMService.Controllers.AuthController.GetToken(System.String)">
+            <summary>
+            获取Token
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:KStar.BPMService.Controllers.BPMServiceController">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:KStar.BPMService.Controllers.BPMServiceController.LogSource">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:KStar.BPMService.Controllers.BPMServiceController.#ctor(KStar.Platform.Logger.ILogger,KStar.BPMService.Service.IBPMService)">
+            <summary>
+            
+            </summary>
+            <param name="logger"></param>
+            <param name="BPMService"></param>
+        </member>
+        <member name="M:KStar.BPMService.Controllers.BPMServiceController.StartProcess(KStar.Form.Domain.ViewModels.BPMService.Requst.RequstModel{KStar.Form.Domain.ViewModels.BPMService.Requst.ProcessStartArgs})">
+            <summary>
+            流程发起
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:KStar.BPMService.Controllers.BPMServiceController.PushBusTest(KStar.Form.Domain.ViewModels.BPMService.Requst.RequstModel{KStar.Form.Domain.ViewModels.BPMService.PushBusInterfaceModel})">
+            <summary>
+            业务系统测试接口
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:KStar.BPMService.Controllers.BusinessServiceController">
+            <summary>
+            Create by：chenqian
+            Create Time：2020-05-09
+            K2调用业务系统接口服务
+            </summary>
+        </member>
+        <member name="F:KStar.BPMService.Controllers.BusinessServiceController.LogSource">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:KStar.BPMService.Controllers.BusinessServiceController.#ctor(KStar.Platform.Logger.ILogger,KStar.Form.Domain.Service.BPMService.IInterfaceLogService,KStar.Form.Domain.Service.Process.IFormInstanceSevice,KStar.BPMService.Service.IRequestBusinessService,KStar.Platform.Service.IPrcConfigEventInterfaceService)">
+            <summary>
+            
+            </summary>
+            <param name="logger"></param>
+            <param name="interfaceLogService"></param>
+            <param name="formInstanceSevice"></param>
+            <param name="requestBusinessService"></param>
+            <param name="prcConfigEventInterfaceService"></param>
+        </member>
+        <member name="M:KStar.BPMService.Controllers.BusinessServiceController.PushBusinessServiceEntrance(KStar.Domain.ViewModels.BPMService.ProcessEventMessage)">
+            <summary>
+            推送业务服务 Rest 请求接 入口
+            </summary>
+            <param name="proEventMessage"></param>
+            <returns></returns>
+        </member>
+        <member name="M:KStar.BPMService.Controllers.BusinessServiceController.CallBusinessService(KStar.Domain.ViewModels.BPMService.ProcessEventMessage)">
+            <summary>
+            调用业务系统接口 推送状态处理
+            </summary>
+            <param name="msgItem"></param>
+            <returns></returns>
+        </member>
+        <member name="M:KStar.BPMService.Controllers.BusinessServiceController.CheckProcessEventMessage(KStar.Domain.ViewModels.BPMService.ProcessEventMessage,KStar.Form.Domain.ViewModels.BPMService.ResponseResultInfo)">
+            <summary>
+            校验推送消息
+            </summary>
+            <param name="proEventMessage"></param>
+            <param name="returnInfo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:KStar.BPMService.Controllers.BusinessServiceController.ReturnErrorInfo(KStar.Domain.ViewModels.BPMService.ProcessEventMessage,KStar.Form.Domain.ViewModels.BPMService.ResponseResultInfo)">
+            <summary>
+            错误信息返回信息、记录错误日志
+            </summary>
+            <param name="proEventMsgInfo"></param>
+            <param name="resResultInfo"></param>
+        </member>
+        <member name="T:KStar.BPMService.ActionFilters.ActionHeaderFilterAttribute">
+            <summary>
+             action 过滤属性
+            </summary>
+        </member>
+        <member name="M:KStar.BPMService.ActionFilters.ActionHeaderFilterAttribute.OnActionExecuting(System.Web.Http.Controllers.HttpActionContext)">
+            <summary>
+            
+            </summary>
+            <param name="actionContext"></param>
+        </member>
+        <member name="M:KStar.BPMService.ActionFilters.ActionHeaderFilterAttribute.OnActionExecuted(System.Web.Http.Filters.HttpActionExecutedContext)">
+            <summary>
+            
+            </summary>
+            <param name="actionExecutedContext"></param>
+        </member>
+        <member name="T:KStar.BPMService.Filter.BasicAuthenticationAttribute">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:KStar.BPMService.Filter.BasicAuthenticationAttribute.authService">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:KStar.BPMService.Filter.BasicAuthenticationAttribute.OnActionExecuting(System.Web.Http.Controllers.HttpActionContext)">
+            <summary>
+            
+            </summary>
+            <param name="actionContext"></param>
+        </member>
+        <member name="T:KStar.BPMService.Filter.GlobalExceptionHandler">
+            <summary>
+            自定义的异常处理程序
+            </summary>
+        </member>
+        <member name="M:KStar.BPMService.Filter.GlobalExceptionHandler.HandleAsync(System.Web.Http.ExceptionHandling.ExceptionHandlerContext,System.Threading.CancellationToken)">
+            <summary>
+            处理异常
+            </summary>
+            <param name="context"></param>
+            <param name="cancellationToken"></param>
+            <returns></returns>
+        </member>
+        <member name="M:KStar.BPMService.Filter.GlobalExceptionHandler.ShouldHandle(System.Web.Http.ExceptionHandling.ExceptionHandlerContext)">
+            <summary>
+            判断是否应该处理
+            后期扩展，重写方法可过滤掉不需处理的异常
+            </summary>
+            <param name="context"></param>
+            <returns></returns>
+        </member>
+        <member name="T:KStar.BPMService.Filter.GlobalExceptionLogger">
+            <summary>
+            全局异常记录
+            </summary>
+        </member>
+        <member name="F:KStar.BPMService.Filter.GlobalExceptionLogger.log">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:KStar.BPMService.Filter.GlobalExceptionLogger.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:KStar.BPMService.Filter.GlobalExceptionLogger.LogAsync(System.Web.Http.ExceptionHandling.ExceptionLoggerContext,System.Threading.CancellationToken)">
+            <summary>
+            
+            </summary>
+            <param name="context"></param>
+            <param name="cancellationToken"></param>
+            <returns></returns>
+        </member>
+        <member name="M:KStar.BPMService.Filter.GlobalExceptionLogger.ShouldLog(System.Web.Http.ExceptionHandling.ExceptionLoggerContext)">
+            <summary>
+            判断是否应记录异常
+            后期重写此方法，可过滤掉不需要记录的异常信息
+            </summary>
+            <param name="context"></param>
+            <returns></returns>
+        </member>
+        <member name="M:KStar.BPMService.WebApiApplication.Application_BeginRequest(System.Object,System.EventArgs)">
+            <summary>
+            
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="T:KStar.BPMService.Logger.ExceptionLessLogger">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:KStar.BPMService.Logger.ExceptionLessLogger.Trace(System.String,System.String,System.String[])">
+            <summary>
+            跟踪
+            </summary>
+        </member>
+        <member name="M:KStar.BPMService.Logger.ExceptionLessLogger.Debug(System.String,System.String,System.String[])">
+            <summary>
+            调试
+            </summary>
+        </member>
+        <member name="M:KStar.BPMService.Logger.ExceptionLessLogger.Info(System.String,System.String,System.String[])">
+            <summary>
+            信息
+            </summary>
+        </member>
+        <member name="M:KStar.BPMService.Logger.ExceptionLessLogger.Warn(System.String,System.String,System.String[])">
+            <summary>
+            警告
+            </summary>
+        </member>
+        <member name="M:KStar.BPMService.Logger.ExceptionLessLogger.Error(System.Exception,System.String[])">
+            <summary>
+            错误
+            </summary>
+        </member>
+        <member name="M:KStar.BPMService.Logger.ExceptionLessLogger.FeatureUsage(System.String,System.String[])">
+            <summary>
+            跟踪
+            </summary>
+            <param name="message"></param>
+            <param name="tags"></param>
+        </member>
+        <member name="T:KStar.BPMService.Models.BusinessServiceInfo">
+            <summary>
+            调用业务接口服务总模型
+            </summary>
+        </member>
+        <member name="P:KStar.BPMService.Models.BusinessServiceInfo.ProEventMsgInfo">
+            <summary>
+            入口接收参数信息
+            </summary>
+        </member>
+        <member name="P:KStar.BPMService.Models.BusinessServiceInfo.ResultInfo">
+            <summary>
+            响应数据
+            </summary>
+        </member>
+        <member name="P:KStar.BPMService.Models.BusinessServiceInfo.InterfaceConfig">
+            <summary>
+            接口配置信息
+            </summary>
+        </member>
+        <member name="P:KStar.BPMService.Models.BusinessServiceInfo.BusInterfaceLog">
+            <summary>
+            调用业务系统接口日志信息
+            </summary>
+        </member>
+        <member name="P:KStar.BPMService.Models.BusinessServiceInfo.BegInterfaceTime">
+            <summary>
+            调用业务系统接口开始时间
+            </summary>
+        </member>
+        <member name="P:KStar.BPMService.Models.BusinessServiceInfo.EndInterfaceTime">
+            <summary>
+            调用业务系统接口结束时间
+            </summary>
+        </member>
+        <member name="T:KStar.BPMService.Models.ProcessStartInfo">
+            <summary>
+            流程发起接口需要计算的数据信息
+            </summary>
+        </member>
+        <member name="P:KStar.BPMService.Models.ProcessStartInfo.BizId">
+            <summary>
+            业务Id
+            </summary>           
+        </member>
+        <member name="P:KStar.BPMService.Models.ProcessStartInfo.ApplyUserCode">
+            <summary>
+            申请人ID
+            </summary>           
+        </member>
+        <member name="P:KStar.BPMService.Models.ProcessStartInfo.StartUserCode">
+            <summary>
+            Desc:发起人ID
+            </summary>           
+        </member>
+        <member name="P:KStar.BPMService.Models.ProcessStartInfo.Folio">
+            <summary>
+            流程标题
+            </summary>           
+        </member>
+        <member name="P:KStar.BPMService.Models.ProcessStartInfo.ProcessCode">
+            <summary>
+            流程编码
+            </summary>
+        </member>
+        <member name="P:KStar.BPMService.Models.ProcessStartInfo.BizData">
+            <summary>
+            业务数据
+            </summary>
+        </member>
+        <member name="P:KStar.BPMService.Models.ProcessStartInfo.K2ID">
+            <summary>
+            K2ID(流程实例编号)
+            </summary>
+        </member>
+        <member name="P:KStar.BPMService.Models.ProcessStartInfo.FormId">
+            <summary>
+            表单ID
+            </summary>           
+        </member>
+        <member name="P:KStar.BPMService.Models.ProcessStartInfo.SplitProcessCode">
+            <summary>
+            拆分后的流程编码
+            </summary>
+        </member>
+        <member name="T:KStar.BPMService.Models.ProcessStartModeEnum">
+            <summary>
+            发起模式枚举
+            </summary>
+        </member>
+        <member name="F:KStar.BPMService.Models.ProcessStartModeEnum.Default">
+            <summary>
+            不需要弹出确认页面，直接发起流程
+            </summary>
+        </member>
+        <member name="F:KStar.BPMService.Models.ProcessStartModeEnum.Confirm">
+            <summary>
+            需要弹出确认页面进行确认
+            </summary>
+        </member>
+        <member name="T:KStar.BPMService.Models.RequestInfo">
+            <summary>
+            发起接口请求参数
+            </summary>
+        </member>
+        <member name="P:KStar.BPMService.Models.RequestInfo.processCode">
+            <summary>
+            流程编码
+            </summary>
+        </member>
+        <member name="P:KStar.BPMService.Models.RequestInfo.sourceId">
+            <summary>
+            系统来源
+            </summary>
+        </member>
+        <member name="P:KStar.BPMService.Models.RequestInfo.bizId">
+            <summary>
+            业务数据唯一标识
+            </summary>
+        </member>
+        <member name="P:KStar.BPMService.Models.RequestInfo.applyUserCode">
+            <summary>
+            申请人
+            </summary>
+        </member>
+        <member name="P:KStar.BPMService.Models.RequestInfo.applyPositonCode">
+            <summary>
+            申请人岗位编码
+            </summary>
+        </member>
+        <member name="P:KStar.BPMService.Models.RequestInfo.startUserCode">
+            <summary>
+            发起人
+            </summary>
+        </member>
+        <member name="P:KStar.BPMService.Models.RequestInfo.startPositionCode">
+            <summary>
+            发起人岗位编码
+            </summary>
+        </member>
+        <member name="P:KStar.BPMService.Models.RequestInfo.formSubject">
+            <summary>
+            流程主题
+            </summary>
+        </member>
+        <member name="P:KStar.BPMService.Models.RequestInfo.bizModel">
+            <summary>
+            业务系统表单数据
+            </summary>
+        </member>
+        <member name="P:KStar.BPMService.Models.RequestInfo.attr1">
+            <summary>
+            扩展字段1
+            </summary>
+        </member>
+        <member name="P:KStar.BPMService.Models.RequestInfo.attr2">
+            <summary>
+            扩展字段2
+            </summary>
+        </member>
+        <member name="P:KStar.BPMService.Models.RequestInfo.attr3">
+            <summary>
+            扩展字段3
+            </summary>
+        </member>
+        <member name="T:KStar.BPMService.Models.ResultInfo">
+            <summary>
+            发起接口返回参数
+            </summary>
+        </member>
+        <member name="P:KStar.BPMService.Models.ResultInfo.Folio">
+            <summary>
+            流程实例编号
+            </summary>
+        </member>
+        <member name="P:KStar.BPMService.Models.ResultInfo.FormID">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:KStar.BPMService.Models.ResultInfo.FormUrl">
+            <summary>
+            发起地址
+            </summary>
+        </member>
+        <member name="P:KStar.BPMService.Models.ResultInfo.ReturnCode">
+            <summary>
+            接口返回代码
+            </summary>
+        </member>
+        <member name="P:KStar.BPMService.Models.ResultInfo.ReturnMsg">
+            <summary>
+            接口返回信息
+            </summary>
+        </member>
+        <member name="T:KStar.BPMService.Models.Response.ProcessStartResponseModel">
+            <summary>
+            流程发起、重新发起接口 响应模型
+            </summary>
+        </member>
+        <member name="P:KStar.BPMService.Models.Response.ProcessStartResponseModel.k2Id">
+            <summary>
+            表单唯一标识
+            </summary>
+        </member>
+        <member name="P:KStar.BPMService.Models.Response.ProcessStartResponseModel.formUrl">
+            <summary>
+            表单打开地址
+            </summary>
+        </member>
+        <member name="T:KStar.BPMService.Models.Response.SubmitResponseModel">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:KStar.BPMService.Models.Response.SubmitResponseModel.Code">
+            <summary>
+            200 代表成功（默认）
+            其他值 代表失败
+            </summary>
+        </member>
+        <member name="P:KStar.BPMService.Models.Response.SubmitResponseModel.Message">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:KStar.BPMService.Models.Response.SubmitResponseModel.Data">
+            <summary>
+            不带分页 data = res
+            </summary>
+        </member>
+        <member name="P:KStar.BPMService.Models.Response.SubmitResponseModel.LogId">
+            <summary>
+            LogId
+            </summary>
+        </member>
+        <member name="T:KStar.BPMService.Models.Response.SubmitResultMessage">
+            <summary>
+            表单提交 响应消息模型
+            </summary>
+        </member>
+        <member name="P:KStar.BPMService.Models.Response.SubmitResultMessage.Item1">
+            <summary>
+            提交是否成功
+            </summary>
+        </member>
+        <member name="P:KStar.BPMService.Models.Response.SubmitResultMessage.Item2">
+            <summary>
+            表单ID
+            </summary>
+        </member>
+        <member name="P:KStar.BPMService.Models.Response.SubmitResultMessage.Item3">
+            <summary>
+            流程实例编码
+            </summary>
+        </member>
+        <member name="T:KStar.BPMService.SdkConfig">
+            <summary>
+            元宝配置
+            </summary>
+        </member>
+        <member name="F:KStar.BPMService.SdkConfig.ClientId">
+            <summary>
+            企业管理后台"授权管理"中获取的client id
+            </summary>
+        </member>
+        <member name="F:KStar.BPMService.SdkConfig.ClientSecret">
+            <summary>
+            企业管理后台"授权管理"中获取的client secret
+            </summary>
+        </member>
+        <member name="F:KStar.BPMService.SdkConfig.orgClientId">
+            <summary>
+            需要通过 EntLibManager中 bind 获取库授权获取orgClientId
+            </summary>
+        </member>
+        <member name="F:KStar.BPMService.SdkConfig.orgClientSecret">
+            <summary>
+            需要通过 EntLibManager中 bind 获取库授权获取orgClientSecret
+            </summary>
+        </member>
+        <member name="F:KStar.BPMService.SdkConfig.outId">
+            <summary>
+            企业在合作方系统中的唯一ID
+            </summary>
+        </member>
+        <member name="F:KStar.BPMService.SdkConfig.admin">
+            <summary>
+            用户名
+            </summary>
+        </member>
+        <member name="F:KStar.BPMService.SdkConfig.password">
+            <summary>
+            密码
+            </summary>
+        </member>
+        <member name="T:KStar.BPMService.Service.RequestBusinessService">
+            <summary>
+            调用业务系统服务
+            </summary>
+        </member>
+        <member name="M:KStar.BPMService.Service.RequestBusinessService.#ctor(KStar.Platform.Logger.ILogger,KStar.Form.Domain.Service.BPMService.IInterfaceLogService,KStar.Platform.Service.IPrcConfigEventInterfaceService,KStar.Form.Domain.Service.Process.IFormInstanceSevice)">
+            <summary>
+            
+            </summary>
+            <param name="logger"></param>
+            <param name="interfaceLogService"></param>
+            <param name="eventInterfaceService"></param>
+            <param name="formInstanceSevice"></param>
+        </member>
+        <member name="M:KStar.BPMService.Service.RequestBusinessService.RequestBusInterface(KStar.Domain.ViewModels.BPMService.ProcessEventMessage,KStar.Form.Domain.ViewModels.BPMService.PushBusInterfaceModel)">
+            <summary>
+            调用业务服务系统接口
+            </summary>
+            <param name="proEventMsg"></param>
+            <param name="pushInfo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:KStar.BPMService.Service.RequestBusinessService.GetRequstParameter(System.String,System.String,KStar.Domain.ViewModels.BPMService.ProcessEventMessage,KStar.Form.Domain.ViewModels.BPMService.PushBusInterfaceModel)">
+            <summary>
+            获取请求接口参数字符串
+            </summary>
+            <param name="dataType"></param>
+            <param name="submitUser"></param>
+            <param name="proEventMsgInfo"></param>
+            <param name="pushBusInfo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:KStar.BPMService.Service.RequestBusinessService.GetApproverInfo(KStar.Domain.ViewModels.BPMService.ProcessEventMessage,System.String,System.String)">
+            <summary>
+            获取上次审批信息
+            </summary>
+            <param name="msgItem"></param>
+            <param name="applyUserCode"></param>
+            <param name="actionResult"></param>
+            <returns></returns>
+        </member>
+        <member name="M:KStar.BPMService.Service.RequestBusinessService.InitBusinessServiceInfo(KStar.Domain.ViewModels.BPMService.ProcessEventMessage,KStar.Form.Domain.ViewModels.BPMService.PushBusInterfaceModel)">
+            <summary>
+            初始化 调用业务系统总模型
+            </summary>
+            <param name="proEventMsgInfo"></param>
+            <param name="pushBusInfo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:KStar.BPMService.Service.RequestBusinessService.AddBusErrorLog(KStar.BPMService.Models.BusinessServiceInfo,System.Int32,System.String,System.String)">
+            <summary>
+            添加调用业务服务错误日志
+            </summary>
+            <param name="k2ID"></param>
+            <param name="busServiceInfo"></param>
+            <param name="errorCode"></param>
+            <param name="param"></param>
+            <param name="responseString"></param>
+        </member>
+        <member name="M:KStar.BPMService.Service.RequestBusinessService.AddBusinessInterfaceLog(KStar.BPMService.Models.BusinessServiceInfo,System.String,System.String)">
+            <summary>
+            添加调用业务接口日志
+            </summary>
+            <param name="busServiceInfo"></param>
+            <param name="param"></param>
+            <param name="responseString"></param>
+        </member>
+        <member name="T:KStar.BPMService.Service.IRequestBusinessService">
+            <summary>
+            调用业务系统服务
+            </summary>
+        </member>
+        <member name="M:KStar.BPMService.Service.IRequestBusinessService.RequestBusInterface(KStar.Domain.ViewModels.BPMService.ProcessEventMessage,KStar.Form.Domain.ViewModels.BPMService.PushBusInterfaceModel)">
+            <summary>
+            调用业务服务系统接口
+            </summary>
+            <param name="proEventMsg"></param>
+            <param name="pushInfo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:KStar.BPMService.Service.IRequestBusinessService.AddBusErrorLog(KStar.BPMService.Models.BusinessServiceInfo,System.Int32,System.String,System.String)">
+            <summary>
+            添加调用业务服务错误日志
+            </summary>
+            <param name="k2ID"></param>
+            <param name="busServiceInfo"></param>
+            <param name="errorCode"></param>
+            <param name="param"></param>
+            <param name="responseString"></param>
+        </member>
+        <member name="T:KStar.BPMService.Service.IService">
+            <summary>
+            依赖注入的接口约束
+            </summary>
+        </member>
+        <member name="T:KStar.BPMService.Service.IWorkFlowService">
+            <summary>
+            流程客户端服务
+            </summary>
+        </member>
+        <member name="M:KStar.BPMService.Service.IWorkFlowService.NewTaskStart(KStar.BPMService.Models.ProcessStartInfo)">
+            <summary>
+            发起接口 一步法 直接发起流程处理
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:KStar.BPMService.Service.ProcessBusService">
+            <summary>
+            BPM接口业务逻辑处理
+            </summary>
+        </member>
+        <member name="M:KStar.BPMService.Service.ProcessBusService.#ctor(KStar.Form.Domain.Service.Process.IFormInstanceSevice,KStar.Platform.Service.IProcessSetService,KStar.Domain.Service.IPrcConfigSplitService,KStar.Platform.Service.KStarFormStorageProvider.IProcessDataStorageProvider,KStar.Form.Domain.Service.BPMService.IInterfaceLogService)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:KStar.BPMService.Service.ProcessBusService.GetProcessStartInfo(KStar.Form.Domain.ViewModels.BPMService.Requst.ProcessStartArgs)">
+            <summary>
+            获取流程发起信息
+            </summary>
+            <param name="startInfo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:KStar.BPMService.Service.ProcessBusService.GetFormPreStartuptUrl(System.String,System.String)">
+            <summary>
+            发起接口 获取流程预发起地址
+            </summary>
+            <param name="processCode"></param>
+            <param name="k2Id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:KStar.BPMService.Service.ProcessBusService.GetFormViewUrl(System.Int64)">
+            <summary>
+            获取表单查看地址
+            </summary>
+            <param name="formId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:KStar.BPMService.Service.ProcessBusService.GetProcessStartuptUrl(System.String)">
+            <summary>
+            获取流程发起地址 表单地址路由
+            </summary>
+            <param name="processCode"></param>
+            <returns></returns>
+        </member>
+        <member name="M:KStar.BPMService.Service.ProcessBusService.UrlAddK2ID(System.String,System.String)">
+            <summary>
+            Url添加K2ID
+            </summary>
+            <param name="url"></param>
+            <param name="k2Id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:KStar.BPMService.Service.ProcessBusService.GetSplitProcessCode(KStar.Form.Domain.ViewModels.BPMService.Requst.ProcessStartArgs)">
+            <summary>
+            获取流程编码
+            获取拆分规则匹配到的流程编码
+            </summary>
+            <param name="processStartInfo"></param>
+            <returns></returns>
+        </member>
+        <member name="T:KStar.BPMService.Service.BPMService">
+            <summary>
+            BPMService  业务封装层
+            </summary>
+        </member>
+        <member name="M:KStar.BPMService.Service.BPMService.#ctor(KStar.Platform.Logger.ILogger,KStar.Form.Domain.Service.BPMService.IInterfaceLogService,KStar.BPMService.Service.IProcessBusService,KStar.Domain.Service.IUserService,KStar.BPMService.Service.IWorkFlowService)">
+            <summary>
+            
+            </summary>
+            <param name="logger"></param>
+            <param name="interfaceLogService"></param>
+            <param name="processBusService"></param>
+            <param name="userService"></param>
+            <param name="workFlowService"></param>
+        </member>
+        <member name="M:KStar.BPMService.Service.BPMService.ProcessStart(KStar.Form.Domain.ViewModels.BPMService.BPMServiceModel,KStar.Form.Domain.ViewModels.BPMService.Requst.ProcessStartArgs)">
+            <summary>
+            流程发起
+            </summary>
+            <param name="serviceInfo"></param>
+            <param name="requestInfo">发起接口Model数据</param>
+            <returns></returns>
+        </member>
+        <member name="M:KStar.BPMService.Service.BPMService.InitProcessStartResponseInfo">
+            <summary>
+            初始化发起接口返回参数
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:KStar.BPMService.Service.BPMService.InitBPMServiceModel">
+            <summary>
+            初始化serviceInfo
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:KStar.BPMService.Service.BPMService.InitBPMServiceInfo(System.String,System.String,System.String)">
+            <summary>
+            初始化 BPMServiceInfo
+            </summary>
+            <param name="sourceId"></param>
+            <param name="requestMessage"></param>
+            <param name="k2Id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:KStar.BPMService.Service.BPMService.CheckRequestInfo``1(KStar.Form.Domain.ViewModels.BPMService.Requst.RequstModel{``0},System.String)">
+            <summary>
+            检查请求信息
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="request"></param>
+            <param name="langType"></param>
+            <returns></returns>
+        </member>
+        <member name="M:KStar.BPMService.Service.BPMService.VerifyRequired(System.Web.Http.ModelBinding.ModelStateDictionary)">
+            <summary>
+            校验class 数据 必填
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="modelState"></param>
+            <returns></returns>
+        </member>
+        <member name="M:KStar.BPMService.Service.BPMService.VerifyArgsData``1(``0)">
+            <summary>
+            校验参数 数据正确性
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="model"></param>
+            <returns></returns>
+        </member>
+        <member name="M:KStar.BPMService.Service.BPMService.VerifyData``1(System.String,System.String,``0)">
+            <summary>
+            数据校验
+            </summary>
+            <param name="verifyFunction"></param>
+            <param name="args"></param>
+            <param name="model"></param>
+            <returns></returns>
+        </member>
+        <member name="M:KStar.BPMService.Service.BPMService.ProStartAddErrorInfo(KStar.Form.Domain.ViewModels.BPMService.BPMServiceModel,KStar.Form.Domain.ViewModels.BPMService.Requst.ProcessStartArgs,System.Int32)">
+            <summary>
+            错误返回信息，并记录日志
+            </summary>
+            <param name="serviceInfo"></param>
+            <param name="proStartInfo"></param>
+            <param name="errorCodeType"></param>
+            <param name="returnStatus"></param>
+        </member>
+        <member name="M:KStar.BPMService.Service.BPMService.ProStartAddSuccessLog(KStar.Form.Domain.ViewModels.BPMService.BPMServiceModel,KStar.BPMService.Models.ProcessStartInfo)">
+            <summary>
+            发起接口调用成功添加日志
+            </summary>
+            <param name="serviceInfo"></param>
+            <param name="proStartInfo"></param>
+        </member>
+        <member name="T:KStar.BPMService.Service.IProcessBusService">
+            <summary>
+            BPM接口业务逻辑处理
+            </summary>
+        </member>
+        <member name="M:KStar.BPMService.Service.IProcessBusService.GetProcessStartInfo(KStar.Form.Domain.ViewModels.BPMService.Requst.ProcessStartArgs)">
+            <summary>
+            获取流程发起信息
+            </summary>
+            <param name="startInfo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:KStar.BPMService.Service.IProcessBusService.GetFormPreStartuptUrl(System.String,System.String)">
+            <summary>
+            发起接口 获取流程预发起地址
+            </summary>
+            <param name="processCode"></param>
+            <param name="k2Id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:KStar.BPMService.Service.IProcessBusService.GetFormViewUrl(System.Int64)">
+            <summary>
+            获取表单查看地址
+            </summary>
+            <param name="formId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:KStar.BPMService.Service.IProcessBusService.GetProcessStartuptUrl(System.String)">
+            <summary>
+            获取流程发起地址 表单地址路由
+            </summary>
+            <param name="processCode"></param>
+            <returns></returns>
+        </member>
+        <member name="M:KStar.BPMService.Service.IProcessBusService.UrlAddK2ID(System.String,System.String)">
+            <summary>
+            Url添加K2ID
+            </summary>
+            <param name="url"></param>
+            <param name="k2Id"></param>
+            <returns></returns>
+        </member>
+        <member name="T:KStar.BPMService.Service.IBPMService">
+            <summary>
+            BPMSService  业务封装层
+            </summary>
+        </member>
+        <member name="M:KStar.BPMService.Service.IBPMService.ProcessStart(KStar.Form.Domain.ViewModels.BPMService.BPMServiceModel,KStar.Form.Domain.ViewModels.BPMService.Requst.ProcessStartArgs)">
+            <summary>
+            流程发起
+            </summary>
+            <param name="serviceInfo"></param>
+            <param name="requestInfo">发起接口Model数据</param>
+            <returns></returns>
+        </member>
+        <member name="M:KStar.BPMService.Service.IBPMService.CheckRequestInfo``1(KStar.Form.Domain.ViewModels.BPMService.Requst.RequstModel{``0},System.String)">
+            <summary>
+            检查请求信息
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="request"></param>
+            <param name="langType"></param>
+            <returns></returns>
+        </member>
+        <member name="M:KStar.BPMService.Service.IBPMService.VerifyRequired(System.Web.Http.ModelBinding.ModelStateDictionary)">
+            <summary>
+            校验class 数据 必填
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="modelState"></param>
+            <returns></returns>
+        </member>
+        <member name="M:KStar.BPMService.Service.IBPMService.InitProcessStartResponseInfo">
+            <summary>
+            初始化发起接口返回参数
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:KStar.BPMService.Service.IBPMService.InitBPMServiceModel">
+            <summary>
+            初始化serviceInfo
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:KStar.BPMService.Service.IBPMService.InitBPMServiceInfo(System.String,System.String,System.String)">
+            <summary>
+            初始化 BPMServiceInfo
+            </summary>
+            <param name="sourceId"></param>
+            <param name="requestMessage"></param>
+            <param name="k2Id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:KStar.BPMService.Service.IBPMService.ProStartAddErrorInfo(KStar.Form.Domain.ViewModels.BPMService.BPMServiceModel,KStar.Form.Domain.ViewModels.BPMService.Requst.ProcessStartArgs,System.Int32)">
+            <summary>
+            错误返回信息，并记录日志
+            </summary>
+            <param name="serviceInfo"></param>
+            <param name="proStartInfo"></param>
+            <param name="errorCodeType"></param>
+        </member>
+        <member name="T:KStar.BPMService.Service.WorkFlowService">
+            <summary>
+            流程客户端服务
+            </summary>
+        </member>
+        <member name="M:KStar.BPMService.Service.WorkFlowService.#ctor(KStar.Platform.Logger.ILogger,KStar.Platform.WorkFlow.Service.IKStarWorkFlowService,KStar.BPMService.Service.IProcessBusService)">
+            <summary>
+            
+            </summary>
+            <param name="logger"></param>
+            <param name="KStarWorkFlowService"></param>
+            <param name="processBusService"></param>
+        </member>
+        <member name="M:KStar.BPMService.Service.WorkFlowService.NewTaskStart(KStar.BPMService.Models.ProcessStartInfo)">
+            <summary>
+            发起接口 一步法 直接发起流程处理
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:KStar.BPMService.WebServiceModule">
+            <summary>
+            模块
+            </summary>
+        </member>
+        <member name="M:KStar.BPMService.WebServiceModule.Load(Autofac.ContainerBuilder)">
+            <summary>
+            关于生命周期
+            InstancePerDependency  瞬时,服务对于每次请求都会返回单独的实例
+            InstancePerLifetimeScope 基于线程或者请求的单例
+            SingleInstance  单例..整个项目公用一个
+            InstancePerRequest 针对MVC的,或者说是ASP.NET的..每个请求单例
+            </summary>
+            <param name="builder"></param>
+        </member>
+    </members>
+</doc>

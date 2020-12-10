@@ -1,0 +1,1379 @@
+﻿
+@{
+    ViewBag.Title = "新业务及培训业务合同申请";
+    Layout = "~/Views/Shared/_KStarFormLayout.cshtml";
+}
+
+@section HeadStyle{
+    <style>
+        .helper-inline-block {
+            display: inline-block;
+        }
+
+        .cell .el-form-item__error.el-form-item__error--inline {
+            position: inherit !important;
+            bottom: unset !important;
+        }
+        .BusinessType label{
+            margin-right:15px;
+            font-size:15px;
+        }
+
+        #MoreTips{display:none;}
+        .tips-container article.tips {
+            color: red;
+            overflow: hidden;
+            height: 60px;
+        }
+        .tips-container label {
+            margin-left: 310px;
+        }
+        .tips-container article {
+            background: rgba(255, 255, 255, 0.5);
+            margin-top: -1px;
+            overflow: hidden;
+            height: 60px;
+            position: relative;
+            z-index: 1;
+            -webkit-transition: height 0.3s ease-in-out, box-shadow 0.6s linear;
+            -moz-transition: height 0.3s ease-in-out, box-shadow 0.6s linear;
+            -o-transition: height 0.3s ease-in-out, box-shadow 0.6s linear;
+            -ms-transition: height 0.3s ease-in-out, box-shadow 0.6s linear;
+            transition: height 0.3s ease-in-out, box-shadow 0.6s linear;
+        }
+        .tips-container input:checked ~ article {
+            -webkit-transition: height 0.5s ease-in-out, box-shadow 0.1s linear;
+            -moz-transition: height 0.5s ease-in-out, box-shadow 0.1s linear;
+            -o-transition: height 0.5s ease-in-out, box-shadow 0.1s linear;
+            -ms-transition: height 0.5s ease-in-out, box-shadow 0.1s linear;
+            transition: height 0.5s ease-in-out, box-shadow 0.1s linear;
+        }
+
+        .tips-container input:checked ~ article {
+            height: 500px;
+        }
+    </style>
+}
+<el-form :model="vmFormContent" :rules="formContentValidateRules" ref="refFormContent" label-width="120px" inline-message size="mini"
+         label-position="rigth">
+    <el-row>
+        <el-col>
+            <el-form-item label="重要提示">
+                <section class="tips-container">
+                    <div>
+                        <input id="MoreTips" name="MoreTips" type="checkbox" v-model="MoreTips" />
+                        <label for="MoreTips" class="el-button el-button--primary el-button--mini" v-if="!MoreTips" style="position: absolute;margin-top:30px;z-index:10">更多</label>
+                        <label for="MoreTips" class="el-button el-button--primary el-button--mini" v-if="MoreTips" style="position: absolute;margin-top:460px;z-index:10;">收起</label>
+                        <article class="tips">
+                            1，乙方统一为：成都新大瀚人力资源管理有限公司江苏分公司<br />
+                            &nbsp;&nbsp;&nbsp;&nbsp;开户行：中国银行股份有限公司东台金海支行<br />
+                            &nbsp;&nbsp;&nbsp;&nbsp;银行账号：5469 7517 9720<br />
+                            &nbsp;&nbsp;&nbsp;&nbsp;纳税识别号：91320981MA22C4KQ9P<br />
+                            &nbsp;&nbsp;&nbsp;&nbsp;注册地址：东台经济开发区滨河公建（社会事业局） 401-17<br />
+                            &nbsp;&nbsp;&nbsp;&nbsp;所有协议在协议首页，甲乙方下面、第一条之前，加一条（不写序号、和甲乙方字体一致、加粗字体）：
+                            <div style="width:80%;padding-left:25px;">
+                                &nbsp;&nbsp;&nbsp;&nbsp;“本协议乙方签约主体为：成都新大瀚人力资源管理有限公司及其所有分子公司，本协议所有条款对成都新大瀚人力资源管理有限公司及其分子公司均有效。（成都新大瀚人力资源管理有限公司分子公司名单以附件为准）”  ，合同末尾需加上成都新大瀚人力资源管理有限公司及其分子公司名称清单，如下附件
+                            </div>
+                            2，K2合同需与实际寄出的合同内容保持一致 。<br />
+                            &nbsp;&nbsp;&nbsp;&nbsp;2.1 如提交k2后需修改合同内容，特别是商务等核心条款，请联系合同专员退回原申请，上载新的附件后重新提交。<br />
+                            &nbsp;&nbsp;&nbsp;&nbsp;2.2 仅修改日期等非核心条款且不影响后续交付。<br />
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a.若合同未寄出，请联系合同专员修改和备案。<br />
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;b.若合同已寄出，请回寄原件或当地就地销毁作废并拍照给合同专员备案，然后重新打印盖章寄出。<br />
+                            3，合同评审完后正常情况0.5个工作日内盖章寄出，如有其他特殊要求，请提前告知合同专员。<br />
+                            <div><span style="color:#323947">附件：</span><a href="http://119.6.39.40:9000/products/files/doceditor.aspx?fileid=10310&doc=UmhSdmpKU1V1MHd5aXBVN3U4V0dEdE53TVhTTXdQdGlzK3pBdFpYMG1JMD0_IjEwMzEwIg2" target="_blank">乙方及其分子公司 202009.xlsx</a></div>
+                        </article>
+                    </div>
+                </section>
+            </el-form-item>
+        </el-col>
+    </el-row>
+    <el-row>
+        <el-col>
+            <el-form-item label="客户号" prop="ClientCode" :rules="{required: false, message: '请填写客户号'}">
+                <el-input type="text" placeholder="请填写客户号" v-model="vmFormContent.ClientCode"></el-input>
+            </el-form-item>
+        </el-col>
+    </el-row>
+    <el-row>
+        <el-col>
+            <el-form-item label="客户名称" prop="ClientName" :rules="{required: false, message: '请填写客户名称'}">
+                <el-input type="text" placeholder="请填写客户名称" v-model="vmFormContent.ClientName"></el-input>
+            </el-form-item>
+        </el-col>
+    </el-row>
+    <el-row>
+        <el-col>
+            <el-form-item label="合同类型" prop="CompactType" :rules="{required: false, message: '请选择类型'}">
+                <el-select v-if="isFormCanBeEdit"
+                           placeholder="请选择"
+                           v-model="vmFormContent.CompactType">
+                    <el-option value="新签"></el-option>
+                    <el-option value="连续续签"></el-option>
+                    <el-option value="找回(非连续续签，与上一个合同间隔半年以上) "></el-option>
+                </el-select>
+                <div v-else class="form-item-div">{{ vmFormContent.CompactType }}</div>
+            </el-form-item>
+        </el-col>
+    </el-row>
+    <el-row>
+        <el-col>
+            <el-form-item label="业务类型" prop="BusinessType" :rules="{required: false, message: '请选择业务类型'}">
+                <div v-if="isFormCanBeEdit" class="BusinessType">
+                    @*<input type="checkbox" id="猎头" value="猎头" v-model="Headhunter">
+                        <label for="猎头">猎头<span style="color:red">(最低收费5万)</span></label>
+                        <input type="checkbox" id="RPO" value="RPO" v-model="RPO">
+                        <label for="RPO">RPO</label>*@
+                    <input type="checkbox" id="灵活用工" value="灵活用工" v-model="Fb_checked" v-if="!TrainBusiness">
+                    <label for="灵活用工" v-if="!TrainBusiness">灵活用工</label>
+                    <input type="checkbox" id="培训业务" value="培训业务" v-model="TrainBusiness" v-if="!Fb_checked">
+                    <label for="培训业务" v-if="!Fb_checked">培训业务</label>
+                </div>
+                <div v-if="isFormCanBeEdit && Fb_checked">
+                    <div style="clear:both;">
+                        <input type="checkbox" id="岗位外包" value="岗位外包" v-model="Fb_info.post">
+                        <label for="岗位外包">岗位外包</label>
+                        <div v-if="Fb_info.post">
+                            <el-form-item label="服务城市" style="width:300px;float:left;" :rules="{required: true}">
+                                <el-input type="text" placeholder="" v-model="Fb_info.post_city"></el-input>
+                            </el-form-item>
+                            <el-form-item label="需求人数" style="width:300px;float:left;" :rules="{required: true}">
+                                <el-input type="text" placeholder="" v-model="Fb_info.post_num"></el-input>
+                            </el-form-item>
+                            <el-form-item label="预付款" style="width:300px;float:left;" :rules="{required: true}">
+                                <el-input type="text" placeholder="元" v-model="Fb_info.post_advancePay"></el-input>
+                            </el-form-item>
+                            @*<el-form-item label="其他成本" style="width:300px;float:left;" :rules="{required: true}">
+                                <el-input type="text" placeholder="元/人" v-model="Fb_info.post_otherCosts"></el-input>
+                            </el-form-item>*@
+                            <el-form-item label="是否垫资" style="width:300px;float:left;" :rules="{required: true}">
+                                <el-select placeholder="请选择" v-model="Fb_info.post_advance">
+                                    <el-option value="是"></el-option>
+                                    <el-option value="否"></el-option>
+                                </el-select>
+                            </el-form-item>
+                            <el-form-item label="垫资周期" style="width:300px;float:left;" :rules="{required: true}">
+                                <el-input type="text" placeholder="天" v-model="Fb_info.post_advancePeriod"></el-input>
+                            </el-form-item>
+                            <el-form-item label="报价" style="width:300px;float:left;" :rules="{required: true}">
+                                <el-select placeholder="请选择" v-model="Fb_info.post_percentageType" style="width:90px;float:left;">
+                                    <el-option value="固定(元)"></el-option>
+                                    <el-option value="比例(%)"></el-option>
+                                </el-select>
+                                <el-input type="text" placeholder="" v-model="Fb_info.post_percentage" style="width:85px;float:left;"></el-input>
+                            </el-form-item>
+                            @*<el-form-item label="测算利润" style="width:300px;float:left;" :rules="{required: true}">
+                                <el-input type="text" placeholder="元/人/月" v-model="Fb_info.post_emProfit"></el-input>
+                            </el-form-item>
+                            <el-form-item label="测算利润率" style="width:300px;float:left;" :rules="{required: true}">
+                                <el-input type="text" placeholder="%" v-model="Fb_info.post_emProfitRate"></el-input>
+                            </el-form-item>*@
+                        </div>
+                    </div>
+                    <div style="clear:both;">
+                        <input type="checkbox" id="业务外包" value="业务外包" v-model="Fb_info.business">
+                        <label for="业务外包">业务外包</label>
+                        <div v-if="Fb_info.business">
+                            <el-form-item label="服务城市" style="width:300px;float:left;" :rules="{required: true}">
+                                <el-input type="text" placeholder="" v-model="Fb_info.business_city"></el-input>
+                            </el-form-item>
+                            <el-form-item label="需求人数" style="width:300px;float:left;" :rules="{required: true}">
+                                <el-input type="text" placeholder="" v-model="Fb_info.business_num"></el-input>
+                            </el-form-item>
+                            <el-form-item label="预付款" style="width:300px;float:left;" :rules="{required: true}">
+                                <el-input type="text" placeholder="元" v-model="Fb_info.business_advancePay"></el-input>
+                            </el-form-item>
+                            @*<el-form-item label="其他成本" style="width:300px;float:left;" :rules="{required: true}">
+                                <el-input type="text" placeholder="元/人" v-model="Fb_info.business_otherCosts"></el-input>
+                            </el-form-item>*@
+                            <el-form-item label="是否垫资" style="width:300px;float:left;" :rules="{required: true}">
+                                <el-select placeholder="请选择" v-model="Fb_info.business_advance">
+                                    <el-option value="是"></el-option>
+                                    <el-option value="否"></el-option>
+                                </el-select>
+                            </el-form-item>
+                            <el-form-item label="垫资周期" style="width:300px;float:left;" :rules="{required: true}">
+                                <el-input type="text" placeholder="天" v-model="Fb_info.business_advancePeriod"></el-input>
+                            </el-form-item>
+                            <el-form-item label="报价" style="width:300px;float:left;" :rules="{required: true}">
+                                <el-select placeholder="请选择" v-model="Fb_info.business_percentageType" style="width:90px;float:left;">
+                                    <el-option value="固定(元)"></el-option>
+                                    <el-option value="比例(%)"></el-option>
+                                </el-select>
+                                <el-input type="text" placeholder="" v-model="Fb_info.business_percentage" style="width:85px;float:left;"></el-input>
+                            </el-form-item>
+                            @*<el-form-item label="测算利润" style="width:300px;float:left;" :rules="{required: true}">
+                                <el-input type="text" placeholder="元/人/月" v-model="Fb_info.business_emProfit"></el-input>
+                            </el-form-item>
+                            <el-form-item label="测算利润率" style="width:300px;float:left;" :rules="{required: true}">
+                                <el-input type="text" placeholder="%" v-model="Fb_info.business_emProfitRate"></el-input>
+                            </el-form-item>*@
+                        </div>
+                    </div>
+                    <div style="clear:both;">
+                        <input type="checkbox" id="劳务派遣" value="劳务派遣" v-model="Fb_info.labour">
+                        <label for="劳务派遣">劳务派遣</label>
+                        <div v-if="Fb_info.labour">
+                            <el-form-item label="服务城市" style="width:300px;float:left;" :rules="{required: true}">
+                                <el-input type="text" placeholder="" v-model="Fb_info.labour_city"></el-input>
+                            </el-form-item>
+                            <el-form-item label="需求人数" style="width:300px;float:left;" :rules="{required: true}">
+                                <el-input type="text" placeholder="" v-model="Fb_info.labour_num"></el-input>
+                            </el-form-item>
+                            <el-form-item label="预付款" style="width:300px;float:left;" :rules="{required: true}">
+                                <el-input type="text" placeholder="元" v-model="Fb_info.labour_advancePay"></el-input>
+                            </el-form-item>
+                            @*<el-form-item label="其他成本" style="width:300px;float:left;" :rules="{required: true}">
+                                <el-input type="text" placeholder="元/人" v-model="Fb_info.labour_otherCosts"></el-input>
+                            </el-form-item>*@
+                            <el-form-item label="是否垫资" style="width:300px;float:left;" :rules="{required: true}">
+                                <el-select placeholder="请选择" v-model="Fb_info.labour_advance">
+                                    <el-option value="是"></el-option>
+                                    <el-option value="否"></el-option>
+                                </el-select>
+                            </el-form-item>
+                            <el-form-item label="垫资周期" style="width:300px;float:left;" :rules="{required: true}">
+                                <el-input type="text" placeholder="天" v-model="Fb_info.labour_advancePeriod"></el-input>
+                            </el-form-item>
+                            <el-form-item label="报价" style="width:300px;float:left;" :rules="{required: true}">
+                                <el-select placeholder="请选择" v-model="Fb_info.labour_percentageType" style="width:90px;float:left;">
+                                    <el-option value="固定(元)"></el-option>
+                                    <el-option value="比例(%)"></el-option>
+                                </el-select>
+                                <el-input type="text" placeholder="" v-model="Fb_info.labour_percentage" style="width:85px;float:left;"></el-input>
+                            </el-form-item>
+                            @*<el-form-item label="测算利润" style="width:300px;float:left;" :rules="{required: true}">
+                                <el-input type="text" placeholder="元/人/月" v-model="Fb_info.labour_emProfit"></el-input>
+                            </el-form-item>
+                            <el-form-item label="测算利润率" style="width:300px;float:left;" :rules="{required: true}">
+                                <el-input type="text" placeholder="%" v-model="Fb_info.labour_emProfitRate"></el-input>
+                            </el-form-item>*@
+                        </div>
+                    </div>
+                    <div style="clear:both;">
+                        <input type="checkbox" id="人事代理" value="人事代理" v-model="Fb_info.agent">
+                        <label for="人事代理">人事代理</label>
+                        <div v-if="Fb_info.agent">
+                            <el-form-item label="服务城市" style="width:300px;float:left;" :rules="{required: true}">
+                                <el-input type="text" placeholder="" v-model="Fb_info.agent_city"></el-input>
+                            </el-form-item>
+                            <el-form-item label="需求人数" style="width:300px;float:left;" :rules="{required: true}">
+                                <el-input type="text" placeholder="" v-model="Fb_info.agent_num"></el-input>
+                            </el-form-item>
+                            <el-form-item label="预付款" style="width:300px;float:left;" :rules="{required: true}">
+                                <el-input type="text" placeholder="元" v-model="Fb_info.agent_advancePay"></el-input>
+                            </el-form-item>
+                            @*<el-form-item label="其他成本" style="width:300px;float:left;" :rules="{required: true}">
+                                <el-input type="text" placeholder="元/人" v-model="Fb_info.agent_otherCosts"></el-input>
+                            </el-form-item>*@
+                            <el-form-item label="是否垫资" style="width:300px;float:left;" :rules="{required: true}">
+                                <el-select placeholder="请选择" v-model="Fb_info.agent_advance">
+                                    <el-option value="是"></el-option>
+                                    <el-option value="否"></el-option>
+                                </el-select>
+                            </el-form-item>
+                            <el-form-item label="垫资周期" style="width:300px;float:left;" :rules="{required: true}">
+                                <el-input type="text" placeholder="天" v-model="Fb_info.agent_advancePeriod"></el-input>
+                            </el-form-item>
+                            <el-form-item label="报价" style="width:300px;float:left;" :rules="{required: true}">
+                                <el-select placeholder="请选择" v-model="Fb_info.agent_percentageType" style="width:90px;float:left;">
+                                    <el-option value="固定(元)"></el-option>
+                                    <el-option value="比例(%)"></el-option>
+                                </el-select>
+                                <el-input type="text" placeholder="" v-model="Fb_info.agent_percentage" style="width:85px;float:left;"></el-input>
+                            </el-form-item>
+                            @*<el-form-item label="测算利润" style="width:300px;float:left;" :rules="{required: true}">
+                                <el-input type="text" placeholder="元/人/月" v-model="Fb_info.agent_emProfit"></el-input>
+                            </el-form-item>
+                            <el-form-item label="测算利润率" style="width:300px;float:left;" :rules="{required: true}">
+                                <el-input type="text" placeholder="%" v-model="Fb_info.agent_emProfitRate"></el-input>
+                            </el-form-item>*@
+                        </div>
+                    </div>
+                    <div style="clear:both;">
+                        <input type="checkbox" id="兼职、小时工" value="兼职、小时工" v-model="Fb_info.partTime">
+                        <label for="兼职、小时工">兼职、小时工</label>
+                        <div v-if="Fb_info.partTime">
+                            <el-form-item label="服务城市" style="width:300px;float:left;" :rules="{required: true}">
+                                <el-input type="text" placeholder="" v-model="Fb_info.partTime_city"></el-input>
+                            </el-form-item>
+                            <el-form-item label="需求人数" style="width:300px;float:left;" :rules="{required: true}">
+                                <el-input type="text" placeholder="" v-model="Fb_info.partTime_num"></el-input>
+                            </el-form-item>
+                            <el-form-item label="预付款" style="width:300px;float:left;" :rules="{required: true}">
+                                <el-input type="text" placeholder="元" v-model="Fb_info.partTime_advancePay"></el-input>
+                            </el-form-item>
+                            @*<el-form-item label="其他成本" style="width:300px;float:left;" :rules="{required: true}">
+                                <el-input type="text" placeholder="元/人" v-model="Fb_info.partTime_otherCosts"></el-input>
+                            </el-form-item>*@
+                            <el-form-item label="是否垫资" style="width:300px;float:left;" :rules="{required: true}">
+                                <el-select placeholder="请选择" v-model="Fb_info.partTime_advance">
+                                    <el-option value="是"></el-option>
+                                    <el-option value="否"></el-option>
+                                </el-select>
+                            </el-form-item>
+                            <el-form-item label="垫资周期" style="width:300px;float:left;" :rules="{required: true}">
+                                <el-input type="text" placeholder="天" v-model="Fb_info.partTime_advancePeriod"></el-input>
+                            </el-form-item>
+                            <el-form-item label="报价" style="width:300px;float:left;" :rules="{required: true}">
+                                <el-select placeholder="请选择" v-model="Fb_info.partTime_percentageType" style="width:90px;float:left;">
+                                    <el-option value="固定(元)"></el-option>
+                                    <el-option value="比例(%)"></el-option>
+                                </el-select>
+                                <el-input type="text" placeholder="" v-model="Fb_info.partTime_percentage" style="width:85px;float:left;"></el-input>
+                            </el-form-item>
+                            @*<el-form-item label="测算利润" style="width:300px;float:left;" :rules="{required: true}">
+                                <el-input type="text" placeholder="元/人/月" v-model="Fb_info.partTime_emProfit"></el-input>
+                            </el-form-item>
+                            <el-form-item label="测算利润率" style="width:300px;float:left;" :rules="{required: true}">
+                                <el-input type="text" placeholder="%" v-model="Fb_info.partTime_emProfitRate"></el-input>
+                            </el-form-item>*@
+                        </div>
+                    </div>
+                    <div style="clear:both;">
+                        <input type="checkbox" id="共享经济平台" value="共享经济平台" v-model="Fb_info.share">
+                        <label for="共享经济平台">共享经济平台</label>
+                        <div v-if="Fb_info.share">
+                            <el-form-item label="报价" style="width:300px;float:left;" :rules="{required: true}">
+                                <el-select placeholder="请选择" v-model="Fb_info.share_percentageType" style="width:90px;float:left;">
+                                    <el-option value="固定(元)"></el-option>
+                                    <el-option value="比例(%)"></el-option>
+                                </el-select>
+                                <el-input type="text" placeholder="" v-model="Fb_info.share_percentage" style="width:85px;float:left;"></el-input>
+                            </el-form-item>
+                            @*<el-form-item label="测算利润" style="width:300px;float:left;" :rules="{required: true}">
+                                <el-input type="text" placeholder="元/人/月" v-model="Fb_info.share_emProfit"></el-input>
+                            </el-form-item>
+                            <el-form-item label="测算利润率" style="width:300px;float:left;" :rules="{required: true}">
+                                <el-input type="text" placeholder="%" v-model="Fb_info.share_emProfitRate"></el-input>
+                            </el-form-item>*@
+                        </div>
+                    </div>
+                </div>
+                <div v-if="!isFormCanBeEdit" class="form-item-div" v-html="vmFormContent.BusinessType"></div>
+            </el-form-item>
+        </el-col>
+    </el-row>
+    <el-row v-if="Headhunter">
+        <el-col>
+            <el-form-item label="猎头报价组合" prop="Combination" :rules="{required: true, message: '请选择猎头报价组合'}">
+                <el-select v-if="isFormCanBeEdit"
+                           placeholder="请选择"
+                           v-model="vmFormContent.Combination">
+                    <el-option value="组合1"></el-option>
+                    <el-option value="组合2"></el-option>
+                    <el-option value="组合3"></el-option>
+                    <el-option value="组合4"></el-option>
+                    <el-option value="组合5"></el-option>
+                    <el-option value="组合6"></el-option>
+                    <el-option value="组合7"></el-option>
+                    <el-option value="组合8"></el-option>
+                    <el-option value="组合9"></el-option>
+                    <el-option value="组合10"></el-option>
+                    <el-option value="组合11"></el-option>
+                    <el-option value="组合12"></el-option>
+                    <el-option value="组合13"></el-option>
+                    <el-option value="组合14"></el-option>
+                    <el-option value="组合15"></el-option>
+                    <el-option value="组合16"></el-option>
+                    <el-option value="组合17"></el-option>
+                    <el-option value="组合18"></el-option>
+                    <el-option value="不满足组合1-18"></el-option>
+                </el-select>
+                @*<div v-else class="form-item-div">{{ vmFormContent.Combination }}</div>
+                    <div>附件：<a href="http://119.6.39.40:9000/products/files/doceditor.aspx?fileid=9349&doc=QlBzNDhLOUJqMmFjOEJCRUErdm5icENQY3Y2cFpXUForbldXRFREU21QWT0_IjkzNDki0" target="_blank">猎头报价组合2020</a></div>*@
+            </el-form-item>
+        </el-col>
+    </el-row>
+    <el-row v-if="!isFormCanBeEdit && vmFormContent.Combination">
+        <el-col>
+            <el-form-item label="猎头报价组合" prop="Combination" :rules="{required: true, message: '请选择猎头报价组合'}">
+                <div class="form-item-div">{{ vmFormContent.Combination }}</div>
+                <div>附件：<a href="http://119.6.39.40:9000/products/files/doceditor.aspx?fileid=9349&doc=QlBzNDhLOUJqMmFjOEJCRUErdm5icENQY3Y2cFpXUForbldXRFREU21QWT0_IjkzNDki0" target="_blank">猎头报价组合2020</a></div>
+            </el-form-item>
+        </el-col>
+    </el-row>
+    <el-row v-if="Headhunter">
+        <el-col>
+            <el-form-item label="服务费率(%)" prop="ServiceRate" :rules="{required: false, message: '请填写服务费率(%)'}">
+                <el-input type="text" placeholder="例如年薪50万以下25%，年薪50万以上30%" v-model="vmFormContent.ServiceRate"></el-input>
+                <div style="color:red;">授权体系:&nbsp;&nbsp;&nbsp;&nbsp;顾问:25%;&nbsp;&nbsp;&nbsp;&nbsp;团队经理:23%;&nbsp;&nbsp;&nbsp;&nbsp;城市总:22%;&nbsp;&nbsp;&nbsp;&nbsp;地区总:21.5%;&nbsp;&nbsp;&nbsp;&nbsp;轮值CEO:21%;&nbsp;&nbsp;&nbsp;&nbsp;董事长:其他;</div>
+            </el-form-item>
+        </el-col>
+    </el-row>
+    <el-row v-if="!isFormCanBeEdit && vmFormContent.ServiceRate">
+        <el-col>
+            <el-form-item label="服务费率(%)" prop="ServiceRate" :rules="{required: false, message: '请填写服务费率(%)'}">
+                <div class="form-item-div">{{ vmFormContent.ServiceRate }}</div>
+            </el-form-item>
+        </el-col>
+    </el-row>
+    <el-row v-if="Headhunter">
+        <el-col>
+            <el-form-item label="保证期(月)" prop="GuaranteePeriod" :rules="{required: false, message: '请填写保证期(月)'}">
+                <el-input type="text" placeholder="请填写保证期(月)" v-model="vmFormContent.GuaranteePeriod"></el-input>
+            </el-form-item>
+        </el-col>
+    </el-row>
+    <el-row v-if="!isFormCanBeEdit && vmFormContent.GuaranteePeriod">
+        <el-col>
+            <el-form-item label="保证期(月)" prop="ServiceRate" :rules="{required: false, message: '请填写保证期(月)'}">
+                <div class="form-item-div">{{ vmFormContent.GuaranteePeriod }}</div>
+            </el-form-item>
+        </el-col>
+    </el-row>
+    <el-row v-if="Headhunter">
+        <el-col>
+            <el-form-item label="最低收费(万)" prop="MinimumCharge" :rules="{required: false, message: '请填写最低收费(万)'}">
+                <el-input type="text" placeholder="请填写最低收费(万)" v-model="vmFormContent.MinimumCharge"></el-input>
+            </el-form-item>
+        </el-col>
+    </el-row>
+    <el-row v-if="!isFormCanBeEdit && vmFormContent.MinimumCharge">
+        <el-col>
+            <el-form-item label="最低收费(万)" prop="MinimumCharge" :rules="{required: false, message: '请填写最低收费(万)'}">
+                <div class="form-item-div">{{ vmFormContent.MinimumCharge }}</div>
+            </el-form-item>
+        </el-col>
+    </el-row>
+    <el-row v-if="Headhunter">
+        <el-col>
+            <el-form-item label="增值税客户支付" prop="ValueAddedTax" :rules="{required: false, message: '请选择增值税客户支付'}">
+                <el-select v-if="isFormCanBeEdit"
+                           placeholder="请选择"
+                           v-model="vmFormContent.ValueAddedTax">
+                    <el-option value="是"></el-option>
+                    <el-option value="否"></el-option>
+                </el-select>
+            </el-form-item>
+        </el-col>
+    </el-row>
+    <el-row v-if="!isFormCanBeEdit && vmFormContent.ValueAddedTax">
+        <el-col>
+            <el-form-item label="增值税客户支付" prop="ValueAddedTax" :rules="{required: false, message: '请选择增值税客户支付'}">
+                <div class="form-item-div">{{ vmFormContent.ValueAddedTax }}</div>
+            </el-form-item>
+        </el-col>
+    </el-row>
+    <el-row v-if="Headhunter">
+        <el-col>
+            <el-form-item label="付款比例" prop="PaymentRatio" :rules="{required: false, message: '请填写付款比例'}">
+                <el-input type="text" placeholder="例如上班支付100%" v-model="vmFormContent.PaymentRatio"></el-input>
+            </el-form-item>
+        </el-col>
+    </el-row>
+    <el-row v-if="!isFormCanBeEdit && vmFormContent.PaymentRatio">
+        <el-col>
+            <el-form-item label="付款比例" prop="PaymentRatio" :rules="{required: false, message: '请填写付款比例'}">
+                <div class="form-item-div">{{ vmFormContent.PaymentRatio }}</div>
+            </el-form-item>
+        </el-col>
+    </el-row>
+    <el-row>
+        <el-col>
+            <el-form-item label="收件地址" prop="ClientAddress" :rules="{required: false, message: '请填写收货地址'}">
+                <el-input type="text" placeholder="请填写收货地址" v-model="vmFormContent.ClientAddress"></el-input>
+                <div style="color:red;">必须先在OA系统的客户往来联系人中维护好合同收件人信息，并在此填写收件人名字+手机+地址，以确认收件信息，合同寄出后，可在OA中查看快递单号。</div>
+            </el-form-item>
+        </el-col>
+    </el-row>
+    <el-row>
+        <el-col>
+            <el-form-item label="寄出条件" prop="SendCondition" :rules="{required: false, message: '请选择寄出条件'}">
+                <el-select v-if="isFormCanBeEdit"
+                           placeholder="请选择"
+                           v-model="vmFormContent.SendCondition">
+                    <el-option value="我司先寄，评审完后直接寄出"></el-option>
+                    <el-option value="我司先寄，评审完后等待申请人通知合同专员时再寄出"></el-option>
+                    <el-option value="客户先寄，等收到客户合同后，处理后直接寄出"></el-option>
+                </el-select>
+                <div v-else class="form-item-div">{{ vmFormContent.SendCondition }}</div>
+            </el-form-item>
+        </el-col>
+    </el-row>
+    <el-row>
+        <el-col>
+            <el-form-item label="客户开发人" prop="CompactSignBy" :rules="{required: false, message: '请填写客户开发人'}">
+                <el-input type="text" placeholder="请填写客户开发人" v-model="vmFormContent.CompactSignBy"></el-input>
+                <div style="color:red;">用于客户开发的业绩切分。</div>
+            </el-form-item>
+        </el-col>
+    </el-row>
+    <el-row>
+        <el-col>
+            <el-form-item label="开票类型" prop="BillingType" :rules="{required: isFormCanBeEdit, message: '请选择开票类型'}">
+                <el-select v-if="isFormCanBeEdit"
+                           placeholder="请选择"
+                           v-model="vmFormContent.BillingType">
+                    <el-option value="增值税专用发票-全额纳税"></el-option>
+                    <el-option value="增值税普通发票-全额纳税 "></el-option>
+                    <el-option value="增值税专用发票-差额纳税（服务费部分专票）"></el-option>
+                    <el-option value="增值税普通发票-差额纳税（服务费部分普票）"></el-option>
+                </el-select>
+                <div v-else class="form-item-div">{{ vmFormContent.BillingType }}</div>
+            </el-form-item>
+        </el-col>
+    </el-row>
+    <el-row>
+        <el-col>
+            <el-form-item label="其他价格要点" prop="payKeynote" :rules="{required: false, message: '请填写合同价格和支付等要点'}">
+                <div class="el-textarea el-input--mini">
+                    <textarea autocomplete="off" class="el-textarea__inner" style="min-height: 60px; height: 60px;" v-model="vmFormContent.payKeynote"></textarea>
+                </div>
+            </el-form-item>
+        </el-col>
+    </el-row>
+    <el-row>
+        <el-col>
+            <el-form-item label="特殊情况说明" prop="SpecialCaseDescription" :rules="{required: false, message: '请填写特殊情况说明'}">
+                <div class="el-textarea el-input--mini">
+                    <textarea autocomplete="off" class="el-textarea__inner" style="min-height: 60px; height: 60px;" v-model="vmFormContent.SpecialCaseDescription"></textarea>
+                </div>
+                <div style="color:red;">特殊情况请单独说明，例如 无法江苏分公司签约、报价达不到公司要求等等</div>
+            </el-form-item>
+        </el-col>
+    </el-row>
+    <el-row>
+        <el-col>
+            <el-form-item label="新业务总" prop="NewBusLeader" :rules="{required: isFormCanBeEdit, message: '请选择新业务总'}">
+                <el-select v-if="isFormCanBeEdit"
+                           placeholder="请选择"
+                           v-model="vmFormContent.NewBusLeader">
+
+                    <el-option value="Gavin Yang" v-if="Fb_checked"></el-option>
+                    <el-option value="Ben Xi" v-if="Fb_checked"></el-option>
+                    <el-option value="Max Wang" v-if="TrainBusiness"></el-option>
+                </el-select>
+                <div v-else class="form-item-div">{{ vmFormContent.NewBusLeader }}</div>
+            </el-form-item>
+        </el-col>
+    </el-row>
+    <subtitle subtitle="收入概算表" class="line-sub-title"></subtitle>
+    <el-table :data="vmFormContent.TableBillInfos" border>
+        <el-table-column align="center" v-if="isFormCanBeEdit">
+            <template v-slot:header="{ column, $index }">
+                <el-button icon="el-icon-plus" type="success" size="mini" circle
+                           v-on:click="handleAddBillInfo($index, column)" id="IncomeButton"></el-button>
+            </template>
+            <template v-slot:default="{ row, column, $index }">
+                <el-button type="danger" size="mini" plain
+                           v-on:click="handleDeleteBillInfo($index, row, column)">删除</el-button>
+            </template>
+        </el-table-column>
+        <el-table-column label="序号" type="index" show-overflow-tooltip width="50" align="center">
+        </el-table-column>
+        <el-table-column label="收入类型" header-align="center" width="150" property="IncomeType">
+            <template v-slot:default="{ row, column, $index }">
+                <el-form-item label-width="0" :prop="'TableBillInfos.' + $index + '.IncomeType'"
+                              :rules="{required: false, message: '请输入收入类型'}">
+                    <el-input v-model="row.IncomeType" v-if="isFormCanBeEdit" style="width: 100%;"
+                              size="mini"></el-input>
+                    <div v-else class="form-item-div">{{ row.IncomeType }}</div>
+                </el-form-item>
+            </template>
+        </el-table-column>
+        <el-table-column label="单价" header-align="center" width="135" property="UnitPrice">
+            <template v-slot:default="{ row, column, $index }">
+                <el-form-item label-width="0" :prop="'TableBillInfos.' + $index + '.UnitPrice'"
+                              :rules="{required: false, message: '请输入单价'}">
+                    <el-input v-model="row.UnitPrice" v-if="isFormCanBeEdit" style="width: 100%;"
+                              size="mini"></el-input>
+                    <div v-else class="form-item-div">{{ row.UnitPrice }}</div>
+                </el-form-item>
+            </template>
+        </el-table-column>
+        <el-table-column label="人数" header-align="center" width="120" property="NumberOfPeople">
+            <template v-slot:default="{ row, column, $index }">
+                <el-form-item label-width="0" :prop="'TableBillInfos.' + $index + '.NumberOfPeople'"
+                              :rules="{required: false, message: '请输入人数'}">
+                    <el-input v-model="row.NumberOfPeople" v-if="isFormCanBeEdit" style="width: 100%;"
+                              size="mini" type="number"></el-input>
+                    <div v-else class="form-item-div">{{ row.NumberOfPeople }}</div>
+                </el-form-item>
+            </template>
+        </el-table-column>
+        <el-table-column label="工时" header-align="center" width="120" property="WorkingHours">
+            <template v-slot:default="{ row, column, $index }">
+                <el-form-item label-width="0" :prop="'TableBillInfos.' + $index + '.WorkingHours'"
+                              :rules="{required: false, message: '请输入工时'}">
+                    <el-input v-model="row.WorkingHours" v-if="isFormCanBeEdit" style="width: 100%;"
+                              size="mini" type="number"></el-input>
+                    <div v-else class="form-item-div">{{ row.WorkingHours }}</div>
+                </el-form-item>
+            </template>
+        </el-table-column>
+        <el-table-column label="小计(元)" header-align="center" width="135" property="Subtotal">
+            <template v-slot:default="{ row, column, $index }">
+                <el-form-item label-width="0" :prop="'TableBillInfos.' + $index + '.Subtotal'"
+                              :rules="{required: isFormCanBeEdit, message: '请输入小计'}">
+                    <el-input v-model="row.Subtotal" v-if="isFormCanBeEdit" style="width: 100%;"
+                              size="mini" type="number"></el-input>
+                    <div v-else class="form-item-div">{{ row.Subtotal }}</div>
+                </el-form-item>
+            </template>
+        </el-table-column>
+        <el-table-column label="备注" header-align="center" width="250" property="Remarks">
+            <template v-slot:default="{ row, column, $index }">
+                <el-form-item label-width="0" :prop="'TableBillInfos.' + $index + '.Remarks'"
+                              :rules="{required: false, message: '请输入备注'}">
+                    <el-input v-model="row.Remarks" v-if="isFormCanBeEdit" style="width: 100%;"
+                              size="mini"></el-input>
+                    <div v-else class="form-item-div">{{ row.Remarks }}</div>
+                </el-form-item>
+            </template>
+        </el-table-column>
+    </el-table>
+    <el-row el-row :gutter="120">
+        <el-col :xs="24" :sm="12" style="font-weight:700;">
+            <el-form-item label="总收入(元)" prop="TotalRevenue" :rules="{required: false, message: '请填写总收入'}">
+                <div class="form-item-div" style="font-weight:700;">{{ vmFormContent.TotalRevenue }}</div>
+            </el-form-item>
+        </el-col>
+        @*<el-col :xs="24" :sm="12">
+                <el-form-item label="总人数" prop="IncomeTotalNumberOfPeople" :rules="{required: false, message: '请填写总人数'}">
+                    <div class="form-item-div">{{ vmFormContent.IncomeTotalNumberOfPeople }}</div>
+                </el-form-item>
+            </el-col>*@
+    </el-row>
+    <subtitle subtitle="成本概算表" class="line-sub-title"></subtitle>
+    <div style="color:red;">各项成本小计必填(增值税缴纳、附加税缴纳的成本小计为自动计算)；  增值税缴纳比例，随需可修改为6%或3%或1%；其他字段随需填写</div>
+    <el-table :data="vmFormContent.CostBillInfos" border>
+        <el-table-column align="center" v-if="isFormCanBeEdit">
+            <template v-slot:header="{ column, $index }">
+                <el-button icon="el-icon-plus" type="success" size="mini" circle
+                           v-on:click="handleAddCostBillInfo($index, column)" id="CostButton"></el-button>
+            </template>
+            <template v-slot:default="{ row, column, $index }">
+                <el-button type="danger" size="mini" plain
+                           v-on:click="handleDeleteCostBillInfo($index, row, column)">删除</el-button>
+            </template>
+        </el-table-column>
+        <el-table-column label="序号" type="index" show-overflow-tooltip width="50" align="center">
+        </el-table-column>
+        <el-table-column label="成本类型" header-align="center" width="150" property="CostType">
+            <template v-slot:default="{ row, column, $index }">
+                <el-form-item label-width="0" :prop="'CostBillInfos.' + $index + '.CostType'"
+                              :rules="{required: isFormCanBeEdit, message: '请输入成本类型'}">
+                    <el-input v-model="row.CostType" v-if="isFormCanBeEdit" style="width: 100%;"
+                              size="mini"></el-input>
+                    <div v-else class="form-item-div">{{ row.CostType }}</div>
+                </el-form-item>
+            </template>
+        </el-table-column>
+        <el-table-column label="单价" header-align="center" width="135" property="UnitPrice">
+            <template v-slot:default="{ row, column, $index }">
+                <el-form-item label-width="0" :prop="'CostBillInfos.' + $index + '.UnitPrice'"
+                              :rules="{required: false, message: '请输入单价'}">
+                    <el-input v-model="row.UnitPrice" v-if="isFormCanBeEdit" style="width: 100%;"
+                              size="mini"></el-input>
+                    <div v-else class="form-item-div">{{ row.UnitPrice }}</div>
+                </el-form-item>
+            </template>
+        </el-table-column>
+        <el-table-column label="人数" header-align="center" width="120" property="NumberOfPeople">
+            <template v-slot:default="{ row, column, $index }">
+                <el-form-item label-width="0" :prop="'CostBillInfos.' + $index + '.NumberOfPeople'"
+                              :rules="{required: false, message: '请输入人数'}">
+                    <el-input v-model="row.NumberOfPeople" v-if="isFormCanBeEdit" style="width: 100%;"
+                              size="mini" type="number"></el-input>
+                    <div v-else class="form-item-div">{{ row.NumberOfPeople }}</div>
+                </el-form-item>
+            </template>
+        </el-table-column>
+        <el-table-column label="工时" header-align="center" width="120" property="WorkingHours">
+            <template v-slot:default="{ row, column, $index }">
+                <el-form-item label-width="0" :prop="'CostBillInfos.' + $index + '.WorkingHours'"
+                              :rules="{required: false, message: '请输入工时'}">
+                    <el-input v-model="row.WorkingHours" v-if="isFormCanBeEdit" style="width: 100%;"
+                              size="mini" type="number"></el-input>
+                    <div v-else class="form-item-div">{{ row.WorkingHours }}</div>
+                </el-form-item>
+            </template>
+        </el-table-column>
+        <el-table-column label="小计(元)" header-align="center" width="135" property="Subtotal">
+            <template v-slot:default="{ row, column, $index }">
+                <el-form-item label-width="0" :prop="'CostBillInfos.' + $index + '.Subtotal'"
+                              :rules="{required: isFormCanBeEdit, message: '请输入小计'}">
+                    <el-input v-model="row.Subtotal" v-if="isFormCanBeEdit" style="width: 100%;"
+                              size="mini" type="number"></el-input>
+                    <div v-else class="form-item-div">{{ row.Subtotal }}</div>
+                </el-form-item>
+            </template>
+        </el-table-column>
+        <el-table-column label="备注" header-align="center" width="250" property="Remarks">
+            <template v-slot:default="{ row, column, $index }">
+                <el-form-item label-width="0" :prop="'CostBillInfos.' + $index + '.Remarks'"
+                              :rules="{required: false, message: '请输入备注'}">
+                    <el-input v-model="row.Remarks" v-if="isFormCanBeEdit" style="width: 100%;"
+                              size="mini"></el-input>
+                    <div v-else class="form-item-div">{{ row.Remarks }}</div>
+                </el-form-item>
+            </template>
+        </el-table-column>
+    </el-table>
+    <el-row el-row :gutter="120">
+        <el-col :xs="24" :sm="12" style="font-weight:700;">
+            <el-form-item label="总成本(元)" prop="TotalCost" :rules="{required: false, message: '请填写总成本'}">
+                <div class="form-item-div" style="font-weight:700;">{{ vmFormContent.TotalCost }}</div>
+            </el-form-item>
+        </el-col>
+        @*<el-col :xs="24" :sm="12">
+                <el-form-item label="总人数" prop="CostTotalNumberOfPeople" :rules="{required: false, message: '请填写总人数'}">
+                    <div class="form-item-div">{{ vmFormContent.CostTotalNumberOfPeople }}</div>
+                </el-form-item>
+            </el-col>*@
+    </el-row>
+    <subtitle subtitle="项目利润" class="line-sub-title"></subtitle>
+    <el-row>
+        <el-col>
+            <el-form-item label="项目毛利" prop="ProjectGrossProfit">
+                <div class="form-item-div">{{ vmFormContent.ProjectGrossProfit }}</div>
+            </el-form-item>
+        </el-col>
+        <el-col>
+            <el-form-item label="项目毛利率" prop="ProjectGrossProfitRate">
+                <div class="form-item-div">{{ vmFormContent.ProjectGrossProfitRate }}</div>
+            </el-form-item>
+        </el-col>
+        <el-col>
+            <el-form-item label="税前利润" prop="ProfitBeforeTax">
+                <div class="form-item-div">{{ vmFormContent.ProfitBeforeTax }}</div>
+            </el-form-item>
+        </el-col>
+        <el-col>
+            <el-form-item label="企业所得税" prop="CorporateIncomeTax">
+                <div class="form-item-div">{{ vmFormContent.CorporateIncomeTax }}</div>
+            </el-form-item>
+        </el-col>
+        <el-col>
+            <el-form-item label="税后利润" prop="ProfitAfterTax">
+                <div class="form-item-div">{{ vmFormContent.ProfitAfterTax }}</div>
+            </el-form-item>
+        </el-col>
+        <el-col>
+            <el-form-item label="税后利润率" prop="ProfitAfterTaxRate">
+                <div class="form-item-div">{{ vmFormContent.ProfitAfterTaxRate }}</div>
+            </el-form-item>
+        </el-col>
+    </el-row>
+</el-form>
+
+@section KStarFormJs{
+    <script src="~/Scripts/NewBusiness/CascaderAreaModel.js"></script>
+    <script type="text/javascript">
+        FormContentModel = {
+            totalActualPaySalaryAmount: null,
+            totalAmount: null
+        };
+        KStarForm.formModelExtend = {
+            data: function () {
+                var onlyCity = ArrcascaderAreaAll;
+                onlyCity.forEach(function (v) {
+                    v.children.forEach(function (v2) {
+                        v2.children = null;
+                    })
+                })
+                return {
+                    ArrcascaderAreaAll: onlyCity,
+                    formContentValidateRules: {
+
+                    },
+                    formContentRules: {
+                   
+                    },
+                    BusinessType: [],
+                    Headhunter: false,
+                    RPO: false,
+                    Fb_checked: false,
+                    Fb_info: {
+
+                    },
+                    TrainBusiness: false,
+                    MoreTips: false,
+                }
+            },
+            methods: {
+                handleAddBillInfo: function (index, column) {
+                    this.vmFormContent.TableBillInfos.push({
+                        "ProjectName": null,
+                        "ClientName":
+                        {
+                            Code: null,
+                            Name: null
+                        },
+                        "IncomeType": null,
+                        "NumberOfPeople": null,
+                        "UnitPrice": null,
+                        "WorkingHours": null,
+                        "Subtotal": null,
+                        "Remarks": null,
+                        "ServiceFee": null,
+                        "Amount": null
+                    });
+                },
+                handleAddCostBillInfo: function (index, column) {
+                    this.vmFormContent.CostBillInfos.push({
+                        "ProjectName": null,
+                        "ClientName":
+                        {
+                            Code: null,
+                            Name: null
+                        },
+                        "CostType": null,
+                        "NumberOfPeople": null,
+                        "UnitPrice": null,
+                        "WorkingHours": null,
+                        "Subtotal": null,
+                        "Remarks": null,
+                        "ServiceFee": null,
+                        "Amount": null
+                    });
+                },
+                handleDeleteBillInfo: function (index, row, column) {
+                    this.vmFormContent.TableBillInfos.splice(index, 1);
+                },
+                handleDeleteCostBillInfo: function (index, row, column) {
+                    if (index < 7) {
+                        alertInfo("默认表项不能删除！");
+                        return;
+                    }
+                    this.vmFormContent.CostBillInfos.splice(index, 1);
+                },
+                handleAccountInfoChange: function (info, b) {
+                    this.vmFormContent.TmpCollectionAccountInfo.Id = info.Id;
+                    this.vmFormContent.TmpCollectionAccountInfo.Name = info.Name;
+                    this.vmFormContent.TmpCollectionAccountInfo.BankOfDeposit = info.BankOfDeposit;
+                    this.vmFormContent.TmpCollectionAccountInfo.Account = info.Account;
+                    //debugger;
+                },
+                searchClientInfo: function (v) {
+                    var that = this;
+
+                    axios.post(getControllerName() + "/SearchClientInfo", {
+                        name: v
+                    }).then(function (r) {
+                        that.vmFormContent.ListClients = r.data;
+                    })
+                },
+                searchAccountInfo: function (v, cb) {
+                    var that = this;
+
+                    axios.post(getControllerName() + "/SearchAccountInfo", {
+                        key: v
+                    }).then(function (r) {
+                        cb(r.data);
+                        //that.vmFormContent.ListCollectionAccountInfo = r.data;
+                    })
+                },
+
+                getSummary: function (param) {
+                    var funcFixed = this.$options.filters["transformToFixed"];
+                    var that = this;
+                    var columns = param.columns;
+                    var data = param.data;
+                    var sums = [];
+                    _.each(columns, function (column, idx) {
+                        //debugger
+                        if (idx == 0) {
+                            sums[0] = '合计';
+                            //return;
+                        } else if (idx > 5 && idx < 12) {
+
+                            var values = _.map(data, function (val) {
+                                var tmp = parseFloat(val[column.property]);
+                                return isNaN(tmp) ? 0 : tmp;
+                            });
+
+                            var colSum = _.reduce(values, function (prev, v) {
+                                return prev + v;
+                            });
+                            sums[idx] = idx > 6 ? funcFixed(colSum) : colSum;
+                            if (column.property == 'ActualPaySalaryAmount')
+                                that.vmFormContent.totalActualPaySalaryAmount = parseFloat(sums[idx]);
+                            else if (column.property == 'Amount')
+                                that.vmFormContent.totalAmount = parseFloat(sums[idx]);
+                        } else {
+                            sums[idx] = '';
+                        }
+                    });
+                    return sums;
+                },
+
+            },
+            computed: {
+                isFormCanBeEdit: function () {
+                    return this.vmFormType == 'Application' || this.vmFormType == 'Draft' || this.vmFormType == 'ReApproval';
+                },
+                isActAccounting: function () {
+                    var curActName = this.vmOperation.ActivityName;
+                    return curActName == '会计审核' && this.vmFormType == 'Approval';
+                }
+            },
+            filters: {
+                transformToFixed: function (value, fixedCount = 2) {
+                    if (!value || isNaN(value) || !isFinite(value)) return '';
+                    var x = parseFloat(value);
+                    return x.toFixed(fixedCount);
+                },
+                captialAmount: function (n) {
+                    if (!/^(0|[1-9]\d*)(\.\d+)?$/.test(n)) {
+                        return ''
+                    }
+                    var unit = "仟佰拾亿仟佰拾万仟佰拾圆角分", str = "";
+                    n += "00";
+                    var p = n.indexOf('.');
+                    if (p >= 0)
+                        n = n.substring(0, p) + n.substr(p + 1, 2);
+
+                    unit = unit.substr(unit.length - n.length);
+
+                    for (var i = 0; i < n.length; i++)
+                        str += '零壹贰叁肆伍陆柒捌玖'.charAt(n.charAt(i)) + unit.charAt(i);
+                    var result = str.replace(/零(仟|佰|拾|角)/g, "零").replace(/(零)+/g, "零").replace(/零(万|亿|圆)/g, "$1").replace(/(亿)万|壹(拾)/g, "$1$2").replace(/^圆零?|零分/g, "").replace(/圆$/g, "圆整");
+                    return result == '分' ? '' : result;
+                }
+            },
+            watch: {
+                'vmFormContent.PayMethod': function (nv, ov) {
+                    if (nv == '云账户') {
+                        this.vmFormContent.AgentCommission = this.vmFormContent.totalActualPaySalaryAmount * 0.071;
+                    } else {
+                        this.vmFormContent.AgentCommission = 0;
+                    }
+
+                    this.vmFormContent.ApplicationAmount = this.vmFormContent.totalAmount + this.vmFormContent.AgentCommission;
+                },
+                'vmFormContent.TableBillInfos': {
+                    handler: function (nv) {
+
+                        _.each(nv, function (v, idx) {
+                            var peopleNumber = isNaN(parseInt(v.PeopleNumber)) ? 0 : parseInt(v.PeopleNumber);
+                            var actualPaySalaryAmount = isNaN(parseFloat(v.ActualPaySalaryAmount)) ? 0 : parseFloat(v.ActualPaySalaryAmount);
+                            var socialInsurance = isNaN(parseFloat(v.SocialInsurance)) ? 0 : parseFloat(v.SocialInsurance);
+                            var housingFund = isNaN(parseFloat(v.HousingFund)) ? 0 : parseFloat(v.HousingFund);
+                            var serviceFee = isNaN(parseFloat(v.ServiceFee)) ? 0 : parseFloat(v.ServiceFee);
+                            v.Amount = actualPaySalaryAmount + socialInsurance + housingFund + serviceFee;
+                        })
+                        calculation();
+                    },
+                    deep: true
+                },
+                'vmFormContent.CostBillInfos': {
+                    handler: function (nv) {
+
+                        _.each(nv, function (v, idx) {
+                            var peopleNumber = isNaN(parseInt(v.PeopleNumber)) ? 0 : parseInt(v.PeopleNumber);
+                            var actualPaySalaryAmount = isNaN(parseFloat(v.ActualPaySalaryAmount)) ? 0 : parseFloat(v.ActualPaySalaryAmount);
+                            var socialInsurance = isNaN(parseFloat(v.SocialInsurance)) ? 0 : parseFloat(v.SocialInsurance);
+                            var housingFund = isNaN(parseFloat(v.HousingFund)) ? 0 : parseFloat(v.HousingFund);
+                            var serviceFee = isNaN(parseFloat(v.ServiceFee)) ? 0 : parseFloat(v.ServiceFee);
+                            v.Amount = actualPaySalaryAmount + socialInsurance + housingFund + serviceFee;
+                        })
+                        calculation();
+                    },
+                    deep: true
+                },
+                'vmFormContent.totalActualPaySalaryAmount': function (nv) {
+                    if (this.vmFormContent.PayMethod == '云账户') {
+                        this.vmFormContent.AgentCommission = nv * 0.071;
+                    } else {
+                        this.vmFormContent.AgentCommission = 0;
+                    }
+
+                    this.vmFormContent.ApplicationAmount = this.vmFormContent.totalAmount + this.vmFormContent.AgentCommission;
+
+                },
+                'vmFormContent.totalAmount': function (nv) {
+                    if (this.vmFormContent.PayMethod == '云账户') {
+                        this.vmFormContent.AgentCommission = this.vmFormContent.totalActualPaySalaryAmount * 0.071;
+                    } else {
+                        this.vmFormContent.AgentCommission = 0;
+                    }
+
+                    this.vmFormContent.ApplicationAmount = nv + this.vmFormContent.AgentCommission;
+                },
+            },
+            mounted: function () {
+                // 将账单信息中的客户信息加载到可选列表中，以支持正确显示
+                //clientsNeedToAdd = [];
+                var currentClientListOptions = this.vmFormContent.ListClients || [];
+                _.each(this.vmFormContent.TableBillInfos, function (bill, idx) {
+                    if (!bill.ClientName)
+                        return false;
+                    var clientCode = bill.ClientName.Code;
+                    var idxFinded = _.findIndex(currentClientListOptions, function (c) {
+                        return c.Code == clientCode;
+                    });
+                    if (idxFinded == -1) {
+                        currentClientListOptions.push(bill.ClientName);
+                    }
+                });
+
+                _.each(this.vmFormContent.CostBillInfos, function (bill, idx) {
+                    if (!bill.ClientName)
+                        return false;
+                    var clientCode = bill.ClientName.Code;
+                    var idxFinded = _.findIndex(currentClientListOptions, function (c) {
+                        return c.Code == clientCode;
+                    });
+                    if (idxFinded == -1) {
+                        currentClientListOptions.push(bill.ClientName);
+                    }
+                });
+            }
+        }
+
+        var SubmitBefore = function () {
+            var canBeSubmit = true;
+            //var lineApplyUnit = KStarForm.vmFormData.vmFormContent.lineApplyUnit;
+            //if (!lineApplyUnit) {
+            //    canBeSubmit = false;
+            //    alertInfo("不能获取申请人的申请单位！不能提交！")
+            //}
+            //var fileCount = KStarForm.vmFormData.vmFormAttachments.length;
+            //if (fileCount < 1) {
+            //    canBeSubmit = false
+            //    alertInfo("必须上传至少一个文件！");
+            //}
+
+            var that = KStarForm.vmFormData;
+            var isFormCanBeEdit = that.vmFormType == 'Application' || that.vmFormType == 'Draft' || that.vmFormType == 'ReApproval';
+            if (isFormCanBeEdit) {
+                var Fb_checked = that.Fb_checked;
+                var Headhunter = that.Headhunter;
+                var RPO = that.RPO;
+                var Fb_info = that.Fb_info;
+                var outsource = "";
+                var TrainBusiness = that.TrainBusiness;
+                if (Fb_checked) {
+                    var Fb_type = ['post', 'business', 'labour', 'agent', 'partTime'];
+                    var Fb_type_value = {
+                        'post': '岗位外包',
+                        'business': '业务外包',
+                        'labour': '劳务派遣',
+                        'agent': '人事代理',
+                        'partTime': '兼职、小时工',
+                    };
+                    var Fb_config = ['city', 'num', 'advancePay', 'advance', 'advancePeriod','percentageType','percentage'];
+                    var Fb_config_value = {
+                        'city': '服务城市',
+                        'num': '需求人数',
+                        'advancePay': '预付款',
+                        'otherCosts': '其他成本',
+                        'advance': '是否垫资',
+                        'advancePeriod': '垫资周期',
+                        'percentageType': '报价类型',
+                        'percentage':'报价',
+                        'emProfit': '测算利润',
+                        'emProfitRate':'测算利润率',
+                    };
+                    var Fb_config_suffix = {
+                        'city': '',
+                        'num': '人',
+                        'advancePay': '元',
+                        'otherCosts': '元/人',
+                        'advance': '',
+                        'advancePeriod': '天',
+                        'emProfit': '元/人/月',
+                        'emProfitRate':'%',
+                    };
+                    for (var i = 0; i < Fb_type.length; i++) {
+                        if (Fb_info[Fb_type[i]]) {
+                            outsource += Fb_type_value[Fb_type[i]] + "：<br/>";
+                            for (var j = 0; j < Fb_config.length; j++) {
+                                var tpath = Fb_type[i] + '_' + Fb_config[j];
+                                if (!Fb_info[tpath] && Fb_info[tpath] !== 0) {
+                                    canBeSubmit = false
+                                    alertInfo(Fb_type_value[Fb_type[i]] + Fb_config_value[Fb_config[j]] + "不能为空！");
+                                    return canBeSubmit;
+                                }
+                                if (Fb_config[j] != 'percentageType' && Fb_config[j] != 'percentage') {
+                                    outsource += Fb_config_value[Fb_config[j]] + "：" + Fb_info[tpath] + Fb_config_suffix[Fb_config[j]] + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+                                } else {
+                                    if (Fb_config[j] == 'percentage') {
+                                        outsource += "报价：" + Fb_info[Fb_type[i] + '_percentageType'] +" "+ Fb_info[Fb_type[i] + '_percentage'] + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+                                    }
+                                }
+                                
+                                if (j == Fb_config.length - 1) {
+                                    outsource += '<br/><br/>';
+                                }
+
+                                if (Fb_config[j] == 'emProfitRate') {
+                                    if (Fb_info[tpath] > 100 || Fb_info[tpath] < 0) {
+                                        canBeSubmit = false
+                                        alertInfo("测算利润率超出范围0~100");
+                                        return canBeSubmit;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (Fb_info.share) {
+                
+                        if (!Fb_info.share_percentageType || !Fb_info.share_percentage) {
+                            canBeSubmit = false
+                            alertInfo("共享经济平台报价不能为空！");
+                            return canBeSubmit;
+                        }
+                        outsource +="共享经济平台：<br/>" + "报价：" + Fb_info.share_percentageType + " " + Fb_info.share_percentage + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+
+                        //if (!Fb_info.share_emProfit && Fb_info.share_emProfit !== 0) {
+                        //    canBeSubmit = false
+                        //    alertInfo("共享经济平台测算利润不能为空！");
+                        //    return canBeSubmit;
+                        //}
+                        //outsource += "测算利润：" + Fb_info.share_emProfit + "元/人/月" + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+
+                        //if (!Fb_info.share_emProfitRate && Fb_info.share_emProfitRate !== 0) {
+                        //    canBeSubmit = false
+                        //    alertInfo("共享经济平台测算利润率不能为空！");
+                        //    return canBeSubmit;
+                        //}
+
+                        //if (Fb_info.share_emProfitRate > 100 || Fb_info.share_emProfitRate < 0){
+                        //    canBeSubmit = false
+                        //    alertInfo("测算利润率超出范围0~100");
+                        //    return canBeSubmit;
+                        //}
+                        //outsource += "测算利润率：" + Fb_info.share_emProfitRate + "%" ;
+
+                    }
+
+                    if (outsource == "") {
+                        canBeSubmit = false
+                        alertInfo("请勾选灵活用工子类！");
+                        return canBeSubmit;
+                    }
+                }
+
+                if (!Headhunter && !RPO && !Fb_checked && !TrainBusiness) {
+                    canBeSubmit = false
+                    alertInfo("请勾选业务类型！");
+                    return canBeSubmit;
+                }
+                
+                var temp = '';
+                //for (var i = 0; i < BusinessType.length; i++) {
+                //    temp += BusinessType[i];
+                //    if (i < BusinessType.length - 1) {
+                //        temp += "、";
+                //    }
+                //}
+
+                if (Headhunter) {
+                    temp += "猎头、";
+                }
+
+                if (RPO) {
+                    temp += "RPO、";
+                }
+
+                if (TrainBusiness) {
+                    temp += "培训业务、";
+                }
+
+                if (temp != '') {
+                    temp = temp.substr(0, temp.length - 1)
+                } 
+
+                that.vmFormContent.BusinessType = temp;
+                if (outsource != '') {
+                    if (temp != '') {
+                        that.vmFormContent.BusinessType += "<br/><br/>" + outsource;
+                    } else {
+                        that.vmFormContent.BusinessType += outsource;
+                    }
+                }
+
+                if (!that.vmFormContent.NewBusLeader) {
+                    canBeSubmit = false
+                    alertInfo("请选择新业务总！");
+                    return canBeSubmit;
+                }
+
+                //收入概算表
+                //成本概算表
+                if (!calculation()) {
+                    canBeSubmit = false;
+                    return canBeSubmit;
+                }
+                var CostTable = that.vmFormContent.CostBillInfos;
+                for (var i = 0; i < CostTable.length; i++) {
+                    if (CostTable[i].CostType == "增值税缴纳") {
+                        if (CostTable[i].UnitPrice != '1%' && CostTable[i].UnitPrice != '3%' && CostTable[i].UnitPrice != '6%') {
+                            canBeSubmit = false;
+                           alertInfo("增值税缴纳单价填写错误，应为1%、3%、6%其中一项。");
+                            return canBeSubmit;
+                        }
+                        
+                    }
+                }
+            }
+            return canBeSubmit;
+        }
+        //发起
+        KStarForm.onSubmitBefore = SubmitBefore;
+        //重新发起
+        KStarForm.onReSubmitBefore = SubmitBefore;
+
+        var formLoadComplete = function(){
+            setTimeout(function () {
+                CostIniti();
+            }, 1000);
+        }
+        KStarForm.formLoadComplete = formLoadComplete;
+        window.onload = function () {
+            document.getElementsByClassName("el-form-item__label")[8].style.color = 'red';
+        }
+
+        function CostIniti() {
+            var that = KStarForm.vmFormData;
+            var isFormCanBeEdit = that.vmFormType == 'Application' || that.vmFormType == 'Draft' || that.vmFormType == 'ReApproval';
+            var obj = that.vmFormContent.CostBillInfos;
+            if (!isFormCanBeEdit || obj.length == 7) {
+                return;
+            }
+            var CostTypes = ['管理成本', '渠道成本', '工资成本', '运营成本', '资金占用', '增值税缴纳', '附加税缴纳'];
+            obj[0].CostType = CostTypes[0];
+            for (var i = 0; i < 6; i++) {
+                document.getElementById("CostButton").click();
+                obj = that.vmFormContent.CostBillInfos;
+                obj[i + 1].CostType = CostTypes[i + 1];
+                if (i == 3) {
+                    obj[i + 1].UnitPrice = "1%";
+                    obj[i + 1].Remarks = "若涉及垫资，月资金占用成本为垫资金额的1% ";
+                }
+                if (i == 4) {
+                    obj[i + 1].UnitPrice = "6%";
+                    obj[i + 1].Remarks = "税率填写6%或3%或1%，金额自动计算";
+                }
+                if (i == 5) {
+                    obj[i + 1].UnitPrice = "12%";
+                    obj[i + 1].Remarks = "附加税固定为增值税的12%，金额自动计算";
+                }
+            }
+        }
+
+        function calculation() {
+            var that = KStarForm.vmFormData;
+            var isFormCanBeEdit = that.vmFormType == 'Application' || that.vmFormType == 'Draft' || that.vmFormType == 'ReApproval';
+            if (!isFormCanBeEdit) {
+                return true;
+            }
+            //收入概算表
+            var IncomeTable = that.vmFormContent.TableBillInfos;
+            var TotalRevenue = 0;
+            var IncomeTotalNumberOfPeople = 0;
+            for (var i = 0; i < IncomeTable.length; i++) {
+                
+                if (parseFloat(IncomeTable[i].NumberOfPeople) < 0) {
+                    alertInfo("收入概算表第" + (i + 1) + "行人数填写错误，该项必须>=0");
+                    return false;
+                }
+
+                if (parseFloat(IncomeTable[i].WorkingHours) < 0) {
+                    alertInfo("收入概算表第" + (i + 1) + "行工时填写错误，该项必须>=0");
+                    return false;
+                }
+
+                if (parseFloat(IncomeTable[i].Subtotal) < 0) {
+                    alertInfo("收入概算表第" + (i + 1) + "行小计填写错误，该项必须>=0");
+                    return false;
+                }
+                
+                TotalRevenue += parseFloat(IncomeTable[i].Subtotal);
+                IncomeTotalNumberOfPeople += parseFloat(IncomeTable[i].NumberOfPeople);
+            }
+            TotalRevenue = numToFixed(TotalRevenue);
+            that.vmFormContent.TotalRevenue = TotalRevenue + " 元";
+            that.vmFormContent.IncomeTotalNumberOfPeople = numToFixed(IncomeTotalNumberOfPeople);
+
+
+            //成本概算表
+            var CostTable = that.vmFormContent.CostBillInfos;
+            var TotalCost = 0;
+            var CostTotalNumberOfPeople = 0;
+            var VatPayment = 0;
+            var ChannelCost = 0;
+            var WageCost = 0;
+            var CostTypes = ['管理成本', '渠道成本', '工资成本', '运营成本', '资金占用', '增值税缴纳', '附加税缴纳'];
+            
+            for (var i = 0; i < CostTable.length; i++) {
+                if (i < 7) {
+                    CostTable[i].CostType = CostTypes[i];
+                }
+                
+                if (parseFloat(CostTable[i].NumberOfPeople) < 0) {
+                    alertInfo("成本概算表第" + (i + 1) + "行人数填写错误，该项必须>=0");
+                    return false;
+                }
+
+                if (parseFloat(CostTable[i].WorkingHours) < 0) {
+                    alertInfo("成本概算表第" + (i + 1) + "行工时填写错误，该项必须>=0");
+                    return false;
+                }
+
+                if (parseFloat(CostTable[i].Subtotal) < 0) {
+                    alertInfo("成本概算表第" + (i + 1) + "行小计填写错误，该项必须>=0");
+                    return false;
+                }
+
+                if (CostTable[i].CostType == "资金占用") {
+                    CostTable[i].UnitPrice = "1%"
+                }
+
+                if (CostTable[i].CostType == "增值税缴纳") {
+                    VatPayment = numToFixed(parseFloat(TotalRevenue * parseFloat(CostTable[i].UnitPrice) / 100));
+                    CostTable[i].Subtotal = VatPayment;
+                }
+
+                if (CostTable[i].CostType == "附加税缴纳") {
+                    CostTable[i].UnitPrice = "12%"
+                    CostTable[i].Subtotal = numToFixed(parseFloat(VatPayment * 0.12));
+                }
+
+                if (CostTable[i].CostType == "渠道成本") {
+                    ChannelCost = CostTable[i].Subtotal;
+                }
+
+                if (CostTable[i].CostType == "工资成本") {
+                    WageCost = CostTable[i].Subtotal;
+                }
+
+                TotalCost += parseFloat(CostTable[i].Subtotal);
+                CostTotalNumberOfPeople += parseFloat(CostTable[i].NumberOfPeople);
+            }
+            TotalCost = numToFixed(TotalCost);
+            that.vmFormContent.TotalCost = TotalCost +" 元";
+            that.vmFormContent.CostTotalNumberOfPeople = numToFixed(CostTotalNumberOfPeople);
+            that.vmFormContent.ProjectGrossProfit = numToFixed(TotalRevenue - ChannelCost - WageCost);
+            that.vmFormContent.ProjectGrossProfitRate = numToFixed(that.vmFormContent.ProjectGrossProfit / TotalRevenue * 100) + "%";
+            that.vmFormContent.ProfitBeforeTax = numToFixed(TotalRevenue - TotalCost);
+            that.vmFormContent.CorporateIncomeTax = numToFixed(that.vmFormContent.ProfitBeforeTax * 0.15);
+            that.vmFormContent.ProfitAfterTax = numToFixed(that.vmFormContent.ProfitBeforeTax - that.vmFormContent.CorporateIncomeTax);
+            that.vmFormContent.ProfitAfterTaxRate = numToFixed(that.vmFormContent.ProfitAfterTax / TotalRevenue * 100) + "%";
+
+            //加上单位 公式
+            that.vmFormContent.ProjectGrossProfit += " 元（总收入-渠道成本-工资成本）";
+            that.vmFormContent.ProjectGrossProfitRate += "（项目毛利/总收入）";
+            that.vmFormContent.ProfitBeforeTax += " 元（总收入-总成本）";
+            that.vmFormContent.CorporateIncomeTax += " 元（税前利润*15%）";
+            that.vmFormContent.ProfitAfterTax += " 元（税前利润-企业所得税）";
+            that.vmFormContent.ProfitAfterTaxRate += "（税后利润/总收入）";
+
+            return true;
+
+        }
+
+        function numToFixed(num) {
+            if (isNaN(num)) {
+                return 0;
+            }
+            num = num * 100;
+            num = Math.round(num) / 100;
+            num = num - 0;
+            return num;
+        }
+    </script>
+}
+

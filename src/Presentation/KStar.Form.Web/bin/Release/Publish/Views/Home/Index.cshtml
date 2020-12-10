@@ -1,0 +1,421 @@
+﻿@{
+    ViewBag.Title = "KStar 流程中心";
+    Layout = "~/Views/Shared/PortalLayout.cshtml";
+}
+
+<el-row id="header-nav">
+    <!-- 顶部菜单 -->
+    <el-row class="header">
+        <el-col :span="10" class="text-align-left ">
+            <el-row><i class="el-icon-s-fold" v-on:click="isCollapse = !isCollapse"></i></el-row>
+            <el-row class="logo"></el-row>
+            <!-- <el-row class="logo-tip">
+                <el-col>K2流程审批平台</el-col>
+                <el-col>K2 EXAMINATION AND APPROVAL</el-col>
+            </el-row> -->
+        </el-col>
+        <el-col :span="14" class="text-align-right">
+            <!-- <el-row><a plain v-on:click="changeLangEventPortal">语言</a></el-row>  -->
+            <el-row class="langBtn">
+                <el-button :type="$i18n.locale == 'zh-CN' ? 'primary' : ''" size="mini" plain v-on:click="changeLangEventPortal('cn')" v-text="$t('Portal.Chinese')"></el-button>
+                <el-button :type="$i18n.locale == 'en-US' ? 'primary' : ''" size="mini" plain v-on:click="changeLangEventPortal('en')" v-text="$t('Portal.English')"></el-button>
+            </el-row>
+            @*<el-row><i class="ic-tip bgy"></i> <a href="/Content/操作说明手册V1.0.docx" v-text="$t('Portal.OperationManual')"></a></el-row>*@
+            <el-row>
+                <span class="el-dropdown-link">
+                    <i class="ic-user bgy"></i>
+                    <span v-text="currentUser.UserDisplayName"></span>
+                </span>
+            </el-row>
+            <el-row v-if="currentUser.Enviroment!='Production'" v-on:click.native="getSignOut" v-text="$t('Portal.Logout')"><i class="ic-out bgy"></i></el-row>
+
+        </el-col>
+    </el-row>
+    <!-- 左侧菜单 -->
+    <el-row class="navMenu" :class="isCollapse ? 'active' : ''">
+        <el-menu :default-active="defaultActive" :active="defaultActive" class="el-menu-vertical-demo" v-on:select="changeNavMenu" :collapse="isCollapse">
+            <el-row v-for="(item, index) in navMenu" :key="index">
+                 <el-submenu :index="item.Hyperlink" v-if="item.children.length">
+                    <template slot="title">
+                        <i :class="item.IconKey ? 'ic-' + item.IconKey : '' " class="bgy"></i>
+                        <span slot="title" v-text="item.DisplayName"></span>
+                    </template>
+                    <el-menu-item v-for="(n, m) in item.children" :key="m" :index="n.Hyperlink" v-text="n.DisplayName"></el-menu-item>
+                </el-submenu> 
+                <el-menu-item :index="item.Hyperlink" v-else>
+                    <i :class="item.IconKey ? 'ic-' + item.IconKey : '' " class="bgy"></i>
+                    <span slot="title">
+                        <span v-text="$t(item.Id)"></span>
+                        <i class="BusinessProcessTask" v-if="item.Hyperlink == '/Portal/Home/BusinessProcessTask' && BusinessProcess > 0 " v-text="BusinessProcess > 99 ? '99+' : BusinessProcess"></i>
+                        <i class="BusinessProcessTask" v-if="item.Hyperlink == '/Portal/Home/MyCCTasks' && TODOReadCount > 0 " v-text="TODOReadCount > 99 ? '99+' : TODOReadCount"></i>
+                    </span>
+                </el-menu-item>
+            </el-row>
+        </el-menu>
+    </el-row>
+    <!-- tab标签 -->
+    <el-row class="tab">
+        <el-col v-for="(item, index) in tabList" :key="index" :class="defaultActive == item.Hyperlink ? 'active' : '' " v-on:click.native="changeTab(item.Hyperlink)"v-text="$t(item.Id)">
+            <i v-if="item.Hyperlink !== '/Portal/Home/StartProcess'" class="el-icon-close" v-on:click.stop="deleteTabList(item, index)"></i>
+        </el-col>
+    </el-row>
+    <el-dialog :visible.sync="dialogVisible" :title="$t('Portal.HomeHeaderChangeLogUserDivTitle')" class="my-dialog-style" width="800px" style="text-align:left" v-if="dialogVisible">
+        <el-form :model="dialogForm" label-width="120px" size="mini" onsubmit="return false;" ref="dialogform">
+            <el-form-item :label="$t('Portal.HomeHeaderChangeLogUserDivLable')">
+                <el-input v-model="dialogForm.username" v-on:keyup.enter.native="handleMutliApprove(true)"></el-input>
+            </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+            <el-button v-on:click="handleMutliApprove(false)" class="cancle" plain v-text="$t('Portal.BusinessProcessCancel')"></el-button>
+            <el-button type="primary" class="submit" v-on:click="handleMutliApprove(true)" :disabled="dialogForm.username && dialogForm.username.trim().length > 0 ? false : true" :loading="btnLoading" plain v-text="$t('Portal.BusinessProcessConfirm')"></el-button>
+        </div>
+    </el-dialog>
+</el-row>
+<div id="main-content"></div>
+<!--axios IE兼容性问题 -->
+<script src="~/Scripts/IE-promise.js"></script>
+
+<script src="~/Scripts/vue/vue-i18n.js"></script><!-- vue多语言 -->
+<script src="~/Scripts/vue/2.6.10/vue.js"></script>
+<script src="~/Scripts/element/2.13.1/index.js"></script>
+<script src="~/Scripts/moment.min.js"></script>
+<script src="~/Scripts/lodash/lodash.min.js"></script>
+<!-- element多语言 -->
+<script src="~/Scripts/element/2.13.1/umd/locale/en.js"></script>
+<script src="~/Scripts/element/2.13.1/umd/locale/zh-CN.js"></script>
+
+
+
+<script src="~/Scripts/axios/0.19.0/axios.js"></script>
+<!-- Portal多语言 -->
+<script src="~/Scripts/portal/lang/Portal.js"></script>
+<!-- Portal配置 -->
+<script src="~/Scripts/portal/config.js"></script>
+<script src="~/Scripts/portal/api.js"></script>
+<script src="~/Scripts/portal/util.js"></script>
+<script src="~/Scripts/jquery-3.4.1.js"></script>
+<script src="~/Scripts/moment-with-locales.min.js"></script>
+@*选人控件*@
+<script src="~/Scripts/form/components/UserPick.js"></script>
+<script>
+    //全局变量
+    window.IsEnabledLog = true;
+    function portalLog(title, url) {
+        var logUrl = window.location.origin + "/Platform/SimpleForm/PortalLog";
+        if (window.IsEnabledLog) {
+            axios.post(logUrl, { actionName: title, url: window.location.origin + url })
+                .then(function (response) {
+                    //console.log(response);
+                })
+                .catch(function (error) {
+                    //console.log(error);
+                });
+        }
+    }
+
+    function getKStarWorklistAllCount(that) {
+        GetKStarWorklistAllCount().then(function (res) {
+            that.BusinessProcess = res.data.data.BusinessProcess
+            that.TODOReadCount = res.data.data.TODOReadCount
+        });
+    }
+    function getKStarWorklistTaskCount(that) {
+        GetKStarWorklistTaskCount().then(function (res) {
+            that.BusinessProcess = res.data.data.BusinessProcess
+        });
+    }
+
+    function getCCPendingReadTotalCount(that) {
+        GetCCPendingReadTotalCount().then(function (res) {
+            that.TODOReadCount = res.data.data.TODOReadCount
+        });
+    }
+
+    function addTemplate(url, that) {
+
+        // 此段代码是为了删除弹框
+        // var elements = document.getElementsByClassName('el-popover');
+        // while (elements.length > 0) {
+        //     elements[0].parentNode.removeChild(elements[0]);
+        // }
+
+        var loading = that.$loading({
+            lock: true,
+            text: 'Loading',
+            spinner: 'el-icon-loading',
+            background: 'rgba(0, 0, 0, 0.7)'
+        });
+        sessionStorage.setItem('navUrl', url)
+        $("#main-content").load(url, function (response, status) {
+            // if (status == "success") {
+            loading.close()
+            //  }
+        })
+        portalLog(name, url);
+    }
+
+    function refresh() {
+        window.location.reload();
+    }
+
+    window.popVisible = false;
+
+
+    var i18n = new VueI18n({
+        locale: 'zh-CN',
+        messages: PortalLang,
+    })
+
+    window.VM = new Vue({
+        el: '#header-nav',
+        i18n: i18n,
+        data: function () {
+            return {
+                isCollapse: false,
+                defaultActive: '',
+                navMenu: [], // 菜单数据
+                currentUser: {}, // 当前用户信息
+                dialogVisible: false,
+                dialogForm: {
+                    username: ''
+                },
+                btnLoading: false,
+                BusinessProcess: 0,
+                TODOReadCount: 0,
+                lang: ''
+            }
+        },
+        computed: {
+            tabList: {
+                get: function () {
+                    var tabList = [];
+                    if (this.navMenu) {
+                        this.navMenu.map(function (item) {
+                            if (item.Hyperlink == "/Portal/Home/StartProcess") {
+                                tabList.push(item);
+                                return
+                            }
+                        });
+                    }
+                    return tabList;
+                }
+            }
+        },
+        mounted: function () {
+            this.defaultActive = sessionStorage.getItem('navUrl') && sessionStorage.getItem('navUrl').indexOf('/Portal') > -1 && sessionStorage.getItem('navUrl') != '/Portal/Home/HomeIndex' ? sessionStorage.getItem('navUrl') : '/Portal/Home/BusinessProcessTask'
+            this.getKStarMenu()
+            this.getCurrentUser()
+            window.that = this;
+
+        },
+        watch: {
+            isCollapse: function (val) {
+                if (val) {
+                    document.getElementById('main-content').className = 'active'
+                } else {
+                    document.getElementById('main-content').className = ''
+                }
+            }
+        },
+        methods: {
+            // 获取菜单数据
+            getKStarMenu: function () {
+                var that = this
+                GetKStarMenu().then(function (res) {
+                    var zh = {};//中文
+                    var en = {};//英文
+                    res.data.data.map(function (item, index) {
+                        if (!item.Parent_Id) {
+                            item.children = []
+                            that.navMenu.push(item)
+                            zh[item.Id] = item.DisplayName;
+                            en[item.Id] = item.EnDisplayName;
+                        }
+                    })
+                    res.data.data.map(function (item, index) {
+                        if (item.Parent_Id) {
+                            for (var i = 0; i < that.navMenu.length; i++) {
+                                if (that.navMenu[i].Id == item.Parent_Id) {
+                                    that.navMenu[i].children.push(item)
+                                    zh[item.Id] = item.DisplayName;
+                                    en[item.Id] = item.EnDisplayName;
+                                }
+                            }
+                        }
+                    })
+                    //res.data.data.map(function (item, index) {
+                    //    if (item.Parent_Id) {
+                    //        for (var i = 0; i < that.navMenu.length; i++) {
+                    //            if (that.navMenu[i].Id == item.Parent_Id) {
+                    //                that.navMenu[i].children.push(item)
+                    //                zh[item.Id] = item.DisplayName;
+                    //                en[item.Id] = item.EnDisplayName;
+                    //            }
+                    //        }
+                    //    } else {
+                    //        item.children = []
+                    //        that.navMenu.push(item)
+                    //        zh[item.Id] = item.DisplayName;
+                    //        en[item.Id] = item.EnDisplayName;
+                    //    }
+                    //})
+                    that.$i18n.mergeLocaleMessage("en-US", en);//添加英文语言数据
+                    that.$i18n.mergeLocaleMessage("zh-CN", zh);//添加中文语言数据
+                    that.changeNavMenu(that.defaultActive)
+                    that.$nextTick(function () {
+                        getKStarWorklistAllCount(that)
+                    })
+                })
+            },
+            // 注销
+            getSignOut: function () {
+                GetSignOut().then(function (res) {
+                    if (res.data.LogoutOAuthUrl) {
+                        window.location.href = res.data.LogoutOAuthUrl;
+                    } else {
+                        window.location.reload();
+                    }
+                    sessionStorage.removeItem('navUrl')
+                    sessionStorage.removeItem('name')
+                })
+            },
+            // 获取用户信息
+            getCurrentUser: function () {
+                var that = this
+                GetCurrentUser().then(function (res) {
+                    sessionStorage.setItem('userName', res.data.data.UserDisplayName);
+                    sessionStorage.setItem('userAccount', res.data.data.UserAccount);
+                    sessionStorage.setItem('userEmail', res.data.data.Email);
+                    that.currentUser = res.data.data
+
+                    //多语言初始化处理
+                    var curLanguage = that.currentUser.CurrentLang;
+
+                    if (curLanguage == null || curLanguage == 'undefined') curLanguage = 'zh-CN';
+                    if (curLanguage == "cn") curLanguage = "zh-CN";
+                    if (curLanguage == "en") curLanguage = "en-US";
+
+                    this.lang = curLanguage;
+                    i18n.locale = this.lang;
+                    //UI设置、表单同步处理
+                    if (curLanguage == "zh-CN") {
+                        ELEMENT.locale(ELEMENT.lang.zhCN);
+                        localStorage.Lang = "cn";
+                    } else {
+                        ELEMENT.locale(ELEMENT.lang.en);
+                        localStorage.Lang = "en";
+                    }
+                })
+            },
+            // 改变菜单
+            changeNavMenu: function (url) {
+                if (url.indexOf("http:") > -1 || url.indexOf("https:") > -1) {
+                    window.open(url, "_blank");
+                    return;
+                }
+                var menu = this.navMenu
+                var that = this
+                var l = that.tabList.filter(function (n) {
+                    return n.Hyperlink == url
+                })
+                if (l.length == 0) {
+                    for (var i = 0; i < menu.length; i++) {
+                        if (menu[i].Hyperlink == url) {
+                            if (that.tabList.length > 1) {
+                                that.tabList.splice(1, 1, { DisplayName: menu[i].DisplayName, Hyperlink: menu[i].Hyperlink, Id: menu[i].Id })
+                            } else {
+                                that.tabList.push({ DisplayName: menu[i].DisplayName, Hyperlink: menu[i].Hyperlink, Id: menu[i].Id })
+                            }
+                        } else if (menu[i].children.length > 0) {
+                            menu[i].children.map(function (item) {
+                                if (item.Hyperlink == url) {
+                                    if (that.tabList.length > 1) {
+                                        that.tabList.splice(1, 1, { DisplayName: item.DisplayName, Hyperlink: item.Hyperlink, Id: menu[i].Id })
+                                    } else {
+                                        that.tabList.push({ DisplayName: item.DisplayName, Hyperlink: item.Hyperlink, Id: menu[i].Id })
+                                    }
+                                }
+                            })
+                        }
+                    }
+                } else if (url == '/Portal/Home/StartProcess' && that.tabList.length > 1) {
+                    that.tabList.splice(1, 1)
+                }
+                this.defaultActive = url
+                addTemplate(url, this)
+            },
+            // 删除tab标签
+            deleteTabList: function (val, index) {
+                this.tabList.splice(index, 1)
+                var url = this.tabList[this.tabList.length - 1].Hyperlink
+                this.defaultActive = url
+                addTemplate(url, this)
+            },
+            // 切换tab标签页
+            changeTab: function (url) {
+                this.defaultActive = url
+                addTemplate(url, this)
+            },
+            // 切换身份
+            handleMutliApprove: function (val) {
+                if (val) {
+                    var that = this
+                    this.btnLoading = true
+                    SwitchLogin({
+                        username: that.dialogForm.username,
+                        returnUrl: location.href
+                    }).then(function (res) {
+                        that.btnLoading = false;
+                        window.location.reload();
+                    }).catch(function (err) {
+                        that.btnLoading = false;
+                        that.$message.error(err.message)
+                    })
+                } else {
+                    this.dialogForm.username = ''
+                    this.dialogVisible = false
+                    this.btnLoading = false
+                }
+            },
+            //切换语言
+            changeLangEventPortal: function (val) {
+                //this.getKStarMenu();
+                //设置cn en 同步给表单使用 表单
+                localStorage.Lang = val;
+
+                if (val == "en") {
+                    this.lang = "en-US";
+                    //UI设置
+                    ELEMENT.locale(ELEMENT.lang.en);
+
+                    //portal设置
+                    this.$i18n.locale = this.lang;
+
+                    //表单同步
+                    //KStarForm.VM.vmUserLanguages = val;
+                }
+                else {
+                    this.lang = 'zh-CN';
+                    //UI设置
+                    ELEMENT.locale(ELEMENT.lang.zhCN);
+
+                    //portal设置
+                    this.$i18n.locale = this.lang;
+
+                    //表单同步
+                    //KStarForm.VM.vmUserLanguages = val;
+                }
+
+                //同步用户语言属性
+                this.currentUser.CurrentLang = this.lang;
+                //语言切换是也需要设置后端中英文
+                $.post("/Token/SetCulture", { culture: this.lang }, function (response) {
+                    if (response.status == 200 && response.data) {
+                    }
+                });
+            }
+        }
+    })
+
+</script>
+

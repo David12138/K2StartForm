@@ -1,0 +1,350 @@
+﻿
+@{
+    ViewBag.Title = "盖章申请";
+    Layout = "~/Views/Shared/_KStarFormLayout.cshtml";
+}
+
+@section HeadStyle{
+    <style>
+        .helper-inline-block {
+            display: inline-block;
+        }
+
+        .cell .el-form-item__error.el-form-item__error--inline {
+            position: inherit !important;
+            bottom: unset !important;
+        }
+
+        .BusinessType label {
+            margin-right: 15px;
+            font-size: 15px;
+        }
+    </style>
+}
+<el-form :model="vmFormContent" :rules="formContentValidateRules" ref="refFormContent" label-width="120px" inline-message size="mini"
+         label-position="rigth">
+    <el-row>
+        <el-col>
+            <el-form-item label="材料类别" prop="MaterialCategory" :rules="{required: true, message: '请选择类型'}">
+                <el-select v-if="isFormCanBeEdit"
+                           placeholder="请选择"
+                           v-model="vmFormContent.MaterialCategory">
+                    <el-option value="A、付款通知书、背调报告、合同补充协议(条款恶化的请重新走合同评审流程)、交付验收材料等">A、付款通知书、背调报告、合同补充协议(条款恶化的请重新走合同评审流程)、交付验收材料等</el-option>
+                    <el-option value="B、公司信息变更、公司信息证明等需财务审核的材料">B、公司信息变更、公司信息证明等需财务审核的材料</el-option>
+                    <el-option value="C、催收函等需法务审核的材料">C、催收函等需法务审核的材料</el-option>
+                    <el-option value="D、其他(审核：业务两级+财务+法务+专员)">D、其他(审核：业务两级+财务+法务+专员)</el-option>
+                </el-select>
+                <div v-else class="form-item-div">{{ vmFormContent.MaterialCategory }}</div>
+            </el-form-item>
+        </el-col>
+    </el-row>
+    <el-row>
+        <el-col>
+            <el-form-item label="用途说明" prop="UsageDescription" :rules="{required: true, message: '请填写用途说明'}">
+                <el-input v-if="isFormCanBeEdit" type="text" placeholder="请填写用途说明" v-model="vmFormContent.UsageDescription"></el-input>
+                <div v-else class="form-item-div">{{ vmFormContent.UsageDescription }}</div>
+            </el-form-item>
+        </el-col>
+    </el-row>
+    <el-row>
+        <el-col>
+            <el-form-item label="印章信息" prop="SealInformation" :rules="{required: true, message: '请填写印章信息，例如 总部公章， xx分公司xx章'}">
+                <el-input v-if="isFormCanBeEdit" type="text" placeholder="请填写印章信息，例如 总部公章， xx分公司xx章" v-model="vmFormContent.SealInformation"></el-input>
+                <div v-else class="form-item-div">{{ vmFormContent.SealInformation }}</div>
+            </el-form-item>
+        </el-col>
+    </el-row>
+    <el-row>
+        <el-col>
+            <el-form-item label="领取方式" prop="ClaimMethod" :rules="{required: false, message: '请选择领取方式'}">
+                <div v-if="isFormCanBeEdit" class="BusinessType">
+                    <input type="checkbox" id="扫描件" value="扫描件" v-model="ScanningCopy">
+                    <label for="扫描件">扫描件</label>
+                    <div v-if="isFormCanBeEdit && ScanningCopy" style="color:red;">如领取扫描件，请申请人在收到流程结束的邮件通知时，登录K2系统自行下载</div>
+                    <input type="checkbox" v-if="!Original" id="原件快递" value="原件快递" v-model="OriginalExpress">
+                    <label for="原件快递" v-if="!Original">原件快递</label>
+                    <el-input v-if="isFormCanBeEdit && OriginalExpress" type="text" placeholder="请输入收件人地址" v-model="adress"></el-input>
+                    <input type="checkbox" v-if="!OriginalExpress" id="原件自取" value="原件自取" v-model="Original">
+                    <label for="原件自取" v-if="!OriginalExpress">原件自取</label>
+                </div>
+                <div v-else class="form-item-div" v-html="vmFormContent.ClaimMethod"></div>
+                <div style="color:red;">备注：如需董事长签字，请自行联系董事长签字</div>
+            </el-form-item>
+        </el-col>
+    </el-row>
+</el-form>
+
+@section KStarFormJs{
+    <script src="~/Scripts/NewBusiness/CascaderAreaModel.js"></script>
+    <script type="text/javascript">
+        FormContentModel = {
+            totalActualPaySalaryAmount: null,
+            totalAmount: null
+        };
+        KStarForm.formModelExtend = {
+            data: function () {
+                var onlyCity = ArrcascaderAreaAll;
+                onlyCity.forEach(function (v) {
+                    v.children.forEach(function (v2) {
+                        v2.children = null;
+                    })
+                })
+                return {
+                    ArrcascaderAreaAll: onlyCity,
+                    formContentValidateRules: {
+
+                    },
+                    formContentRules: {
+
+                    },
+                    'ScanningCopy': false,
+                    'OriginalExpress': false,
+                    'Original': false,
+                    'email': '',
+                    'adress': '',
+
+                }
+            },
+            methods: {
+                handleAddBillInfo: function (index, column) {
+                    this.vmFormContent.TableBillInfos.push({
+                        "ProjectName": null,
+                        "ClientName":
+                        {
+                            Code: null,
+                            Name: null
+                        },
+                        "BusinessType": null,
+                        "CostPeriod": null,
+                        "PeopleNumber": null,
+                        "ActualPaySalaryAmount": null,
+                        "SocialInsurance": null,
+                        "HousingFund": null,
+                        "ServiceFee": null,
+                        "Amount": null
+                    });
+                },
+                handleDeleteBillInfo: function (index, row, column) {
+                    this.vmFormContent.TableBillInfos.splice(index, 1);
+                },
+
+                handleAccountInfoChange: function (info, b) {
+                    this.vmFormContent.TmpCollectionAccountInfo.Id = info.Id;
+                    this.vmFormContent.TmpCollectionAccountInfo.Name = info.Name;
+                    this.vmFormContent.TmpCollectionAccountInfo.BankOfDeposit = info.BankOfDeposit;
+                    this.vmFormContent.TmpCollectionAccountInfo.Account = info.Account;
+                    //debugger;
+                },
+                searchClientInfo: function (v) {
+                    var that = this;
+
+                    axios.post(getControllerName() + "/SearchClientInfo", {
+                        name: v
+                    }).then(function (r) {
+                        that.vmFormContent.ListClients = r.data;
+                    })
+                },
+                searchAccountInfo: function (v, cb) {
+                    var that = this;
+
+                    axios.post(getControllerName() + "/SearchAccountInfo", {
+                        key: v
+                    }).then(function (r) {
+                        cb(r.data);
+                        //that.vmFormContent.ListCollectionAccountInfo = r.data;
+                    })
+                },
+
+                getSummary: function (param) {
+                    var funcFixed = this.$options.filters["transformToFixed"];
+                    var that = this;
+                    var columns = param.columns;
+                    var data = param.data;
+                    var sums = [];
+                    _.each(columns, function (column, idx) {
+                        //debugger
+                        if (idx == 0) {
+                            sums[0] = '合计';
+                            //return;
+                        } else if (idx > 5 && idx < 12) {
+
+                            var values = _.map(data, function (val) {
+                                var tmp = parseFloat(val[column.property]);
+                                return isNaN(tmp) ? 0 : tmp;
+                            });
+
+                            var colSum = _.reduce(values, function (prev, v) {
+                                return prev + v;
+                            });
+                            sums[idx] = idx > 6 ? funcFixed(colSum) : colSum;
+                            if (column.property == 'ActualPaySalaryAmount')
+                                that.vmFormContent.totalActualPaySalaryAmount = parseFloat(sums[idx]);
+                            else if (column.property == 'Amount')
+                                that.vmFormContent.totalAmount = parseFloat(sums[idx]);
+                        } else {
+                            sums[idx] = '';
+                        }
+                    });
+                    return sums;
+                },
+
+            },
+            computed: {
+                isFormCanBeEdit: function () {
+                    return this.vmFormType == 'Application' || this.vmFormType == 'Draft' || this.vmFormType == 'ReApproval';
+                },
+                isActAccounting: function () {
+                    var curActName = this.vmOperation.ActivityName;
+                    return curActName == '会计审核' && this.vmFormType == 'Approval';
+                }
+            },
+            filters: {
+                transformToFixed: function (value, fixedCount = 2) {
+                    if (!value || isNaN(value) || !isFinite(value)) return '';
+                    var x = parseFloat(value);
+                    return x.toFixed(fixedCount);
+                },
+                captialAmount: function (n) {
+                    if (!/^(0|[1-9]\d*)(\.\d+)?$/.test(n)) {
+                        return ''
+                    }
+                    var unit = "仟佰拾亿仟佰拾万仟佰拾圆角分", str = "";
+                    n += "00";
+                    var p = n.indexOf('.');
+                    if (p >= 0)
+                        n = n.substring(0, p) + n.substr(p + 1, 2);
+
+                    unit = unit.substr(unit.length - n.length);
+
+                    for (var i = 0; i < n.length; i++)
+                        str += '零壹贰叁肆伍陆柒捌玖'.charAt(n.charAt(i)) + unit.charAt(i);
+                    var result = str.replace(/零(仟|佰|拾|角)/g, "零").replace(/(零)+/g, "零").replace(/零(万|亿|圆)/g, "$1").replace(/(亿)万|壹(拾)/g, "$1$2").replace(/^圆零?|零分/g, "").replace(/圆$/g, "圆整");
+                    return result == '分' ? '' : result;
+                }
+            },
+            watch: {
+                'vmFormContent.PayMethod': function (nv, ov) {
+                    if (nv == '云账户') {
+                        this.vmFormContent.AgentCommission = this.vmFormContent.totalActualPaySalaryAmount * 0.071;
+                    } else {
+                        this.vmFormContent.AgentCommission = 0;
+                    }
+
+                    this.vmFormContent.ApplicationAmount = this.vmFormContent.totalAmount + this.vmFormContent.AgentCommission;
+                },
+                'vmFormContent.TableBillInfos': {
+                    handler: function (nv) {
+
+                        _.each(nv, function (v, idx) {
+                            var peopleNumber = isNaN(parseInt(v.PeopleNumber)) ? 0 : parseInt(v.PeopleNumber);
+                            var actualPaySalaryAmount = isNaN(parseFloat(v.ActualPaySalaryAmount)) ? 0 : parseFloat(v.ActualPaySalaryAmount);
+                            var socialInsurance = isNaN(parseFloat(v.SocialInsurance)) ? 0 : parseFloat(v.SocialInsurance);
+                            var housingFund = isNaN(parseFloat(v.HousingFund)) ? 0 : parseFloat(v.HousingFund);
+                            var serviceFee = isNaN(parseFloat(v.ServiceFee)) ? 0 : parseFloat(v.ServiceFee);
+                            v.Amount = actualPaySalaryAmount + socialInsurance + housingFund + serviceFee;
+                        })
+                    },
+                    deep: true
+                },
+                'vmFormContent.totalActualPaySalaryAmount': function (nv) {
+                    if (this.vmFormContent.PayMethod == '云账户') {
+                        this.vmFormContent.AgentCommission = nv * 0.071;
+                    } else {
+                        this.vmFormContent.AgentCommission = 0;
+                    }
+
+                    this.vmFormContent.ApplicationAmount = this.vmFormContent.totalAmount + this.vmFormContent.AgentCommission;
+
+                },
+                'vmFormContent.totalAmount': function (nv) {
+                    if (this.vmFormContent.PayMethod == '云账户') {
+                        this.vmFormContent.AgentCommission = this.vmFormContent.totalActualPaySalaryAmount * 0.071;
+                    } else {
+                        this.vmFormContent.AgentCommission = 0;
+                    }
+
+                    this.vmFormContent.ApplicationAmount = nv + this.vmFormContent.AgentCommission;
+                },
+            },
+            mounted: function () {
+                // 将账单信息中的客户信息加载到可选列表中，以支持正确显示
+                //clientsNeedToAdd = [];
+                var currentClientListOptions = this.vmFormContent.ListClients || [];
+                _.each(this.vmFormContent.TableBillInfos, function (bill, idx) {
+                    if (!bill.ClientName)
+                        return false;
+                    var clientCode = bill.ClientName.Code;
+                    var idxFinded = _.findIndex(currentClientListOptions, function (c) {
+                        return c.Code == clientCode;
+                    });
+                    if (idxFinded == -1) {
+                        currentClientListOptions.push(bill.ClientName);
+                    }
+                });
+            }
+        }
+
+        var SubmitBefore = function () {
+            var canBeSubmit = true;
+            //var lineApplyUnit = KStarForm.vmFormData.vmFormContent.lineApplyUnit;
+            //if (!lineApplyUnit) {
+            //    canBeSubmit = false;
+            //    alertInfo("不能获取申请人的申请单位！不能提交！")
+            //}
+            //var fileCount = KStarForm.vmFormData.vmFormAttachments.length;
+            //if (fileCount < 1) {
+            //    canBeSubmit = false
+            //    alertInfo("必须上传至少一个文件！");
+            //}
+
+            var that = KStarForm.vmFormData;
+            var isFormCanBeEdit = that.vmFormType == 'Application' || that.vmFormType == 'Draft' || that.vmFormType == 'ReApproval';
+            if (!isFormCanBeEdit) {
+                return canBeSubmit;
+            }
+
+            var ScanningCopy = that.ScanningCopy;
+            var OriginalExpress = that.OriginalExpress;
+            var Original = that.Original;
+            //var email = that.email;
+            var adress = that.adress;
+            var ClaimMethod = '';
+            if (ScanningCopy) {
+                @*if (email == '') {
+                    alertInfo("请填写email");
+                    canBeSubmit = false;
+                    return canBeSubmit;
+                }*@
+
+                //ClaimMethod = '扫描件，email：' + email;
+                ClaimMethod = '扫描件。<br/>';
+            }
+
+            if (OriginalExpress) {
+                if (adress == '') {
+                    alertInfo("请填写收货人地址。");
+                    canBeSubmit = false;
+                    return canBeSubmit;
+                }
+                if (ClaimMethod != '') {
+                    ClaimMethod += '<br/>';
+                }
+                ClaimMethod += '原件快递，收货地址：' + adress;
+            }
+
+            if (Original) {
+                if (ClaimMethod != '') {
+                    ClaimMethod += '<br/>';
+                }
+                ClaimMethod += '原件自取。';
+            }
+            that.vmFormContent.ClaimMethod = ClaimMethod;
+            return canBeSubmit;
+        }
+        //发起
+        KStarForm.onSubmitBefore = SubmitBefore;
+        //重新发起
+        KStarForm.onReSubmitBefore = SubmitBefore;
+    </script>
+}
+

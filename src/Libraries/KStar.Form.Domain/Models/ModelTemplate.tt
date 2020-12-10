@@ -1,0 +1,29 @@
+﻿<#@ template debug="false" hostspecific="true" language="C#" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ assembly name="System.Core" #>
+<#@ assembly name="System.Xml" #>
+<#@ assembly name="System.Xml.Linq" #>
+<#@ assembly name="System.Data" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="SqlSugar" #>
+<#@ import namespace="System.IO" #>
+<#@ import namespace="System.Web" #>
+<#@ assembly name="$(SolutionDir)packages\sqlSugar.4.9.9.10\lib\SqlSugar.dll" #>
+
+<#
+      
+    //CTRL+S将会执行该文件的代码，自动作生实体
+    //当前项目目录
+    string projectDir = Host.ResolveAssemblyReference("$(ProjectDir)");
+ 
+    //解决方案目录
+    string solutionDir = Host.ResolveAssemblyReference("$(SolutionDir)");
+ 
+  
+    using (var db = new SqlSugarClient(new ConnectionConfig(){ ConnectionString = "Data Source=113.106.164.75,21433;Initial Catalog=KStar;uid=sa;pwd=K2pass!123;Pooling=True",DbType = DbType.SqlServer}))
+    {
+		db.DbFirst.IsCreateAttribute().CreateClassFile(projectDir +"/Models", "KStar.Form.Domain.Models");
+    };
+#>

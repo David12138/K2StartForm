@@ -1,0 +1,293 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>KStar.Form.Rest</name>
+    </assembly>
+    <members>
+        <member name="T:KStar.Form.Rest.Api.Cost.CostSplitController">
+            <summary>
+            成本拆分
+            </summary>
+        </member>
+        <member name="M:KStar.Form.Rest.Api.Cost.CostSplitController.GetSplitStatus(System.String,System.String)">
+            <summary>
+            查询成本拆分
+            </summary>
+            <param name="k2id"></param>
+            <param name="paramData"></param>
+            <returns></returns>
+        </member>
+        <member name="T:KStar.Form.Rest.Api.DataSourceService.SelectDataSourceController">
+            <summary>
+            调用DataSourceService API
+            </summary>
+        </member>
+        <member name="M:KStar.Form.Rest.Api.DataSourceService.SelectDataSourceController.GetLocationByParent(System.String)">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:KStar.Form.Rest.Api.DataSourceService.SelectDataSourceController.Result">
+            <summary>
+            下拉选择控件返回结果集
+            </summary>
+        </member>
+        <member name="P:KStar.Form.Rest.Api.DataSourceService.SelectDataSourceController.Result.label">
+            <summary>
+            显示标签
+            </summary>
+        </member>
+        <member name="P:KStar.Form.Rest.Api.DataSourceService.SelectDataSourceController.Result.value">
+            <summary>
+            值
+            </summary>
+        </member>
+        <member name="T:KStar.Form.Rest.Api.Demo.LeaveController">
+            <summary>
+            示例
+            </summary>
+        </member>
+        <member name="M:KStar.Form.Rest.Api.Demo.LeaveController.OnPrcStarted(KStar.Platform.ViewModel.Dto.InterfaceContextModel)">
+            <summary>
+            流程开始事件
+            </summary>
+            <param name="input">参数</param>
+            <returns></returns>
+        </member>
+        <member name="M:KStar.Form.Rest.Api.Demo.LeaveController.OnPrcCompleted(KStar.Platform.ViewModel.Dto.InterfaceContextModel)">
+            <summary>
+            流程结束事件
+            </summary>
+            <param name="input">参数</param>
+            <returns></returns>
+        </member>
+        <member name="M:KStar.Form.Rest.Api.Demo.LeaveController.OnActStarted(KStar.Platform.ViewModel.Dto.InterfaceContextModel)">
+            <summary>
+            节点开始事件
+            </summary>
+            <param name="input">参数</param>
+            <returns></returns>
+        </member>
+        <member name="M:KStar.Form.Rest.Api.Demo.LeaveController.OnActCompleted(KStar.Platform.ViewModel.Dto.InterfaceContextModel)">
+            <summary>
+            节点结束事件
+            </summary>
+            <param name="input">参数</param>
+            <returns></returns>
+        </member>
+        <member name="M:KStar.Form.Rest.App_Start.Bootstrapper.Register">
+            <summary>
+            负责调用autofac框架实现业务逻辑层和数据仓储层程序集中的类型对象的创建
+            负责创建MVC控制器类的对象(调用控制器中的有参构造函数),接管DefaultControllerFactory的工作
+            </summary>
+        </member>
+        <member name="M:KStar.Form.Rest.App_Start.Bootstrapper.MinLogLevel">
+            <summary>
+            根据配置获取最小的日志级别
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:KStar.Form.Rest.AutoMapperConfig.Mappings.RegisterMappings">
+            <summary>
+            注册所有程序集的Profile
+            </summary>
+        </member>
+        <member name="T:KStar.Form.Rest.Controllers.KStarApiController">
+            <summary>
+            基类
+            </summary>
+        </member>
+        <member name="P:KStar.Form.Rest.Controllers.KStarApiController.baseBusinessService">
+            <summary>
+            获取数据
+            </summary>
+        </member>
+        <member name="P:KStar.Form.Rest.Controllers.KStarApiController.logger">
+            <summary>
+            日志
+            </summary>
+        </member>
+        <member name="T:KStar.Form.Rest.Filter.GlobalExceptionHandler">
+            <summary>
+            自定义的异常处理程序
+            </summary>
+        </member>
+        <member name="M:KStar.Form.Rest.Filter.GlobalExceptionHandler.HandleAsync(System.Web.Http.ExceptionHandling.ExceptionHandlerContext,System.Threading.CancellationToken)">
+            <summary>
+            处理异常
+            </summary>
+            <param name="context"></param>
+            <param name="cancellationToken"></param>
+            <returns></returns>
+        </member>
+        <member name="M:KStar.Form.Rest.Filter.GlobalExceptionHandler.ShouldHandle(System.Web.Http.ExceptionHandling.ExceptionHandlerContext)">
+            <summary>
+            判断是否应该处理
+            后期扩展，重写方法可过滤掉不需处理的异常
+            </summary>
+            <param name="context"></param>
+            <returns></returns>
+        </member>
+        <member name="T:KStar.Form.Rest.Filter.GlobalExceptionLogger">
+            <summary>
+            全局异常记录
+            </summary>
+        </member>
+        <member name="M:KStar.Form.Rest.Filter.GlobalExceptionLogger.ShouldLog(System.Web.Http.ExceptionHandling.ExceptionLoggerContext)">
+            <summary>
+            判断是否应记录异常
+            后期重写此方法，可过滤掉不需要记录的异常信息
+            </summary>
+            <param name="context"></param>
+            <returns></returns>
+        </member>
+        <member name="M:KStar.Form.Rest.WebApiApplication.Application_BeginRequest(System.Object,System.EventArgs)">
+            <summary>
+            
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="T:KStar.Form.Rest.Models.ActEventReponseModel">
+            <summary>
+            审批行为验证事件传参对象 2019-11-27 ZGH
+            </summary>
+        </member>
+        <member name="P:KStar.Form.Rest.Models.ActEventReponseModel.k2Id">
+            <summary>
+            K2ID
+            </summary>
+        </member>
+        <member name="P:KStar.Form.Rest.Models.ActEventReponseModel.sourceId">
+            <summary>
+            系统编号
+            </summary>
+        </member>
+        <member name="P:KStar.Form.Rest.Models.ActEventReponseModel.approverType">
+            <summary>
+            审批行为：ApproverTypeEnum.ToString()
+            </summary>
+        </member>
+        <member name="P:KStar.Form.Rest.Models.ActEventReponseModel.bizId">
+            <summary>
+            业务单据号
+            </summary>
+        </member>
+        <member name="P:KStar.Form.Rest.Models.ActEventReponseModel.processCode">
+            <summary>
+            流程编码
+            </summary>
+        </member>
+        <member name="P:KStar.Form.Rest.Models.ActEventReponseModel.formUrl">
+            <summary>
+            K2表单查看地址
+            </summary>
+        </member>
+        <member name="P:KStar.Form.Rest.Models.ActEventReponseModel.bizModel">
+            <summary>
+            业务表单数据
+            </summary>
+        </member>
+        <member name="P:KStar.Form.Rest.Models.ActEventReponseModel.bizDataFields">
+            <summary>
+            业务系统数据
+            </summary>
+        </member>
+        <member name="P:KStar.Form.Rest.Models.ActEventReponseModel.approverUserCode">
+            <summary>
+            审批人员工编码
+            </summary>
+        </member>
+        <member name="P:KStar.Form.Rest.Models.ActEventReponseModel.activityName">
+            <summary>
+            当前审批环节名称
+            </summary>
+        </member>
+        <member name="P:KStar.Form.Rest.Models.ActEventReponseModel.formAttachments">
+            <summary>
+            流程附件记录 2020-01-06 ZGH
+            </summary>
+        </member>
+        <member name="P:KStar.Form.Rest.Models.ActEventReponseModel.formApprovalHistorys">
+            <summary>
+            流程审批记录 2020-01-06 ZGH
+            </summary>
+        </member>
+        <member name="P:KStar.Form.Rest.Models.ActEventReponseModel.formDataToJson">
+            <summary>
+            流程信息 2020-01-06 ZGH
+            </summary>
+        </member>
+        <member name="P:KStar.Form.Rest.Models.ActEventReponseModel.attr1">
+            <summary>
+            备用字段1
+            </summary>
+        </member>
+        <member name="P:KStar.Form.Rest.Models.ActEventReponseModel.attr2">
+            <summary>
+            备用字段2
+            </summary>
+        </member>
+        <member name="P:KStar.Form.Rest.Models.ActEventReponseModel.attr3">
+            <summary>
+            备用字段3
+            </summary>
+        </member>
+        <member name="T:KStar.Form.Rest.Models.FormAttachmentModel">
+            <summary>
+            表单附件信息 2020-01-06 ZGH
+            </summary>
+        </member>
+        <member name="P:KStar.Form.Rest.Models.FormAttachmentModel.FileId">
+            <summary>
+            文件下载ID
+            </summary>
+        </member>
+        <member name="P:KStar.Form.Rest.Models.FormAttachmentModel.ActDisplayName">
+            <summary>
+            上传文件节点名称
+            </summary>
+        </member>
+        <member name="P:KStar.Form.Rest.Models.FormAttachmentModel.UploaderUser">
+            <summary>
+            上传文件人
+            </summary>
+        </member>
+        <member name="P:KStar.Form.Rest.Models.FormAttachmentModel.FileName">
+            <summary>
+            文件名称
+            </summary>
+        </member>
+        <member name="T:KStar.Form.Rest.Models.FormApprovalHistoryModel">
+            <summary>
+            表单审批记录 2020-01-06 ZGH
+            </summary>
+        </member>
+        <member name="P:KStar.Form.Rest.Models.FormApprovalHistoryModel.ActivityName">
+            <summary>
+            审批节点
+            </summary>
+        </member>
+        <member name="P:KStar.Form.Rest.Models.FormApprovalHistoryModel.UserDisplayName">
+            <summary>
+            审批人
+            </summary>
+        </member>
+        <member name="P:KStar.Form.Rest.Models.FormApprovalHistoryModel.ActionName">
+            <summary>
+            审批行为
+            </summary>
+        </member>
+        <member name="P:KStar.Form.Rest.Models.FormApprovalHistoryModel.Comment">
+            <summary>
+            审批意见
+            </summary>
+        </member>
+        <member name="P:KStar.Form.Rest.Models.FormApprovalHistoryModel.CreateTime">
+            <summary>
+            审批时间
+            </summary>
+        </member>
+    </members>
+</doc>

@@ -1,0 +1,565 @@
+﻿
+@{
+    ViewBag.Title = "发薪申请";
+    Layout = "~/Views/Shared/_KStarFormLayout.cshtml";
+}
+
+@section HeadStyle{
+    <style>
+        .helper-inline-block {
+            display: inline-block;
+        }
+
+        .cell .el-form-item__error.el-form-item__error--inline {
+            position: inherit !important;
+            bottom: unset !important;
+        }
+    </style>
+}
+
+<el-form :model="vmFormContent" :rules="formContentValidateRules" ref="refFormContent" label-width="120px" inline-message size="mini"
+         label-position="left">
+    <el-row :gutter="120">
+        <el-col :xs="24" :sm="12">
+            <el-form-item label="城市：" prop="TmpAddressInfo" :rules="{required: true, message: '请选择城市'}">
+                <el-cascader :disabled="!isFormCanBeEdit" v-model="vmFormContent.TmpAddressInfo" :options="ArrcascaderAreaAll" size="mini" style="width:100%" class="cascader-input"></el-cascader>
+            </el-form-item>
+        </el-col>
+        <el-col :xs="24" :sm="12">
+            <el-form-item label="回款日期：">
+                <el-date-picker v-if="isFormCanBeEdit" :disabled="vmFormContent.IsCashReturn != '否'"
+                                :rules="{required: vmFormContent.IsCashReturn == '否', message: '请选择回款日期'}"
+                                v-model="vmFormContent.DateOfCashReturn" value-format="yyyy-MM-dd"
+                                type="date" placeholder="" style="width: 100%;">
+                </el-date-picker>
+                <div v-else class="form-item-div">{{ vmFormContent.DateOfCashReturn | formatDate }}</div>
+            </el-form-item>
+        </el-col>
+
+    </el-row>
+    <el-row :gutter="120">
+        <el-col :xs="24" :sm="12">
+            <el-form-item label="是否垫付：" prop="IsCashReturn"
+                          :rules="{required: true, message: '请选择是否垫付'}">
+                <el-select v-if="isFormCanBeEdit"
+                           placeholder="请选择"
+                           v-model="vmFormContent.IsCashReturn">
+                    <el-option value="是"></el-option>
+                    <el-option value="否"></el-option>
+                </el-select>
+                <div v-else class="form-item-div">{{ vmFormContent.IsCashReturn }}</div>
+            </el-form-item>
+        </el-col>
+        <el-col :xs="24" :sm="12">
+            <el-form-item label="预计回款日期：">
+                <el-date-picker v-if="isFormCanBeEdit" :disabled="vmFormContent.IsCashReturn != '是'"
+                                :rules="{required: vmFormContent.IsCashReturn == '是', message: '请选择预计回款日期'}"
+                                v-model="vmFormContent.ExpectedDateOfCashReturn" value-format="yyyy-MM-dd"
+                                type="date" placeholder="" style="width: 100%;">
+                </el-date-picker>
+                <div v-else class="form-item-div">{{ vmFormContent.ExpectedDateOfCashReturn | formatDate }}</div>
+            </el-form-item>
+        </el-col>
+    </el-row>
+    <el-row :gutter="120">
+        <el-col :xs="24" :sm="12">
+            <el-form-item label="付款公司名称：" prop="TmpPaymentAccountInfo">
+                <el-select v-if="!isFormCanBeEdit && isActAccounting"
+                           placeholder="请选择" value-key="Name"
+                           v-model="vmFormContent.TmpPaymentAccountInfo">
+                    <el-option v-for="item in vmFormContent.ListPaymentAccountInfo" :label="item.Name" :value="item"></el-option>
+                </el-select>
+                <div v-else class="form-item-div">{{ vmFormContent.TmpPaymentAccountInfo && vmFormContent.TmpPaymentAccountInfo.Name }}</div>
+            </el-form-item>
+        </el-col>
+        <el-col :xs="24" :sm="12">
+            <el-form-item label="收款方名称：" prop="TmpCollectionAccountInfo.Name">
+                <el-autocomplete v-if="isFormCanBeEdit"
+                                 v-model="vmFormContent.TmpCollectionAccountInfo.Name" style="width:100%;"
+                                 :fetch-suggestions="searchAccountInfo"
+                                 v-on:select="handleAccountInfoChange">
+                    <template slot-scope="scope">
+                        <span style="width:100px;">{{ scope.item.Name }}</span>
+                        <el-divider direction="vertical"></el-divider>
+                        <span style="width:100px;">{{ scope.item.BankOfDeposit }}</span>
+                        <el-divider direction="vertical"></el-divider>
+                        <span style="width:100px;">{{ scope.item.Account }}</span>
+                    </template>
+                </el-autocomplete>
+                <div v-else class="form-item-div">{{ vmFormContent.TmpCollectionAccountInfo && vmFormContent.TmpCollectionAccountInfo.Name }}</div>
+            </el-form-item>
+        </el-col>
+
+    </el-row>
+    <el-row :gutter="120">
+        <el-col :xs="24" :sm="12">
+            <el-form-item label="付款公司开户行：" prop="TmpPaymentAccountInfo.BankOfDeposit">
+                <div class="form-item-div">{{ vmFormContent.TmpPaymentAccountInfo && vmFormContent.TmpPaymentAccountInfo.BankOfDeposit }}</div>
+            </el-form-item>
+        </el-col>
+        <el-col :xs="24" :sm="12">
+            <el-form-item label="收款方开户行：" prop="TmpCollectionAccountInfo.BankOfDeposit">
+                <el-autocomplete v-if="isFormCanBeEdit"
+                                 v-model="vmFormContent.TmpCollectionAccountInfo.BankOfDeposit" style="width:100%;"
+                                 :fetch-suggestions="searchAccountInfo"
+                                 v-on:select="handleAccountInfoChange">
+                    <template slot-scope="scope">
+                        <span style="width:100px;">{{ scope.item.Name }}</span>
+                        <el-divider direction="vertical"></el-divider>
+                        <span style="width:100px;">{{ scope.item.BankOfDeposit }}</span>
+                        <el-divider direction="vertical"></el-divider>
+                        <span style="width:100px;">{{ scope.item.Account }}</span>
+                    </template>
+                </el-autocomplete>
+                <div v-else class="form-item-div">{{ vmFormContent.TmpCollectionAccountInfo && vmFormContent.TmpCollectionAccountInfo.BankOfDeposit }}</div>
+            </el-form-item>
+        </el-col>
+
+    </el-row>
+
+    <el-row :gutter="120">
+        <el-col :xs="24" :sm="12">
+            <el-form-item label="付款公司账号：" prop="TmpPaymentAccountInfo.Account">
+                <div class="form-item-div">{{ vmFormContent.TmpPaymentAccountInfo && vmFormContent.TmpPaymentAccountInfo.Account }}</div>
+            </el-form-item>
+        </el-col>
+        <el-col :xs="24" :sm="12">
+            <el-form-item label="收款方账号：" prop="TmpCollectionAccountInfo.Account">
+                <el-autocomplete v-if="isFormCanBeEdit" hide-loading
+                                 v-model="vmFormContent.TmpCollectionAccountInfo.Account" style="width:100%;"
+                                 :fetch-suggestions="searchAccountInfo"
+                                 v-on:select="handleAccountInfoChange">
+                    <template slot-scope="scope">
+                        <span style="width:100px;">{{ scope.item.Name }}</span>
+                        <el-divider direction="vertical"></el-divider>
+                        <span style="width:100px;">{{ scope.item.BankOfDeposit }}</span>
+                        <el-divider direction="vertical"></el-divider>
+                        <span style="width:100px;">{{ scope.item.Account }}</span>
+                    </template>
+                </el-autocomplete>
+                <div v-else class="form-item-div">{{ vmFormContent.TmpCollectionAccountInfo && vmFormContent.TmpCollectionAccountInfo.Account }}</div>
+            </el-form-item>
+        </el-col>
+    </el-row>
+    <el-row :gutter="120">
+        <el-col :xs="24" :sm="12">
+            <el-form-item label="支付方式：" prop="PayMethod">
+                <el-select v-if="!isFormCanBeEdit && isActAccounting"
+                           placeholder="请选择"
+                           v-model="vmFormContent.PayMethod">
+                    <el-option value="对公转账"></el-option>
+                    <el-option value="对私转账"></el-option>
+                    <el-option value="网银转账"></el-option>
+                    <el-option value="云账户"></el-option>
+                </el-select>
+                <div v-else class="form-item-div">{{ vmFormContent.PayMethod }}</div>
+            </el-form-item>
+        </el-col>
+        <el-col :xs="24" :sm="12">
+            <el-form-item label="申请金额：" prop="ApplicationAmount">
+                <div class="form-item-div">{{ vmFormContent.ApplicationAmount | transformToFixed }}</div>
+            </el-form-item>
+        </el-col>
+    </el-row>
+    <el-row :gutter="120">
+        <el-col :xs="24" :sm="12">
+            <el-form-item label="代理佣金：" prop="AgentCommission">
+                <div class="form-item-div">{{ vmFormContent.AgentCommission | transformToFixed }}</div>
+            </el-form-item>
+        </el-col>
+        <el-col :xs="24" :sm="12">
+            <el-form-item label="金额大写：">
+                <div class="form-item-div">{{ vmFormContent.ApplicationAmount| transformToFixed | captialAmount }}</div>
+            </el-form-item>
+        </el-col>
+    </el-row>
+    <el-row :gutter="120">
+
+    </el-row>
+    <el-row :gutter="120">
+
+
+    </el-row>
+    <el-row>
+        <el-col>
+            <el-form-item label="付款事由：" prop="Remark">
+                <el-input type="textarea" :autosize="{ minRows: 3 }" maxlength="500" show-word-limit
+                          placeholder="" :disabled="!isFormCanBeEdit"
+                          v-model="vmFormContent.Remark">
+                </el-input>
+            </el-form-item>
+        </el-col>
+    </el-row>
+
+
+    <subtitle subtitle="账单信息" class="line-sub-title"></subtitle>
+    <el-table :data="vmFormContent.TableBillInfos"
+              border show-summary :summary-method="getSummary">
+        <el-table-column align="center" v-if="isFormCanBeEdit">
+            <template v-slot:header="{ column, $index }">
+                <el-button icon="el-icon-plus" type="success" size="mini" circle
+                           v-on:click="handleAddBillInfo($index, column)"></el-button>
+            </template>
+            <template v-slot:default="{ row, column, $index }">
+                <el-button type="danger" size="mini" plain
+                           v-on:click="handleDeleteBillInfo($index, row, column)">删除</el-button>
+            </template>
+        </el-table-column>
+        <el-table-column label="序号" type="index" show-overflow-tooltip width="50" align="center">
+        </el-table-column>
+        <el-table-column label="项目名称" header-align="center" width="200" property="ProjectName">
+            <template v-slot:default="{ row, column, $index }">
+                <el-form-item label-width="0" :prop="'TableBillInfos.' + $index + '.ProjectName'"
+                              :rules="{required: true, message: '请输入账单信息'}">
+                    <el-input v-model="row.ProjectName" v-if="isFormCanBeEdit" style="width: 100%;"
+                              size="mini"></el-input>
+                    <div v-else class="form-item-div">{{ row.ProjectName }}</div>
+                </el-form-item>
+            </template>
+        </el-table-column>
+        <el-table-column label="客户名称" header-align="center" width="300" property="ClientName">
+            <template v-slot:default="{ row, column, $index }">
+                <el-form-item label-width="0"
+                              :prop="'TableBillInfos.' + $index + '.ClientName'"
+                              :rules="{required: true, message: '请选择客户名称'}">
+                    <el-select v-if="isFormCanBeEdit"
+                               placeholder="请选择" value-key="Code"
+                               filterable clearable remote
+                               :remote-method="searchClientInfo"
+                               v-model="row.ClientName">
+                        <el-option v-for="item in vmFormContent.ListClients" :value="item" :label="item.Name" :key="item.Code">
+                            <span style="float: left">{{ item.Code }}</span>
+                            <span style="float: right; color: #8492a6; font-size: 13px">{{ item.Name }}</span>
+                        </el-option>
+                    </el-select>
+                    <div v-else class="form-item-div">{{ row.ClientName.Name }}</div>
+                </el-form-item>
+            </template>
+        </el-table-column>
+        <el-table-column label="业务类型" header-align="center" width="200" property="BusinessType">
+            <template v-slot:default="{ row, column, $index }">
+                <el-form-item label-width="0" :prop="'TableBillInfos.' + $index + '.BusinessType'"
+                              :rules="{required: true, message: '请选择业务类型'}">
+                    <el-select v-if="isFormCanBeEdit" style="width: 100%;"
+                               placeholder="请选择"
+                               v-model="row.BusinessType">
+                        <el-option value="兼职业务"></el-option>
+                        <el-option value="外包业务"></el-option>
+                        <el-option value="派遣业务"></el-option>
+                        <el-option value="代理业务"></el-option>
+                    </el-select>
+                    <div v-else class="form-item-div">{{ row.BusinessType }}</div>
+                </el-form-item>
+            </template>
+        </el-table-column>
+        <el-table-column label="费用所属期" header-align="center" width="200" property="CostPeriod">
+            <template v-slot:default="{ row, column, $index }">
+                <el-form-item label-width="0" :prop="'TableBillInfos.' + $index + '.CostPeriod'"
+                              :rules="{required: true, message: '请选择费用所属期'}">
+                    <el-date-picker v-if="isFormCanBeEdit" :disabled="!isFormCanBeEdit" v-model="row.CostPeriod" type="month"
+                                    style="width: 100%;" value-format="yyyy-MM"></el-date-picker>
+                    <div v-else class="form-item-div">{{ row.CostPeriod }}</div>
+                </el-form-item>
+            </template>
+        </el-table-column>
+        <el-table-column label="发薪人数" header-align="center" width="200" property="PeopleNumber">
+            <template v-slot:default="{ row, column, $index }">
+                <el-form-item label-width="0" :prop="'TableBillInfos.' + $index + '.PeopleNumber'"
+                              :rules="{required: true, message: '请输入发薪人数'}">
+                    <el-input-number v-model="row.PeopleNumber" style="width: 100%;"
+                                     :controls="false" :precision="0"
+                                     v-if="isFormCanBeEdit" size="mini"></el-input-number>
+                    <div v-else class="form-item-div">{{ row.PeopleNumber }}</div>
+                </el-form-item>
+            </template>
+        </el-table-column>
+        <el-table-column label="实发薪资" header-align="center" width="200" property="ActualPaySalaryAmount">
+            <template v-slot:default="{ row, column, $index }">
+                <el-form-item label-width="0" :prop="'TableBillInfos.' + $index + '.ActualPaySalaryAmount'"
+                              :rules="{required: true, message: '请输入实发薪资'}">
+                    <el-input-number v-model="row.ActualPaySalaryAmount" style="width: 100%;"
+                                     :controls="false" :precision="2"
+                                     v-if="isFormCanBeEdit" size="mini"></el-input-number>
+                    <div v-else class="form-item-div">{{ row.ActualPaySalaryAmount | transformToFixed }}</div>
+                </el-form-item>
+            </template>
+        </el-table-column>
+        <el-table-column label="社保金额" header-align="center" width="200" property="SocialInsurance">
+            <template v-slot:default="{ row, column, $index }">
+                <el-form-item label-width="0" :prop="'TableBillInfos.' + $index + '.SocialInsurance'"
+                              :rules="{required: true, message: '请输入社保金额'}">
+                    <el-input-number v-model="row.SocialInsurance" style="width: 100%;"
+                                     :controls="false" :precision="2"
+                                     v-if="isFormCanBeEdit" size="mini"></el-input-number>
+                    <div v-else class="form-item-div">{{ row.SocialInsurance | transformToFixed }}</div>
+                </el-form-item>
+            </template>
+        </el-table-column>
+        <el-table-column label="公积金金额" header-align="center" width="200" property="HousingFund">
+            <template v-slot:default="{ row, column, $index }">
+                <el-form-item label-width="0" :prop="'TableBillInfos.' + $index + '.HousingFund'"
+                              :rules="{required: true, message: '请输入公积金金额'}">
+                    <el-input-number v-model="row.HousingFund" style="width: 100%;"
+                                     :controls="false" :precision="2"
+                                     v-if="isFormCanBeEdit" size="mini"></el-input-number>
+                    <div v-else class="form-item-div">{{ row.HousingFund | transformToFixed }}</div>
+                </el-form-item>
+            </template>
+        </el-table-column>
+        <el-table-column label="服务费" header-align="center" width="200" property="ServiceFee">
+            <template v-slot:default="{ row, column, $index }">
+                <el-form-item label-width="0" :prop="'TableBillInfos.' + $index + '.ServiceFee'"
+                              :rules="{required: true, message: '请输入服务费'}">
+                    <el-input-number v-model="row.ServiceFee" style="width: 100%;"
+                                     :controls="false" :precision="2"
+                                     v-if="isFormCanBeEdit" size="mini"></el-input-number>
+                    <div v-else class="form-item-div">{{ row.ServiceFee | transformToFixed }}</div>
+                </el-form-item>
+            </template>
+        </el-table-column>
+        <el-table-column label="总计金额" header-align="center" width="200" property="Amount">
+            <template v-slot:default="{ row, column, $index }">
+                <el-form-item label-width="0">
+                    <div class="form-item-div">{{ row.Amount| transformToFixed }}</div>
+                </el-form-item>
+            </template>
+        </el-table-column>
+
+    </el-table>
+
+</el-form>
+
+@section KStarFormJs{
+    <script src="~/Scripts/NewBusiness/CascaderAreaModel.js"></script>
+    <script type="text/javascript">
+        FormContentModel = {
+            totalActualPaySalaryAmount: null,
+            totalAmount: null
+        };
+        KStarForm.formModelExtend = {
+            data: function () {
+                var onlyCity = ArrcascaderAreaAll;
+                onlyCity.forEach(function (v) {
+                    v.children.forEach(function (v2) {
+                        v2.children = null;
+                    })
+                })
+                return {
+                    ArrcascaderAreaAll: onlyCity,
+                    formContentValidateRules: {
+
+                    },
+                    // 新版本新增，可以控制整个表单中除vmFormContent外的组件的验证规则
+                    formContentRules: {
+
+                    }
+                }
+            },
+            methods: {
+                handleAddBillInfo: function (index, column) {
+                    this.vmFormContent.TableBillInfos.push({
+                        "ProjectName": null,
+                        "ClientName":
+                        {
+                            Code: null,
+                            Name: null
+                        },
+                        "BusinessType": null,
+                        "CostPeriod": null,
+                        "PeopleNumber": null,
+                        "ActualPaySalaryAmount": null,
+                        "SocialInsurance": null,
+                        "HousingFund": null,
+                        "ServiceFee": null,
+                        "Amount": null
+                    });
+                },
+                handleDeleteBillInfo: function (index, row, column) {
+                    this.vmFormContent.TableBillInfos.splice(index, 1);
+                },
+
+                handleAccountInfoChange: function (info, b) {
+                    this.vmFormContent.TmpCollectionAccountInfo.Id = info.Id;
+                    this.vmFormContent.TmpCollectionAccountInfo.Name = info.Name;
+                    this.vmFormContent.TmpCollectionAccountInfo.BankOfDeposit = info.BankOfDeposit;
+                    this.vmFormContent.TmpCollectionAccountInfo.Account = info.Account;
+                    //debugger;
+                },
+                searchClientInfo: function (v) {
+                    var that = this;
+
+                    axios.post(getControllerName() + "/SearchClientInfo", {
+                        name: v
+                    }).then(function (r) {
+                        that.vmFormContent.ListClients = r.data;
+                    })
+                },
+                searchAccountInfo: function (v, cb) {
+                    var that = this;
+
+                    axios.post(getControllerName() + "/SearchAccountInfo", {
+                        key: v
+                    }).then(function (r) {
+                        cb(r.data);
+                        //that.vmFormContent.ListCollectionAccountInfo = r.data;
+                    })
+                },
+
+                getSummary: function (param) {
+                    var funcFixed = this.$options.filters["transformToFixed"];
+                    var that = this;
+                    var columns = param.columns;
+                    var data = param.data;
+                    var sums = [];
+                    _.each(columns, function (column, idx) {
+                        //debugger
+                        if (idx == 0) {
+                            sums[0] = '合计';
+                            //return;
+                        } else if (idx > 5 && idx < 12) {
+
+                            var values = _.map(data, function (val) {
+                                var tmp = parseFloat(val[column.property]);
+                                return isNaN(tmp) ? 0 : tmp;
+                            });
+
+                            var colSum = _.reduce(values, function (prev, v) {
+                                return prev + v;
+                            });
+                            sums[idx] = idx > 6 ? funcFixed(colSum) : colSum;
+                            if (column.property == 'ActualPaySalaryAmount')
+                                that.vmFormContent.totalActualPaySalaryAmount = parseFloat(sums[idx]);
+                            else if (column.property == 'Amount')
+                                that.vmFormContent.totalAmount = parseFloat(sums[idx]);
+                        } else {
+                            sums[idx] = '';
+                        }
+                    });
+                    return sums;
+                },
+
+            },
+            computed: {
+                isFormCanBeEdit: function () {
+                    return this.vmFormType == 'Application' || this.vmFormType == 'Draft' || this.vmFormType == 'ReApproval';
+                },
+                isActAccounting: function () {
+                    var curActName = this.vmOperation.ActivityName;
+                    return curActName == '会计审核' && this.vmFormType == 'Approval';
+                }
+            },
+            filters: {
+                transformToFixed: function (value, fixedCount = 2) {
+                    if (!value || isNaN(value) || !isFinite(value)) return '';
+                    var x = parseFloat(value);
+                    return x.toFixed(fixedCount);
+                },
+                captialAmount: function (n) {
+                    if (!/^(0|[1-9]\d*)(\.\d+)?$/.test(n)) {
+                        return ''
+                    }
+                    var unit = "仟佰拾亿仟佰拾万仟佰拾圆角分", str = "";
+                    n += "00";
+                    var p = n.indexOf('.');
+                    if (p >= 0)
+                        n = n.substring(0, p) + n.substr(p + 1, 2);
+
+                    unit = unit.substr(unit.length - n.length);
+
+                    for (var i = 0; i < n.length; i++)
+                        str += '零壹贰叁肆伍陆柒捌玖'.charAt(n.charAt(i)) + unit.charAt(i);
+                    var result = str.replace(/零(仟|佰|拾|角)/g, "零").replace(/(零)+/g, "零").replace(/零(万|亿|圆)/g, "$1").replace(/(亿)万|壹(拾)/g, "$1$2").replace(/^圆零?|零分/g, "").replace(/圆$/g, "圆整");
+                    return result == '分' ? '' : result;
+                },
+                formatDate: function (v) {
+                    var m = moment(v);
+                    if (m.isValid())
+                        return moment.utc(v).format('YYYY-MM-DD');
+                    else
+                        return '';
+                }
+            },
+            watch: {
+                'vmFormContent.PayMethod': function (nv, ov) {
+                    if (nv == '云账户') {
+                        this.vmFormContent.AgentCommission = this.vmFormContent.totalActualPaySalaryAmount * 0.071;
+                    } else {
+                        this.vmFormContent.AgentCommission = 0;
+                    }
+
+                    this.vmFormContent.ApplicationAmount = this.vmFormContent.totalAmount + this.vmFormContent.AgentCommission;
+                },
+                'vmFormContent.TableBillInfos': {
+                    handler: function (nv) {
+
+                        _.each(nv, function (v, idx) {
+                            var peopleNumber = isNaN(parseInt(v.PeopleNumber)) ? 0 : parseInt(v.PeopleNumber);
+                            var actualPaySalaryAmount = isNaN(parseFloat(v.ActualPaySalaryAmount)) ? 0 : parseFloat(v.ActualPaySalaryAmount);
+                            var socialInsurance = isNaN(parseFloat(v.SocialInsurance)) ? 0 : parseFloat(v.SocialInsurance);
+                            var housingFund = isNaN(parseFloat(v.HousingFund)) ? 0 : parseFloat(v.HousingFund);
+                            var serviceFee = isNaN(parseFloat(v.ServiceFee)) ? 0 : parseFloat(v.ServiceFee);
+                            v.Amount = actualPaySalaryAmount + socialInsurance + housingFund + serviceFee;
+                        })
+                    },
+                    deep: true
+                },
+                'vmFormContent.totalActualPaySalaryAmount': function (nv) {
+                    if (this.vmFormContent.PayMethod == '云账户') {
+                        this.vmFormContent.AgentCommission = nv * 0.071;
+                    } else {
+                        this.vmFormContent.AgentCommission = 0;
+                    }
+
+                    this.vmFormContent.ApplicationAmount = this.vmFormContent.totalAmount + this.vmFormContent.AgentCommission;
+
+                },
+                'vmFormContent.totalAmount': function (nv) {
+                    if (this.vmFormContent.PayMethod == '云账户') {
+                        this.vmFormContent.AgentCommission = this.vmFormContent.totalActualPaySalaryAmount * 0.071;
+                    } else {
+                        this.vmFormContent.AgentCommission = 0;
+                    }
+
+                    this.vmFormContent.ApplicationAmount = nv + this.vmFormContent.AgentCommission;
+                }
+            },
+            mounted: function () {
+                // 将账单信息中的客户信息加载到可选列表中，以支持正确显示
+                //clientsNeedToAdd = [];
+                var currentClientListOptions = this.vmFormContent.ListClients || [];
+                _.each(this.vmFormContent.TableBillInfos, function (bill, idx) {
+                    if (!bill.ClientName)
+                        return false;
+                    var clientCode = bill.ClientName.Code;
+                    var idxFinded = _.findIndex(currentClientListOptions, function (c) {
+                        return c.Code == clientCode;
+                    });
+                    if (idxFinded == -1) {
+                        currentClientListOptions.push(bill.ClientName);
+                    }
+                });
+            }
+        }
+
+        var SubmitBefore = function () {
+            var canBeSubmit = true;
+
+            //var lineApplyUnit = KStarForm.vmFormData.vmFormContent.lineApplyUnit;
+            //if (!lineApplyUnit) {
+            //    canBeSubmit = false;
+            //    alertInfo("不能获取申请人的申请单位！不能提交！")
+            //}
+            //var fileCount = KStarForm.vmFormData.vmFormAttachments.length;
+            //if (fileCount < 1) {
+            //    canBeSubmit = false
+            //    alertInfo("必须上传至少一个文件！");
+            //}
+            return canBeSubmit;
+        }
+        //发起
+        KStarForm.onSubmitBefore = SubmitBefore;
+        //重新发起
+        KStarForm.onReSubmitBefore = SubmitBefore;
+    </script>
+}
+

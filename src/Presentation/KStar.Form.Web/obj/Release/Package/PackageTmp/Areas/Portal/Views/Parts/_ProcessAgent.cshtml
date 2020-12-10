@@ -1,0 +1,709 @@
+﻿<div id="app" class="bg-white pd-24 height-100">
+    <div>
+        <el-tabs v-model="form.sType" v-on:tab-click="handlerTabChange">
+            <el-tab-pane :label="$t('Portal.HomeProcessAgentApplicationAuthorityAgent')" name="1"></el-tab-pane>
+            <el-tab-pane :label="$t('Portal.HomeProcessAgentApprovalAuthorityAgent')" name="3"></el-tab-pane>
+            <el-tab-pane :label="$t('Portal.HomeProcessAgentDoneViewAuthorityAgent')" name="4"></el-tab-pane>
+            <el-tab-pane :label="$t('Portal.HomeProcessAgentApprovalCirculateAuthorityAgent')" name="5"></el-tab-pane>
+        </el-tabs>
+    </div>
+
+    <el-row class="header-search">
+        <el-col :span="3">
+            <el-button size="medium" type="info" class="btn" plain v-on:click="AddUserDelegation">{{ $t("Portal.HomeProcessAgentNew") }}</el-button>
+        </el-col>
+        <el-col :span="21" class="text-align-right">
+            <el-input size="medium" :placeholder="$t('Portal.HomeProcessAgentSearchPlcaceholderText')" v-model="form.keyword" v-on:keyup.enter.native="search()" class="search"></el-input>
+            <el-button size="medium" type="primary" class="search-btn" v-on:click="search()" plain>{{ $t("Portal.BusinessProcessTaskSearch") }}</el-button>
+            <!-- 高级搜索 -->
+            <advancedsearch 
+                :isloading="loading" 
+                :form-items="formItems" 
+                v-on:search="search"
+                v-on:reset="reset" />
+        </el-col>
+        
+    </el-row>
+
+
+    <userpick :parmdialog="userpickParam" v-on:closedialog="closeUserPick" v-on:requseturl="userpickCallback"></userpick>
+    <!-- <div style="position:relative;float:right">
+        <div class="process-agent">
+        <searchcontent v-on:click="getSearch" btn-title="新增" :isloading="isLoading" :form-items="formItems" v-on:open="AddUserDelegation" :istabs="form.sType"></searchcontent>
+        </div>
+    </div> -->
+
+    <el-table ref="multipleTable" :data="tableData" v-loading="loading" class="my-table processAgent" size="mini" border style="width: 100%">
+        <div v-if="form.sType!='5'">
+            <el-table-column prop="ToUserName" width="200" :label="$t('Portal.HomeProcessAgentSearchtoUser')" show-overflow-tooltip></el-table-column>
+        </div>
+        <div v-else>
+            <el-table-column prop="ToUserName" width="200" :label="$t('Portal.HomeProcessAgentReceiverUser')" show-overflow-tooltip></el-table-column>
+        </div>
+        <el-table-column v-if="form.sType!='4'" prop="StartDate" width="160" :label="$t('Portal.HomeProcessAgentSearchAgentStartDate')" show-overflow-tooltip>
+            <template slot-scope="scope">
+                {{ getFormatDate(scope.row.StartDate) }}
+            </template>
+        </el-table-column>
+        <el-table-column v-if="form.sType!='4'" prop="EndDate" width="160" :label="$t('Portal.HomeProcessAgentSearchAgentEndDate')" show-overflow-tooltip>
+            <template slot-scope="scope">
+                {{ getFormatDate(scope.row.EndDate) }}
+            </template>
+        </el-table-column>
+        <el-table-column prop="Note" :label="$t('Portal.HomeProcessAgentListNote')" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="IsEnable" width="65" :label="$t('Portal.HomeProcessAgentSearchAgentStatus')">
+            <template slot-scope="scope">
+                <el-switch v-on:change="changeSwitch(scope.row)" v-model="scope.row.IsEnable"></el-switch>
+            </template>
+        </el-table-column>
+        <el-table-column :label="$t('Portal.HomeProcessAgentListOperation')" width="130" align="center">
+            <template slot-scope="scope">
+                <i class="el-icon-view fs-16" v-on:click="openDialog('see', scope.row)" style="margin-right: 8px"></i>
+                <i class="el-icon-edit fs-16" v-on:click="openDialog('edit', scope.row)"></i>
+                <!-- <el-button type="text" size="small" >查看</el-button>
+            <el-button type="text" size="small" >编辑</el-button> -->
+            </template>
+        </el-table-column>
+        <template slot="empty">
+            <img src="../../../Content/portal/images/empty.png" />
+        </template>
+    </el-table>
+
+    <!-- 分页 -->
+    <pages :total="total" :form="form" v-on:click="handleChangePage"></pages>
+    <el-dialog :visible.sync="dialogVisible" :title="dialogTitle" class="my-dialog-style" width="800px" v-on:close="handleCancle">
+        <el-row :gutter="32">
+            <el-form :model="dialogForm" label-width="84px" size="mini" label-position="right">
+                <el-col :span="12" style="height: 38px">
+                    <el-form-item :label="getAgentUserLabel('Portal.HomeProcessAgentListFromUser','fromUser',form.sType)">
+                        <el-input v-model="dialogForm.fromUserName" disabled></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="12" style="height: 38px">
+                    <el-form-item :label="getAgentUserLabel('Portal.HomeProcessAgentSearchtoUser','toUser',form.sType)" v-if="dialogForm.authorizationMode!=3">
+                        <el-input v-model="dialogForm.toUserName" :disabled="dialogType === 'see'" readonly>
+                            <el-button slot="append" v-on:click="GetUserInfo('toUserName')" icon="el-icon-user-solid" :disabled="dialogType === 'see'"></el-button>
+                        </el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="12" v-if="form.sType!='4'" style="height: 38px">
+                    <el-form-item :label="$t('Portal.HomeProcessAgentListEffectivePeriod')">
+                        <el-date-picker v-model="time" type="daterange" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss" :range-separator="$t('Portal.HomeProcessAgentAddPlaceholderSeparator')" :start-placeholder="$t('Portal.HomeProcessAgentAddPlaceholderStartDate')" :end-placeholder="$t('Portal.HomeProcessAgentAddPlaceholderEndDate')" v-on:change="changeTime" :disabled="dialogType === 'see'"></el-date-picker>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="12" style="height: 38px">
+                    <el-form-item :label="$t('Portal.HomeProcessAgentAddIsEnable')">
+                        <el-checkbox v-model="dialogForm.isEnabled" :disabled="dialogType === 'see'"></el-checkbox>
+                    </el-form-item>
+
+                </el-col>
+                <el-col :span="12" style="height: 38px">
+                    <el-form-item :label="$t('Portal.HomeProcessAgentAddApprovalMode')" v-if="form.sType==='3'">
+
+                        <el-radio-group :disabled="dialogType === 'see'" v-model="dialogForm.authorizationMode" v-on:change="changeMode()">
+                            <el-radio :label="1">{{ $t("Portal.HomeProcessAgentAddProcessTransfer") }}</el-radio>
+                            <el-radio :label="3">{{ $t("Portal.HomeProcessAgentAddProcessAuto") }}</el-radio>
+                            @*<el-radio :label="2">代理</el-radio>*@
+                        </el-radio-group>
+
+                    </el-form-item>
+                </el-col>
+                <el-col>
+                    <el-form-item :label="$t('Portal.HomeProcessAgentListNote')">
+                        <el-input type="textarea" v-model="dialogForm.txtNote" :disabled="dialogType === 'see'"></el-input>
+                    </el-form-item>
+                </el-col>
+                @*<el-form-item label="备注">
+            <el-input type="text" v-model="dialogForm.LineRule" :disabled="1!=1" style="display:none;"></el-input>
+            <el-input type="text" v-model="dialogForm.LineRuleDisplay" :disabled="dialogType === 'see'"></el-input>
+        </el-form-item>*@
+                <el-col :span="12" style="height: 38px">
+                    <el-form-item label="所有流程" v-if="form.sType==='1' || form.sType==='3' || form.sType==='5'">
+                        <el-checkbox v-model="dialogForm.isAllProcess" :disabled="dialogType === 'see'"></el-checkbox>
+                    </el-form-item>
+                </el-col>
+            </el-form>
+        </el-row>
+        <el-button size="medium" type="info" class="btn" :disabled="dialogType === 'see'" v-if="dialogForm.isAllProcess==false && form.sType!='4'" style="float:right;margin-bottom:16px" plain v-on:click="GetUserInfo('flow')">{{ $t("Portal.HomeProcessAgentAddProcessSelectProcess") }}</el-button>
+
+        <el-table :data="dialogForm.processList" v-if="dialogForm.isAllProcess==false && form.sType!='4'" style="width: 100%" class="flow-table" height="250">
+            <el-table-column prop="CategoryName" :label="$t('Portal.HomeProcessAgentAddProcessCaty')"></el-table-column>
+            <el-table-column prop="ProcessName" :label="$t('Portal.HomeProcessAgentAddProcessName')"></el-table-column>
+            <el-table-column prop="address" :label="$t('Portal.HomeProcessAgentListOperation')" width="70">
+                <template slot-scope="scope">
+                    <el-button :disabled="dialogType == 'see'" v-on:click="handleDel(scope.row)" type="text" size="small">{{ $t("Portal.HomeProcessAgentAddProcessDel") }}</el-button>
+                </template>
+            </el-table-column>
+            <template slot="empty">
+                <img src="../../../Content/portal/images/empty.png" />
+            </template>
+        </el-table>
+        <div slot="footer" class="dialog-footer">
+            <el-button v-on:click="handleCancle" class="cancle" plain>{{ $t("Portal.BusinessProcessCancel") }}</el-button>
+            <el-button type="primary" class="submit" v-on:click="handleMutliApprove" :disabled="false" :loading="btnLoading" v-if="dialogType != 'see'" plain>{{ $t("Portal.BusinessProcessConfirm") }}</el-button>
+        </div>
+    </el-dialog>
+
+</div>
+
+<script src="~/Scripts/portal/advancedsearch.js"></script>
+<script src="~/Scripts/portal/pages.js"></script>
+<script src="~/Scripts/portal/modalTable.js"></script>
+<script>
+    new Vue({
+        el: '#app',
+        i18n: i18n,
+        data: function () {
+            return {
+                form: {
+                    sType: '1',
+                    toUser: '',
+                    fromUser: sessionStorage.getItem('userName'),
+                    status: 'true',//默认激活状态
+                    processName: '',
+                    endTime: '',
+                    startTime: '',
+                    PageSize: 20,
+                    PageIndex: 1,
+                    keyword: '',
+                }, // 表单数据
+                iniStart: '',
+                iniEnd: '',
+                endStart: '',
+                endEnd: '',
+                tableData: [],
+                total: 0,
+                loading: false,
+                dialogVisible: false,
+                dialogForm: {
+                    fromUserAccount: sessionStorage.getItem('userAccount'),
+                    fromUserName: sessionStorage.getItem('userName'),
+                    toUserName: '',
+                    toUserAccount: '',
+                    start: '',
+                    end: '',
+                    isEnabled: true,
+                    txtNote: '',
+                    isAllProcess: false,
+                    authorizationMode: 0,
+                    processList: []
+                },
+                dialogTitle: '',
+                btnLoading: false,
+                dialogType: '',
+                //选人控件参数
+                userpickParam: {
+                    dialogvisible: false,
+                    multiplelimit: false
+                },
+                dialogType: '',
+                width: 0,
+                type: '',
+                selected: '',
+                popVisible: false,
+                datePicker1: [],
+                datePicker2: [],
+                isLoading: false,
+                // formItems: ['代理人', '开始时间1', '结束时间', '流程名称1', '状态1'],
+                //formItems: [
+                //    advancedSearchItem.toUser, 
+                //    advancedSearchItem.StartDate, 
+                //    advancedSearchItem.EndTime, 
+                //    {
+                //        label: '流程名称',
+                //        model: 'ProcessName',
+                //        type: 'input'
+                //    }, 
+                //    advancedSearchItem.status
+                //],
+                time: []
+            }
+        },
+        computed: {
+            formItems: {
+                get: function () {
+                    //001待审
+                    advancedSearchItem.toUser.label = this.$t('Portal.HomeProcessAgentSearchtoUser');
+                    advancedSearchItem.StartDate.label = this.$t('Portal.HomeProcessAgentSearchAgentStartDate');
+                    advancedSearchItem.EndTime.label = this.$t('Portal.HomeProcessAgentSearchAgentEndDate');
+                    advancedSearchItem.status.label = this.$t('Portal.HomeProcessAgentSearchAgentStatus');
+                    advancedSearchItem.status.option = [ //重新流程代理状态选项
+                        { value: null, label: this.$t('Portal.All') },
+                        { value: 'true', label: this.$t('Portal.Effective') },
+                        { value: 'false', label: this.$t('Portal.Invalid') }];
+                    advancedSearchItem.ProcessName.label = this.$t('Portal.HomeSearchProcessName');
+
+                    return [
+                        advancedSearchItem.toUser,
+                        advancedSearchItem.StartDate,
+                        advancedSearchItem.EndTime,
+                        //advancedSearchItem.ProcessName,
+                        {
+                            label: this.$t('Portal.HomeProcessAgentSearchProcessName'),//'流程名称'
+                            model: 'processName',
+                            type: 'input'
+                        },
+                        advancedSearchItem.status
+                    ];
+
+                }
+            }
+
+        },
+        mounted: function () {
+            this.getDate();
+            this.width = document.body.clientWidth - 289;
+        },
+        watch: {
+            popVisible: function (val) {
+                if (val) {
+                    this.selected = 'selected';
+                } else {
+                    this.selected = '';
+                }
+            }
+        },
+        methods: {
+            changeTime: function () {
+                this.dialogForm.start = this.time[0];
+                //this.dialogForm.end = this.time[1];
+                this.dialogForm.end = this.time[1].replace("00:00:00", "23:59:59");
+                this.time[1] = this.dialogForm.end;
+            },
+            //生效时间段  结束时间到23:59:59
+           // endChange: function (val) {
+            //    this.dialogForm.end = val.replace("00:00:00", "23:59:59");
+           // },
+            //选人控件
+            showdialog: function (val, multiple) {
+
+                //this.userpickParam.clicktype = val;
+                //this.userpickParam.type = "User"; //只选人员
+                //this.userpickParam.ctype = "UserPick"; //选人控件
+                //this.userpickParam.dialogvisible = true;
+                //this.userpickParam.title = "请选择授权人员"; //弹出框标题
+                //this.userpickParam.multiplelimit = multiple; //是否多选
+                //return false;
+
+                this.userpickParam.clicktype = val;
+                switch (val) {
+                    case 'toUserName':
+                        this.userpickParam.type = "User";
+                        this.userpickParam.ctype = "UserPick";
+                        this.userpickParam.title = this.$t('Portal.HomeSearchJSFromUserSelect');  //"请选择授权人员";
+                        break;
+                    case 'toUser':
+                        this.userpickParam.type = "User";
+                        this.userpickParam.ctype = "UserPick";
+                        this.userpickParam.title = this.$t('Portal.HomeSearchJSFromUserSelect'); //"请选择授权人员";
+                        break;
+                    case 'flow':
+                        if (this.form.sType == "1") {
+                            this.userpickParam.isProxyProcess = true;
+                        } else {
+                            this.userpickParam.isProxyProcess = false;
+                        }
+
+                        this.userpickParam.type = "Process";
+                        this.userpickParam.ctype = "ProcessPick";
+                        this.userpickParam.title = this.$t('Portal.HomeSearchJSProcessSelect'); // "请选择流程";
+                        break;
+                }
+                this.userpickParam.dialogvisible = true;
+                this.userpickParam.multiplelimit = multiple;
+                return false;
+            },
+            //关闭弹窗
+            closeUserPick: function (val) {
+                this.userpickParam.dialogvisible = false;
+            },
+            //选人控件返回
+            userpickCallback: function (val, type) {
+                var that = this;
+                if (val.length > 0) {
+                    //console.log(val[0].Name);
+                    switch (type.clicktype) {
+                        case 'toUser': this.$set(this.form, 'toUser', val[0].Name); break;
+                        case 'toUserName':
+                            this.dialogForm.toUserName = val[0].Name;
+                            this.dialogForm.toUserAccount = val[0].Value;
+                            break;
+                        case 'flow':
+                            var cate = [];
+                            $(val).each(function (indel, el) {
+                                if (el.Type == "Category") {
+                                    cate.push(el.CategoryId);
+                                }
+                            });
+                            if (cate.length > 0) {
+                                //根据流程分类取所有流程
+                                GetProcessByCategoryId(cate).then(function (res) {
+                                    var process = res.data.data;
+                                    $(process).each(function (index, el) {
+                                        var objprocess2 = {};
+                                        objprocess2.CategoryId = el.Config_CategoryId;
+                                        objprocess2.CategoryName = el.CategoryName;
+                                        objprocess2.ProcessCode = el.ProcessCode;
+                                        objprocess2.ProcessName = el.ProcessName;
+                                        that.dialogForm.processList.push(objprocess2);
+                                    });
+
+                                });
+                            }
+
+                            $(val).each(function (index, el) {
+                                if (el.Type == "Process") {
+                                    var objprocess = {};
+                                    objprocess.CategoryId = el.CategoryId;
+                                    objprocess.CategoryName = el.CategoryName;
+                                    objprocess.ProcessCode = el.ProcessCode;
+                                    objprocess.ProcessName = el.ProcessName;
+                                    that.dialogForm.processList.push(objprocess);
+                                }
+                            });
+                            break;
+                    }
+                }
+                return false;
+            },
+            //调用选人控件
+            GetUserInfo: function (val) {
+                if (val == 'toUserName') {
+                    this.showdialog('toUserName', false);
+                } else if (val == 'toUser') {
+                    this.showdialog('toUser', false);
+                } else if (val == 'flow') {
+                    this.showdialog('flow', true);
+                }
+            },
+            changeMode: function () {
+                if (this.dialogForm.authorizationMode == 1) {
+                    this.dialogForm.toUserAccount = '';
+                    this.dialogForm.toUserName = '';
+                }
+                else {
+                    this.dialogForm.toUserAccount = 'K2:KStarAutoSkipAccount';
+                    this.dialogForm.toUserName = '自动审批用户 | K2AutoSkipAccountUser';
+                }
+            },
+            // 搜索
+            search: function (val) {
+                debugger;
+                this.form.toUser = val && val.toUserAccount ? val.toUserAccount : '';
+                this.form.status = val ? val.status:'true';//默认激活状态
+                this.form.processName = val && val.processName ? val.processName : '';
+                this.form.endTime = val && val.endTime ? val.endTime : '';
+                this.form.startTime = val && val.startTime ? val.startTime : '';
+                if (this.form.keyword && this.form.toUser == '') {
+                    this.form.toUser = this.form.keyword;
+                }
+                
+                this.getDate(true);
+                portalLog("流程代理-搜索", "/Portal/WorkFlow/GetProcessDelegation");
+            },
+            // tab框切换
+            handlerTabChange: function () {
+                //this.form.limit = 10
+                this.form.PageSize = 10;
+                this.form.PageIndex = 1;
+                this.form.toUser = ''
+                this.form.status = 'true'//默认激活状态
+                this.form.processName = ''
+                this.form.endTime = '';
+                this.form.startTime = '';
+                this.form.PageIndex = 1
+                this.getDate();
+                var elements = document.getElementsByClassName('el-popover');
+                while (elements.length > 0) {
+                    elements[0].parentNode.removeChild(elements[0]);
+                }
+                //this.reset()
+            },
+            // 切换状态
+            changeSwitch: function (row) {
+                var that = this
+                SetDelegationStatus({
+                    Id: row.Id,
+                    Status: row.IsEnable
+                }).then(function (res) {
+                    if (res.status === 200) {
+                        that.$message.success(that.$t('Portal.HomeProcessAgentAddTitleSuccess'));//'设置成功';
+                        that.getDate();
+                    }
+                }).catch(function (err) {
+                    that.$message.error(that.$t('Portal.HomeProcessAgentAddTitleError')+ err.message)  //'操作失败!ERROR MESSAGE:'
+                })
+            },
+            // 日期转换
+            getFormatDate: function (date) {
+                if (date) { return moment(date).format('YYYY-MM-DD HH:mm:ss') }
+            },
+            // 获取业务流程数据
+            getDate: function (val) {
+                // 当val属于search搜索时，一定要把页码重置为1
+                if (val) {
+                    this.form.PageIndex = 1
+                }
+                var that = this
+                this.loading = true
+
+                GetProcessDelegation(this.form).then(function (res) {
+                    that.loading = false
+                    that.isLoading = !that.isLoading
+                    that.tableData = res.data.data
+                    that.total = res.data.count
+                }).catch(function (err) {
+                    that.$message.error(err.message)
+                })
+            },
+            // 改变条数
+            handleChangePage: function (val) {
+                this.form = val;
+                this.getDate();
+            },
+            // 重置
+            reset: function () {
+                this.form.toUser = '';
+                this.form.fromUser = sessionStorage.getItem('userName');
+                this.form.status = 'true';//默认激活状态
+                this.form.endTime = '';
+                this.form.startTime = '';
+                this.processName = '';
+                //    this.iniStart = ''
+                //    this.iniEnd = ''
+                //  this.endStart = ''
+                //   this.endEnd = ''
+                this.getDate(true);
+            },
+            // 去其他页面
+            gotoOther: function (url) {
+                window.open(url, '_blank')
+            },
+            //新增用户代理
+            AddUserDelegation: function () {
+                this.dialogType = 'add';//默认添加
+                this.clearDialogForm();
+                if (this.form.sType == "3") {
+                    this.dialogForm.authorizationMode = 1;
+                }
+                // this.dialogVisible = true;//加载弹出框
+                this.openDialog('add',{sType: this.form.sType} )
+            },
+            // 打开弹框
+            openDialog: function (val, row) {
+                var that = this;
+
+                this.btnLoading = false;
+                var typeName = this.getDelegationType(row.sType);
+                if (val === 'add') {
+                    this.dialogTitle = that.$t('Portal.HomeProcessAgentAddTitleNew');//'新增'
+                    this.dialogVisible = true;
+                    this.dialogType = 'add';
+                    portalLog("流程代理-" + this.dialogType + typeName, "");
+                } else {
+                    if (val === 'see') {
+                        this.dialogTitle = that.$t('Portal.HomeProcessAgentAddTitleView');//'查看'
+                        this.dialogType = 'see';
+                        portalLog("流程代理-" + this.dialogType + typeName, "");
+                    } else {
+                        this.dialogTitle = that.$t('Portal.HomeProcessAgentAddTitleEdit');//'编辑'
+                        this.dialogType = 'edit';
+                        portalLog("流程代理-" + this.dialogType + typeName, "");
+                    }
+
+                    this.dialogForm.toUserName = row.ToUserName;
+                    this.dialogForm.toUserAccount = row.ToUserAccount;
+                    this.dialogForm.start = this.getFormatDate(row.StartDate);
+                    this.dialogForm.end = this.getFormatDate(row.EndDate);
+                    this.dialogForm.isEnabled = row.IsEnable;
+                    this.dialogForm.txtNote = row.Note;
+                    this.dialogForm.isAllProcess = row.IsAllProcess;
+                    this.dialogForm.id = row.Id;
+                    this.time = [];
+                    this.time.push(this.getFormatDate(row.StartDate));
+                    this.time.push(this.getFormatDate(row.EndDate));
+
+                    if (row.sType == 3 || row.sType == 2) {
+                        this.dialogForm.authorizationMode = row.AuthorizationMode;
+                    } else {
+                        this.dialogForm.authorizationMode = null;
+                    }
+
+                    var that = this;
+                    GetDelegationProcessList({
+                        page: 1,
+                        limit: 500,
+                        id: row.Id
+                    }).then(function (res) {
+                        if (res.status == 200) {
+                            that.dialogForm.processList = res.data.data;
+                            that.dialogVisible = true;
+                        }
+                    })
+                }
+
+            },
+            //取消按钮
+            handleCancle: function () {
+                this.btnLoading = false;
+                this.dialogVisible = false;
+                this.time = []
+                return false;
+            },
+            // 确定弹框
+            handleMutliApprove: function (val) {
+
+                this.btnLoading = true;
+                var that = this;
+                if (this.dialogType === 'add' && this.form.sType==4) {
+                    this.dialogForm.start = new Date();
+                    this.dialogForm.end = new Date();
+                }
+                var checkData = this.checkDialogFormInfo();
+                if (!checkData) {
+                    this.btnLoading = false;
+                    return false;
+                }
+                this.dialogForm.sType = this.form.sType;
+                if (this.dialogForm.authorizationMode == 2) {
+                    this.dialogForm.sType = 2;
+                }
+                if (this.dialogForm.authorizationMode == 3) {
+                    this.form.toUserAccount = 'K2:KStarAutoSkipAccount';
+                    this.form.toUserName = '自动审批用户 | K2AutoSkipAccountUser';
+                }
+                if (this.dialogType === 'add') {
+                    this.dialogForm.id = null;
+                    // 新增
+                     //this.dialogForm.processList = JSON.stringify(this.dialogForm.processList);//转成字符串
+                    AddProcessDelegation(this.dialogForm).then(function (res) {
+                        if (res.data.code === 0) {
+                            that.getDate(true);
+                        }
+                    }).catch(function (err) {
+                        that.$message.error(err.message);
+                    })
+                } else if (this.dialogType === 'edit') {
+                    // 编辑
+                    //this.dialogForm.processList = JSON.stringify(this.dialogForm.processList);//转成字符串
+                    UpdateProcessDelegation(this.dialogForm).then(function (res) {
+                        if (res.data.code === 0) {
+                            that.getDate(true);
+                        }
+                    }).catch(function (err) {
+                        that.$message.error(err.message);
+                    })
+                }
+                this.dialogVisible = false;
+                this.btnLoading = false;
+            },
+            // 删除
+            handleDel: function (row) {
+                var index = this.dialogForm.processList.indexOf(row);
+                this.dialogForm.processList.splice(index, 1);
+            },
+            //获取代理类型
+            getDelegationType: function (type) {
+                var delegationType = "";
+                switch (type) {
+                    case 1:
+                    case "1":
+                        delegationType = "申请权限代理"; break;
+                    case 2:
+                    case "2":
+                    case 3:
+                    case "3":
+                        delegationType = "审批权限代理"; break;
+                    case 4:
+                    case "4":
+                        delegationType = "已办查看代理"; break;
+                    case 5:
+                    case "5":
+                        delegationType = "审批后传阅代理"; break;
+                }
+                return delegationType;
+            },
+            //清理dialogForm对象
+            clearDialogForm: function () {
+                this.btnLoading = false;
+
+                this.dialogForm.fromUserAccount = sessionStorage.getItem('userAccount');
+                this.dialogForm.fromUserName = sessionStorage.getItem('userName');
+                this.dialogForm.toUserName = '';
+                this.dialogForm.toUserAccount = '';
+                this.dialogForm.start = '';
+                this.dialogForm.end = '';
+                this.dialogForm.isEnabled = true;
+                this.dialogForm.txtNote = '';
+                this.dialogForm.isAllProcess = false;
+                this.dialogForm.authorizationMode = 0;
+                //this.dialogForm.LineRule = "";
+                //this.dialogForm.LineRuleDisplay = "";
+                this.dialogForm.processList = [];
+            },
+            //校验数据
+            checkDialogFormInfo: function () {
+                var that = this;
+                if (this.dialogForm.toUserName.length == 0) {
+                    that.$message.error(that.$t('Portal.HomeProcessAgentAddChecktoUser')); //'代理人不能为空！'
+                    return false;
+                }
+                if (this.dialogForm.start.length == 0 && this.form.sType!='4') {
+                    that.$message.error(that.$t('Portal.HomeProcessAgentAddCheckEffectiveStart'));//'生效开始时间不能为空！'
+                    return false;
+                }
+                if (this.dialogForm.end == 0 && this.form.sType != '4') {
+                    that.$message.error(that.$t('Portal.HomeProcessAgentAddCheckEffectiveEnd'));//'生效结束时间不能为空！'
+                    return false;
+                }
+                if (this.form.sType == "3" && this.dialogForm.authorizationMode.length == 0) {
+                    that.$message.error(that.$t('Portal.HomeProcessAgentAddCheckApprovalMode'));//'请选择审批模式！'
+                    return false;
+                }
+                if (!this.dialogForm.isAllProcess && this.dialogForm.processList.length == 0 && this.form.sType != '4') {
+                    that.$message.error(that.$t('Portal.HomeProcessAgentAddCheckProcessSelect'));//'请选择流程！'
+                    return false;
+                }
+                if (this.dialogForm.toUserAccount == this.dialogForm.fromUserAccount) {
+                    that.$message.error(that.$t('Portal.HomeProcessAgentAddCheckFromToUser'));//'授权人与代理人不能相同！'
+                    return false;
+                }
+                if ("k2admin,Everyone".indexOf(this.dialogForm.toUserAccount) > -1) {
+                    that.$message.error(that.$t('Portal.HomeProcessAgentAddCheckSpecialUser'));//'特殊账号不能使用！'
+                    return false;
+                }
+
+                var startTime = new Date(this.dialogForm.start);
+                var startTimeStemp = startTime.getTime();
+
+                var endTime = new Date(this.dialogForm.end);
+                var endTimeStemp = endTime.getTime();
+                if (startTimeStemp > endTimeStemp) {
+                    that.$message.error(that.$t('Portal.HomeProcessAgentAddCheckEffectiveStartEnd'));//'生效开始时间大于生效结束时间！'
+                    return false;
+                }
+
+                return true;
+            },
+            //获取弹出框代理人label
+            getAgentUserLabel: function (agentUserLabel, field, sType) {
+                if (field == "fromUser") {
+                    if (sType == "5") {
+                        return this.$t('Portal.HomeProcessAgentCCUser');
+                    } else {
+                        return this.$t(agentUserLabel);
+                    }
+                }
+                else if (field == "toUser") {
+                    if (sType == "5") {
+                        return this.$t('Portal.HomeProcessAgentReceiverUser');
+                    } else {
+                        return this.$t(agentUserLabel);
+                    }
+                } else {
+                    return this.$t(agentUserLabel);
+                }
+            }
+        }
+    });
+</script>

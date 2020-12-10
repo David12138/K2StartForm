@@ -1,0 +1,138 @@
+@font-face {font-family: "icom";
+  src: url('fonts/iconfont.eot?t=1579490039638'); /* IE9 */
+  src: url('fonts/iconfont.eot?t=1579490039638#iefix') format('embedded-opentype'), /* IE6-IE8 */
+  url('fonts/iconfont.woff?t=1579490039638') format('woff'),
+  url('fonts/iconfont.ttf?t=1579490039638') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+ */
+  url('fonts/iconfont.svg?t=1579490039638#icom') format('svg'); /* iOS 4.1- */
+}
+
+.ic-delete,
+.ic-query-process,
+.ic-user,
+.ic-arrown-dowm,
+.ic-setting,
+.ic-download,
+.ic-home,
+.ic-copy,
+.ic-menu,
+.ic-process-agent,
+.ic-see,
+.ic-process-icon,
+.ic-trial-tasks,
+.ic-flow,
+.ic-data,
+.ic-draft,
+.ic-daiyuerenwuicon,
+.ic-application,
+.ic-query-auth,
+.ic-tasks,
+.ic-guolv,
+.ic-unfold,
+.ic-ren
+{
+  font-family: "icom" !important;
+  speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+  
+    /* Better Font Rendering =========== */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+
+.ic-delete:before {
+  content: "\e628";
+}
+
+.ic-query-process:before {
+  content: "\e629";
+}
+
+.ic-user:before {
+  content: "\e62a";
+}
+
+.ic-arrown-dowm:before {
+  content: "\e62b";
+}
+
+.ic-setting:before {
+  content: "\e62c";
+}
+
+.ic-download:before {
+  content: "\e62d";
+}
+
+.ic-home:before {
+  content: "\e62e";
+}
+
+.ic-copy:before {
+  content: "\e62f";
+}
+
+.ic-menu:before {
+  content: "\e630";
+}
+
+.ic-process-agent:before {
+  content: "\e631";
+}
+
+.ic-see:before {
+  content: "\e632";
+}
+
+.ic-process-icon:before {
+  content: "\e633";
+}
+
+.ic-trial-tasks:before {
+  content: "\e634";
+}
+
+.ic-flow:before {
+  content: "\e635";
+}
+
+.ic-data:before {
+  content: "\e636";
+}
+
+.ic-draft:before {
+  content: "\e637";
+}
+
+.ic-daiyuerenwuicon:before {
+  content: "\e638";
+}
+
+.ic-application:before {
+  content: "\e639";
+}
+
+.ic-query-auth:before {
+  content: "\e63a";
+}
+
+.ic-tasks:before {
+  content: "\e63b";
+}
+
+.ic-guolv:before {
+  content: "\e63c";
+}
+
+.ic-unfold:before {
+  content: "\e63d";
+}
+
+.ic-ren:before {
+  content: "\e63e";
+}
+

@@ -1,0 +1,40 @@
+#app {
+    font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Î¢ÈíÑÅºÚ",Arial,sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-align: center;
+    color: #2c3e50;
+    margin-top: 160px;
+}
+
+.login {
+    min-width: 350px;
+    width: 25%;
+    margin: auto;
+}
+
+.lf {
+    float: left;
+}
+
+.box {
+    min-width: 350px;
+    margin-left: 50px;
+    width: 30%;
+}
+
+.rf {
+    float: right;
+}
+
+.clearfix:after {
+    content: ".";
+    display: block;
+    height: 0;
+    visibility: hidden;
+    clear: both;
+}
+
+.clearfix {
+    *zoom: 1;
+}

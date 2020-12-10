@@ -1,0 +1,166 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{C3861C53-57DA-4777-AB56-1934669FE696}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>KStar.Form.Domain</RootNamespace>
+    <AssemblyName>KStar.Form.Domain</AssemblyName>
+    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Autofac, Version=4.9.4.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Autofac.4.9.4\lib\net45\Autofac.dll</HintPath>
+    </Reference>
+    <Reference Include="AutoMapper, Version=8.1.0.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\AutoMapper.8.1.0\lib\net461\AutoMapper.dll</HintPath>
+    </Reference>
+    <Reference Include="CacheManager.Core, Version=1.2.0.0, Culture=neutral, PublicKeyToken=5b450b4fb65c4cdb, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\CacheManager.Core.1.2.0\lib\net45\CacheManager.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Exceptionless, Version=4.0.0.0, Culture=neutral, PublicKeyToken=fc181f0a46f65747, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Exceptionless.4.4.0\lib\net45\Exceptionless.dll</HintPath>
+    </Reference>
+    <Reference Include="KStar.Domain, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\kstarpackages\KStar.Domain.dll</HintPath>
+    </Reference>
+    <Reference Include="KStar.Platform, Version=1.0.4.7, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\kstarpackages\KStar.Platform.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="RestSharp, Version=106.0.0.0, Culture=neutral, PublicKeyToken=598062e77f915f75, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\RestSharp.106.10.1\lib\net452\RestSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="SqlSugar, Version=4.9.9.10, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\sqlSugar.4.9.9.10\lib\SqlSugar.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Net.Http.WebRequest" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Threading.Tasks.Dataflow, Version=4.5.24.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Microsoft.Tpl.Dataflow.4.5.24\lib\portable-net45+win8+wpa81\System.Threading.Tasks.Dataflow.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Attribute\CustomAttribute.cs" />
+    <Compile Include="AutoMapperProfile\FormDomainMapperProfiles.cs" />
+    <Compile Include="ConsoleServiceModule.cs" />
+    <Compile Include="CustomExpression\CustomContext.cs" />
+    <Compile Include="CustomExpression\RuleService.cs" />
+    <Compile Include="Helper\ConvertHelper.cs" />
+    <Compile Include="IService.cs" />
+    <Compile Include="Logger\ExceptionLessLogger.cs" />
+    <Compile Include="Logger\DbLogManager.cs" />
+    <Compile Include="Logger\PrcServer_UserOperationLog.cs" />
+    <Compile Include="Models\DH_AccountInfoHistory.cs" />
+    <Compile Include="Models\ModelTemplate.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ModelTemplate.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\OA_Client.cs" />
+    <Compile Include="Models\PrcServer_FormViewAuthorize.cs" />
+    <Compile Include="Service\BaseRepository.cs" />
+    <Compile Include="Service\BPMService\IInterfaceLogService.cs" />
+    <Compile Include="Service\BPMService\InterfaceLogService.cs" />
+    <Compile Include="Service\BuyerManage\ChanneContractService.cs" />
+    <Compile Include="Service\BuyerManage\IChanneContractService.cs" />
+    <Compile Include="Service\Demo\DemoServier.cs" />
+    <Compile Include="Service\Demo\IDemoServier.cs" />
+    <Compile Include="Service\HumanResources\IPayRiseApplicationService.cs" />
+    <Compile Include="Service\HumanResources\PayRiseApplicationService.cs" />
+    <Compile Include="Service\IRepository.cs" />
+    <Compile Include="Service\NewBusiness\ClientCompactService.cs" />
+    <Compile Include="Service\NewBusiness\ElectronicSealApplyApplicationService.cs" />
+    <Compile Include="Service\NewBusiness\ExpenseApplicationService.cs" />
+    <Compile Include="Service\NewBusiness\IClientCompactService.cs" />
+    <Compile Include="Service\NewBusiness\IElectronicSealApplyApplicationService.cs" />
+    <Compile Include="Service\NewBusiness\IExpenseApplicationService.cs" />
+    <Compile Include="Service\NewBusiness\IMyTestService.cs" />
+    <Compile Include="Service\NewBusiness\INewClientCompactService.cs" />
+    <Compile Include="Service\NewBusiness\IPaySalaryApplicationTService.cs" />
+    <Compile Include="Service\NewBusiness\IPaySalaryApplicationService.cs" />
+    <Compile Include="Service\NewBusiness\IRefundApplicationService.cs" />
+    <Compile Include="Service\NewBusiness\ISocialSecurityService.cs" />
+    <Compile Include="Service\NewBusiness\MyTestService.cs" />
+    <Compile Include="Service\NewBusiness\NewClientCompactService.cs" />
+    <Compile Include="Service\NewBusiness\PaySalaryApplicationTService.cs" />
+    <Compile Include="Service\NewBusiness\PaySalaryApplicationService.cs" />
+    <Compile Include="Service\NewBusiness\RefundApplicationService.cs" />
+    <Compile Include="Service\NewBusiness\SocialSecurityService.cs" />
+    <Compile Include="ViewModels\BaseFormModel.cs" />
+    <Compile Include="ViewModels\BPMService\BPMBaseModel.cs" />
+    <Compile Include="ViewModels\BPMService\BPMServiceModel.cs" />
+    <Compile Include="ViewModels\BPMService\PushBusInterfaceModel.cs" />
+    <Compile Include="ViewModels\BPMService\Requst\ProcessStartArgs.cs" />
+    <Compile Include="ViewModels\BPMService\Requst\RequstModel.cs" />
+    <Compile Include="ViewModels\BPMService\ResponseModel.cs" />
+    <Compile Include="ViewModels\BPMService\ResponseResultInfo.cs" />
+    <Compile Include="ViewModels\BuyerManage\ChanneContract\ChanneContractViewModel.cs" />
+    <Compile Include="ViewModels\DataDictionaryDto.cs" />
+    <Compile Include="ViewModels\NewBusiness\ClientCompact\ClientCompactViewModel.cs" />
+    <Compile Include="ViewModels\NewBusiness\ExpenseApplication\ExpenseApplicationViewModel.cs" />
+    <Compile Include="ViewModels\NewBusiness\NewClientCompact\NewClientCompactViewModel.cs" />
+    <Compile Include="ViewModels\NewBusiness\PaySalaryApplication\PaySalaryApplicationViewModel.cs" />
+    <Compile Include="ViewModels\NewBusiness\RefundApplication\RefundApplicationViewModel.cs" />
+    <Compile Include="WebServiceModule.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Models\ModelTemplate.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ModelTemplate.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

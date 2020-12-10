@@ -1,0 +1,1993 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Autofac.Annotation</name>
+    </assembly>
+    <members>
+        <member name="T:Autofac.Annotation.AutoConfiguration">
+            <summary>
+            和Spring的Configuration功能类似
+            Bean标签在这个类里面才有作用
+            </summary>
+        </member>
+        <member name="M:Autofac.Annotation.AutoConfiguration.#ctor">
+            <summary>
+            构造函数
+            </summary>
+        </member>
+        <member name="M:Autofac.Annotation.AutoConfiguration.#ctor(System.String)">
+            <summary>
+            构造函数
+            </summary>
+            <param name="key"></param>
+        </member>
+        <member name="P:Autofac.Annotation.AutoConfiguration.Key">
+            <summary>
+            注册单个的key
+            </summary>
+        </member>
+        <member name="P:Autofac.Annotation.AutoConfiguration.OrderIndex">
+            <summary>
+            值越大越优先处理
+            </summary>
+        </member>
+        <member name="T:Autofac.Annotation.AutofacScope">
+            <summary>
+            实例的生命周期
+            </summary>
+        </member>
+        <member name="F:Autofac.Annotation.AutofacScope.InstancePerDependency">
+            <summary>
+            瞬时
+            </summary>
+        </member>
+        <member name="F:Autofac.Annotation.AutofacScope.SingleInstance">
+            <summary>
+            单例
+            </summary>
+        </member>
+        <member name="F:Autofac.Annotation.AutofacScope.InstancePerLifetimeScope">
+            <summary>
+            每个scope获取新的实例
+            </summary>
+        </member>
+        <member name="F:Autofac.Annotation.AutofacScope.InstancePerRequest">
+            <summary>
+            根据每个请求一个实例
+            </summary>
+        </member>
+        <member name="F:Autofac.Annotation.AutofacScope.Default">
+            <summary>
+            默认是瞬时
+            </summary>
+        </member>
+        <member name="T:Autofac.Annotation.Autowired">
+            <summary>
+            注入属性或者字段
+            只能打一个标签 可以继承父类
+            </summary>
+        </member>
+        <member name="M:Autofac.Annotation.Autowired.#ctor">
+            <summary>
+            默认的
+            </summary>
+        </member>
+        <member name="M:Autofac.Annotation.Autowired.#ctor(System.String)">
+            <summary>
+            按照名称来注入
+            </summary>
+            <param name="name"></param>
+        </member>
+        <member name="M:Autofac.Annotation.Autowired.#ctor(System.Boolean)">
+            <summary>
+            设置是否装载失败报错
+            </summary>
+            <param name="required"></param>
+        </member>
+        <member name="P:Autofac.Annotation.Autowired.Name">
+            <summary>
+            对应的值
+            </summary>
+        </member>
+        <member name="P:Autofac.Annotation.Autowired.Required">
+            <summary>
+            默认装载失败会报错 设置为false装载失败不会报错
+            </summary>
+        </member>
+        <member name="M:Autofac.Annotation.Autowired.ResolveParameter(System.Reflection.ParameterInfo,Autofac.IComponentContext)">
+            <summary>
+            作为ParameterInfo自动装载
+            </summary>
+            <param name="parameter"></param>
+            <param name="context"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Autofac.Annotation.Autowired.ResolveField(System.Reflection.FieldInfo,Autofac.IComponentContext,System.Collections.Generic.IEnumerable{Autofac.Core.Parameter},System.Object,System.Boolean)">
+            <summary>
+            装配字段
+            </summary>
+            <param name="property"></param>
+            <param name="context"></param>
+            <param name="Parameters"></param>
+            <param name="instance"></param>
+            <param name="allowCircle"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Autofac.Annotation.Autowired.ResolveProperty(System.Reflection.PropertyInfo,Autofac.IComponentContext,System.Collections.Generic.IEnumerable{Autofac.Core.Parameter},System.Object,System.Boolean)">
+            <summary>
+            装配属性
+            </summary>
+            <param name="property"></param>
+            <param name="context"></param>
+            <param name="Parameters"></param>
+            <param name="instance"></param>
+            <param name="alowCircle"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Autofac.Annotation.Autowired.Resolve(System.Type,System.Type,Autofac.IComponentContext,System.String)">
+            <summary>
+            装配
+            </summary>
+            <param name="classType"></param>
+            <param name="type"></param>
+            <param name="context"></param>
+            <param name="typeDescription"></param>
+            <returns></returns>
+            <exception cref="T:Autofac.Core.DependencyResolutionException"></exception>
+        </member>
+        <member name="T:Autofac.Annotation.AutowiredParmeter">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Autofac.Annotation.AutowiredParmeter.AutowiredChains">
+            <summary>
+            集合
+            </summary>
+        </member>
+        <member name="M:Autofac.Annotation.AutowiredParmeter.TryAdd(System.String,System.Object)">
+            <summary>
+            添加
+            </summary>
+            <param name="service"></param>
+            <param name="instance"></param>
+        </member>
+        <member name="M:Autofac.Annotation.AutowiredParmeter.TryGet(System.String,System.Object@)">
+            <summary>
+            获取
+            </summary>
+            <param name="service"></param>
+            <param name="instance"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Autofac.Annotation.AutowiredParmeter.CanSupplyValue(System.Reflection.ParameterInfo,Autofac.IComponentContext,System.Func{System.Object}@)">
+            <summary>
+            
+            </summary>
+            <param name="pi"></param>
+            <param name="context"></param>
+            <param name="valueProvider"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Autofac.Annotation.Bean">
+            <summary>
+            Bean标签
+            </summary>
+        </member>
+        <member name="M:Autofac.Annotation.Bean.#ctor">
+            <summary>
+            构造函数
+            </summary>
+        </member>
+        <member name="M:Autofac.Annotation.Bean.#ctor(System.String)">
+            <summary>
+            构造函数
+            </summary>
+            <param name="key"></param>
+        </member>
+        <member name="P:Autofac.Annotation.Bean.Key">
+            <summary>
+            注册单个的key
+            </summary>
+        </member>
+        <member name="T:Autofac.Annotation.Component">
+            <summary>
+            会扫描有该注解的类 自动装配到autofac容器内
+            只能打在class上面 打在abstract不支持会被忽略
+            允许打多个 如果打多个有重复的话会覆盖
+            打在父类上子类没打的话子类就获取不到
+            </summary>
+        </member>
+        <member name="M:Autofac.Annotation.Component.#ctor">
+            <summary>
+            构造函数
+            </summary>
+        </member>
+        <member name="M:Autofac.Annotation.Component.#ctor(System.Type)">
+            <summary>
+            构造函数
+            </summary>
+            <param name="_service"></param>
+        </member>
+        <member name="M:Autofac.Annotation.Component.#ctor(System.Type,System.String)">
+            <summary>
+            构造函数
+            </summary>
+            <param name="_service"></param>
+            <param name="key"></param>
+        </member>
+        <member name="M:Autofac.Annotation.Component.#ctor(System.String)">
+            <summary>
+            构造函数
+            </summary>
+            <param name="key"></param>
+        </member>
+        <member name="P:Autofac.Annotation.Component.Services">
+            <summary>
+            注册的类型
+            如果为null则注册为本身类型
+            </summary>
+        </member>
+        <member name="P:Autofac.Annotation.Component.Service">
+            <summary>
+            注册单个的类型
+            </summary>
+        </member>
+        <member name="P:Autofac.Annotation.Component.Key">
+            <summary>
+            注册单个的key
+            </summary>
+        </member>
+        <member name="P:Autofac.Annotation.Component.OrderIndex">
+            <summary>
+            自定义注册顺序 越大越先注册 但是注意 相同的类型谁最小就会拿resolve谁
+            注册同类型顺序越大越先注册但Resolve获取的是顺序越小的 和autofac本身是保持一致的
+            </summary>
+        </member>
+        <member name="P:Autofac.Annotation.Component.Keys">
+            <summary>
+             注册key 在同一个类型注册多个的时候就需要用到key来做区分
+            </summary>
+        </member>
+        <member name="P:Autofac.Annotation.Component.AutoActivate">
+            <summary>
+            A Boolean indicating if the component should auto-activate.
+            SingleInstance Scope default is true
+            </summary>
+        </member>
+        <member name="P:Autofac.Annotation.Component.InjectProperties">
+            <summary>
+            A Boolean indicating whether property (setter) injection for the component should be enabled.
+            </summary>
+        </member>
+        <member name="P:Autofac.Annotation.Component.InjectPropertyType">
+            <summary>
+            属性自动装配的类型
+            </summary>
+        </member>
+        <member name="P:Autofac.Annotation.Component.AutofacScope">
+            <summary>
+            作用域
+            </summary>
+        </member>
+        <member name="P:Autofac.Annotation.Component.Ownership">
+            <summary>
+            如果设置值为external代表需要自己管理dispose
+            </summary>
+        </member>
+        <member name="P:Autofac.Annotation.Component.Interceptor">
+            <summary>
+            指定拦截器类型
+            </summary>
+        </member>
+        <member name="P:Autofac.Annotation.Component.InterceptorType">
+            <summary>
+            拦截器类型
+            </summary>
+        </member>
+        <member name="P:Autofac.Annotation.Component.InterceptorKey">
+            <summary>
+            如果同一个类型的拦截器有多个 可以指定Key
+            </summary>
+        </member>
+        <member name="P:Autofac.Annotation.Component.InitMethod">
+            <summary>
+            被创建后执行的方法
+            </summary>
+        </member>
+        <member name="P:Autofac.Annotation.Component.DestroyMethod">
+            <summary>
+            被Release时执行的方法
+            </summary>
+        </member>
+        <member name="T:Autofac.Annotation.InterceptorType">
+            <summary>
+            拦截器类型
+            </summary>
+        </member>
+        <member name="F:Autofac.Annotation.InterceptorType.Interface">
+            <summary>
+            使用接口模式
+            </summary>
+        </member>
+        <member name="F:Autofac.Annotation.InterceptorType.Class">
+            <summary>
+            使用class的虚方法模式
+            </summary>
+        </member>
+        <member name="T:Autofac.Annotation.InjectPropertyType">
+            <summary>
+            自动注册属性类型
+            </summary>
+        </member>
+        <member name="F:Autofac.Annotation.InjectPropertyType.Autowired">
+            <summary>
+            代表打了Autowired标签的才会装配
+            </summary>
+        </member>
+        <member name="F:Autofac.Annotation.InjectPropertyType.ALL">
+            <summary>
+            代表全部自动装配
+            </summary>
+        </member>
+        <member name="T:Autofac.Annotation.EnvironmentVariableMode">
+            <summary>
+            Specifies how instances of the
+            class must apply environment variables when replacing values.
+            </summary>
+            <author>Mark Pollack</author>
+        </member>
+        <member name="F:Autofac.Annotation.EnvironmentVariableMode.Never">
+            <summary>
+            Never replace environment variables.
+            </summary>
+        </member>
+        <member name="F:Autofac.Annotation.EnvironmentVariableMode.Fallback">
+            <summary>
+            If properties are not specified via a resource, 
+            then resolve using environment variables.
+            </summary>
+        </member>
+        <member name="F:Autofac.Annotation.EnvironmentVariableMode.Override">
+            <summary>
+            Apply environment variables first before applying properties from a
+            resource.
+            </summary>
+        </member>
+        <member name="T:Autofac.Annotation.Ownership">
+            <summary>
+            Ownership
+            </summary>
+        </member>
+        <member name="F:Autofac.Annotation.Ownership.LifetimeScope">
+            <summary>
+            LifetimeScope
+            </summary>
+        </member>
+        <member name="F:Autofac.Annotation.Ownership.External">
+            <summary>
+            External
+            </summary>
+        </member>
+        <member name="T:Autofac.Annotation.PropertySource">
+            <summary>
+            打在class上面
+            可以存在多个 如果有key重复会覆盖
+            如果不打则默认获取目录下的appsetting.json文件里面的
+            An array of metadata values to associate with the component. Each item specifies the name, type, and value.
+            </summary>
+        </member>
+        <member name="M:Autofac.Annotation.PropertySource.#ctor">
+            <summary>
+            默认构造函数
+            </summary>
+        </member>
+        <member name="M:Autofac.Annotation.PropertySource.#ctor(System.String)">
+            <summary>
+            传入指定的路径是相对于工程目录的地址
+            </summary>
+            <param name="path"></param>
+        </member>
+        <member name="P:Autofac.Annotation.PropertySource.Path">
+            <summary>
+            对应的值
+            </summary>
+        </member>
+        <member name="P:Autofac.Annotation.PropertySource.OrderIndex">
+            <summary>
+            排序 越大的越优先查找
+            </summary>
+        </member>
+        <member name="P:Autofac.Annotation.PropertySource.Embedded">
+            <summary>
+            是否是内嵌资源
+            </summary>
+        </member>
+        <member name="P:Autofac.Annotation.PropertySource.MetaSourceType">
+            <summary>
+            资源格式类型
+            </summary>
+        </member>
+        <member name="T:Autofac.Annotation.Value">
+            <summary>
+            注入值
+            只能打一个标签 可以继承父类
+            </summary>
+        </member>
+        <member name="F:Autofac.Annotation.Value.DefaultPlaceholderPrefix">
+            <summary>
+            The default placeholder prefix.
+            </summary>
+        </member>
+        <member name="F:Autofac.Annotation.Value.DefaultPlaceholderSuffix">
+            <summary>
+            The default placeholder suffix.
+            </summary>
+        </member>
+        <member name="M:Autofac.Annotation.Value.#ctor(System.String)">
+            <summary>
+            构造方法
+            </summary>
+            <param name="_value"></param>
+        </member>
+        <member name="P:Autofac.Annotation.Value.value">
+            <summary>
+            对应的值
+            </summary>
+        </member>
+        <member name="P:Autofac.Annotation.Value.IgnoreUnresolvablePlaceholders">
+            <summary>
+            如果拿不到是否报错
+            </summary>
+        </member>
+        <member name="P:Autofac.Annotation.Value.EnvironmentVariableMode">
+            <summary>
+            设置是否从环境变量拿 默认是从文件里面拿不到 就从环境里面去拿
+            </summary>
+        </member>
+        <member name="M:Autofac.Annotation.Value.ResolveParameter(System.Reflection.ParameterInfo,Autofac.IComponentContext)">
+            <summary>
+            注入
+            只能支持值类型string int boolean dic list
+            </summary>
+            <param name="parameter"></param>
+            <param name="context"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Autofac.Annotation.Value.ResolveParameterWithConfiguration(Autofac.Annotation.AutoConfigurationDetail,System.Reflection.ParameterInfo,Autofac.IComponentContext)">
+            <summary>
+            AutoConfiguration类的value注入
+            </summary>
+            <param name="detail"></param>
+            <param name="parameter"></param>
+            <param name="context"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Autofac.Annotation.Value.ResolveProperty(System.Reflection.PropertyInfo,Autofac.IComponentContext)">
+            <summary>
+            注入Property的值
+            </summary>
+            <param name="parameter"></param>
+            <param name="context"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Autofac.Annotation.Value.ResolveFiled(System.Reflection.FieldInfo,Autofac.IComponentContext)">
+            <summary>
+            注入Filed值
+            </summary>
+            <param name="parameter"></param>
+            <param name="context"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Autofac.Annotation.Value.Resolve(Autofac.IComponentContext,System.Type,System.Type,System.Reflection.MemberInfo,System.Reflection.ParameterInfo,Autofac.Annotation.AutoConfigurationDetail)">
+            <summary>
+            对于memberInfo 或者  parameterInfo 进行设值
+            </summary>
+            <param name="context"></param>
+            <param name="classType"></param>
+            <param name="memberType"></param>
+            <param name="memberInfo"></param>
+            <param name="parameterInfo"></param>
+            <param name="autoConfigurationDetail"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Autofac.Annotation.AutoConfigurationSource">
+            <summary>
+            自启动注册Configuration
+            </summary>
+        </member>
+        <member name="M:Autofac.Annotation.AutoConfigurationSource.Start(Autofac.IComponentContext)">
+            <summary>
+            执行自动注册
+            </summary>
+            <param name="context"></param>
+        </member>
+        <member name="T:Autofac.Annotation.AutoConfigurationList">
+            <summary>
+            AutoConfiguration装配集合数据源
+            </summary>
+        </member>
+        <member name="P:Autofac.Annotation.AutoConfigurationList.AutoConfigurationDetailList">
+            <summary>
+            AutoConfiguration装配集合数据源
+            </summary>
+        </member>
+        <member name="T:Autofac.Annotation.AutoConfigurationDetail">
+            <summary>
+            AutoConfiguration装配集合数据源
+            </summary>
+        </member>
+        <member name="P:Autofac.Annotation.AutoConfigurationDetail.AutoConfigurationClassType">
+            <summary>
+            Configuration 所在的类的类型
+            </summary>
+        </member>
+        <member name="P:Autofac.Annotation.AutoConfigurationDetail.BeanMethodInfoList">
+            <summary>
+            Configuration 所在的类的里面有Bean标签的所有方法
+            </summary>
+        </member>
+        <member name="P:Autofac.Annotation.AutoConfigurationDetail.MetaSourceDataList">
+            <summary>
+            数据源
+            </summary>
+        </member>
+        <member name="T:Autofac.Annotation.InterceptAttribute">
+            <summary>
+            Indicates that a type should be intercepted.
+            </summary>
+        </member>
+        <member name="P:Autofac.Annotation.InterceptAttribute.InterceptorService">
+            <summary>
+            Gets the interceptor service.
+            </summary>
+        </member>
+        <member name="M:Autofac.Annotation.InterceptAttribute.#ctor(Autofac.Core.Service)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Autofac.Annotation.InterceptAttribute"/> class.
+            </summary>
+            <param name="interceptorService">The interceptor service.</param>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown if <paramref name="interceptorService" /> is <see langword="null" />.
+            </exception>
+        </member>
+        <member name="M:Autofac.Annotation.InterceptAttribute.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Autofac.Annotation.InterceptAttribute"/> class.
+            </summary>
+            <param name="interceptorServiceName">Name of the interceptor service.</param>
+        </member>
+        <member name="M:Autofac.Annotation.InterceptAttribute.#ctor(System.Type)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Autofac.Annotation.InterceptAttribute"/> class.
+            </summary>
+            <param name="interceptorServiceType">The typed interceptor service.</param>
+        </member>
+        <member name="T:Autofac.Annotation.RegistrationExtensions">
+            <summary>
+            Adds registration syntax to the <see cref="T:Autofac.ContainerBuilder"/> type.
+            </summary>
+        </member>
+        <member name="M:Autofac.Annotation.RegistrationExtensions.EnableClassInterceptors``2(Autofac.Builder.IRegistrationBuilder{``0,Autofac.Features.Scanning.ScanningActivatorData,``1})">
+            <summary>
+            Enable class interception on the target type. Interceptors will be determined
+            via Intercept attributes on the class or added with InterceptedBy().
+            Only virtual methods can be intercepted this way.
+            </summary>
+            <typeparam name="TLimit">Registration limit type.</typeparam>
+            <typeparam name="TRegistrationStyle">Registration style.</typeparam>
+            <param name="registration">Registration to apply interception to.</param>
+            <returns>Registration builder allowing the registration to be configured.</returns>
+        </member>
+        <member name="M:Autofac.Annotation.RegistrationExtensions.EnableClassInterceptors``3(Autofac.Builder.IRegistrationBuilder{``0,``1,``2})">
+            <summary>
+            Enable class interception on the target type. Interceptors will be determined
+            via Intercept attributes on the class or added with InterceptedBy().
+            Only virtual methods can be intercepted this way.
+            </summary>
+            <typeparam name="TLimit">Registration limit type.</typeparam>
+            <typeparam name="TConcreteReflectionActivatorData">Activator data type.</typeparam>
+            <typeparam name="TRegistrationStyle">Registration style.</typeparam>
+            <param name="registration">Registration to apply interception to.</param>
+            <returns>Registration builder allowing the registration to be configured.</returns>
+        </member>
+        <member name="M:Autofac.Annotation.RegistrationExtensions.EnableClassInterceptors``2(Autofac.Builder.IRegistrationBuilder{``0,Autofac.Features.Scanning.ScanningActivatorData,``1},Castle.DynamicProxy.ProxyGenerationOptions,System.Type[])">
+            <summary>
+            Enable class interception on the target type. Interceptors will be determined
+            via Intercept attributes on the class or added with InterceptedBy().
+            Only virtual methods can be intercepted this way.
+            </summary>
+            <typeparam name="TLimit">Registration limit type.</typeparam>
+            <typeparam name="TRegistrationStyle">Registration style.</typeparam>
+            <param name="registration">Registration to apply interception to.</param>
+            <param name="options">Proxy generation options to apply.</param>
+            <param name="additionalInterfaces">Additional interface types. Calls to their members will be proxied as well.</param>
+            <returns>Registration builder allowing the registration to be configured.</returns>
+        </member>
+        <member name="M:Autofac.Annotation.RegistrationExtensions.EnableClassInterceptors``3(Autofac.Builder.IRegistrationBuilder{``0,``1,``2},Castle.DynamicProxy.ProxyGenerationOptions,System.Type[])">
+            <summary>
+            Enable class interception on the target type. Interceptors will be determined
+            via Intercept attributes on the class or added with InterceptedBy().
+            Only virtual methods can be intercepted this way.
+            </summary>
+            <typeparam name="TLimit">Registration limit type.</typeparam>
+            <typeparam name="TConcreteReflectionActivatorData">Activator data type.</typeparam>
+            <typeparam name="TRegistrationStyle">Registration style.</typeparam>
+            <param name="registration">Registration to apply interception to.</param>
+            <param name="options">Proxy generation options to apply.</param>
+            <param name="additionalInterfaces">Additional interface types. Calls to their members will be proxied as well.</param>
+            <returns>Registration builder allowing the registration to be configured.</returns>
+        </member>
+        <member name="M:Autofac.Annotation.RegistrationExtensions.EnableInterfaceInterceptors``3(Autofac.Builder.IRegistrationBuilder{``0,``1,``2})">
+            <summary>
+            Enable interface interception on the target type. Interceptors will be determined
+            via Intercept attributes on the class or interface, or added with InterceptedBy() calls.
+            </summary>
+            <typeparam name="TLimit">Registration limit type.</typeparam>
+            <typeparam name="TActivatorData">Activator data type.</typeparam>
+            <typeparam name="TSingleRegistrationStyle">Registration style.</typeparam>
+            <param name="registration">Registration to apply interception to.</param>
+            <returns>Registration builder allowing the registration to be configured.</returns>
+        </member>
+        <member name="M:Autofac.Annotation.RegistrationExtensions.EnableInterfaceInterceptors``3(Autofac.Builder.IRegistrationBuilder{``0,``1,``2},Castle.DynamicProxy.ProxyGenerationOptions)">
+            <summary>
+            Enable interface interception on the target type. Interceptors will be determined
+            via Intercept attributes on the class or interface, or added with InterceptedBy() calls.
+            </summary>
+            <typeparam name="TLimit">Registration limit type.</typeparam>
+            <typeparam name="TActivatorData">Activator data type.</typeparam>
+            <typeparam name="TSingleRegistrationStyle">Registration style.</typeparam>
+            <param name="registration">Registration to apply interception to.</param>
+            <param name="options">Proxy generation options to apply.</param>
+            <returns>Registration builder allowing the registration to be configured.</returns>
+        </member>
+        <member name="M:Autofac.Annotation.RegistrationExtensions.InterceptedBy``3(Autofac.Builder.IRegistrationBuilder{``0,``1,``2},Autofac.Core.Service[])">
+            <summary>
+            Allows a list of interceptor services to be assigned to the registration.
+            </summary>
+            <typeparam name="TLimit">Registration limit type.</typeparam>
+            <typeparam name="TActivatorData">Activator data type.</typeparam>
+            <typeparam name="TStyle">Registration style.</typeparam>
+            <param name="builder">Registration to apply interception to.</param>
+            <param name="interceptorServices">The interceptor services.</param>
+            <returns>Registration builder allowing the registration to be configured.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="builder"/> or <paramref name="interceptorServices"/>.</exception>
+        </member>
+        <member name="M:Autofac.Annotation.RegistrationExtensions.InterceptedBy``3(Autofac.Builder.IRegistrationBuilder{``0,``1,``2},System.String[])">
+            <summary>
+            Allows a list of interceptor services to be assigned to the registration.
+            </summary>
+            <typeparam name="TLimit">Registration limit type.</typeparam>
+            <typeparam name="TActivatorData">Activator data type.</typeparam>
+            <typeparam name="TStyle">Registration style.</typeparam>
+            <param name="builder">Registration to apply interception to.</param>
+            <param name="interceptorServiceNames">The names of the interceptor services.</param>
+            <returns>Registration builder allowing the registration to be configured.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="builder"/> or <paramref name="interceptorServiceNames"/>.</exception>
+        </member>
+        <member name="M:Autofac.Annotation.RegistrationExtensions.InterceptedBy``3(Autofac.Builder.IRegistrationBuilder{``0,``1,``2},System.Type[])">
+            <summary>
+            Allows a list of interceptor services to be assigned to the registration.
+            </summary>
+            <typeparam name="TLimit">Registration limit type.</typeparam>
+            <typeparam name="TActivatorData">Activator data type.</typeparam>
+            <typeparam name="TStyle">Registration style.</typeparam>
+            <param name="builder">Registration to apply interception to.</param>
+            <param name="interceptorServiceTypes">The types of the interceptor services.</param>
+            <returns>Registration builder allowing the registration to be configured.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="builder"/> or <paramref name="interceptorServiceTypes"/>.</exception>
+        </member>
+        <member name="T:Autofac.Annotation.AutofacAnnotationModule">
+            <inheritdoc />
+            <summary>
+            autofac模块用注解的模式注册
+            </summary>
+        </member>
+        <member name="P:Autofac.Annotation.AutofacAnnotationModule.DefaultAutofacScope">
+            <summary>
+            当前默认的Scope
+            </summary>
+        </member>
+        <member name="P:Autofac.Annotation.AutofacAnnotationModule.AllowCircularDependencies">
+            <summary>
+            是否启用Autowired的循环注入
+            </summary>
+        </member>
+        <member name="P:Autofac.Annotation.AutofacAnnotationModule.AutofacConfigurationKey">
+            <summary>
+            容器注册完开始找AutofacConfiguration标签的class 有多个的时候指定Key
+            </summary>
+        </member>
+        <member name="P:Autofac.Annotation.AutofacAnnotationModule.EnableAutofacEventBus">
+            <summary>
+            是否开启EventBus
+            </summary>
+        </member>
+        <member name="M:Autofac.Annotation.AutofacAnnotationModule.#ctor(System.Reflection.Assembly[])">
+            <summary>
+            根据程序集来实例化
+            </summary>
+            <param name="assemblyList"></param>
+        </member>
+        <member name="M:Autofac.Annotation.AutofacAnnotationModule.#ctor(System.String[])">
+            <summary>
+            根据程序集的名称来实例化
+            </summary>
+            <param name="assemblyNameList"></param>
+        </member>
+        <member name="M:Autofac.Annotation.AutofacAnnotationModule.SetAutofacConfigurationKey(System.String)">
+            <summary>
+            容器注册完开始找AutofacConfiguration标签的class 有多个的时候指定Key
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Autofac.Annotation.AutofacAnnotationModule.SetDefaultAutofacScopeToInstancePerDependency">
+            <summary>
+            设置瞬时
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Autofac.Annotation.AutofacAnnotationModule.SetDefaultAutofacScopeToSingleInstance">
+            <summary>
+            设置单例
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Autofac.Annotation.AutofacAnnotationModule.SetDefaultAutofacScopeToInstancePerLifetimeScope">
+            <summary>
+            设置作用域
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Autofac.Annotation.AutofacAnnotationModule.SetDefaultAutofacScopeToInstancePerRequest">
+            <summary>
+            设置请求作用域
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Autofac.Annotation.AutofacAnnotationModule.SetAllowCircularDependencies(System.Boolean)">
+            <summary>
+            设置是否启用循环Autowired
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Autofac.Annotation.AutofacAnnotationModule.SetEnableAutofacEventBug(System.Boolean)">
+            <summary>
+            设置是否启动eventBus
+            </summary>
+            <param name="flag"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Autofac.Annotation.AutofacAnnotationModule.Load(Autofac.ContainerBuilder)">
+            <summary>
+            autofac加载
+            </summary>
+            <param name="builder"></param>
+        </member>
+        <member name="M:Autofac.Annotation.AutofacAnnotationModule.RegisterMethods``2(Autofac.Annotation.ComponentModel,Autofac.Builder.IRegistrationBuilder{System.Object,``0,``1})">
+            <summary>
+            init方法和Release方法
+            </summary>
+            <typeparam name="TReflectionActivatorData"></typeparam>
+            <typeparam name="TSingleRegistrationStyle"></typeparam>
+            <param name="component"></param>
+            <param name="registrar"></param>
+        </member>
+        <member name="M:Autofac.Annotation.AutofacAnnotationModule.SetIntercept``3(Autofac.Annotation.ComponentModel,Autofac.Builder.IRegistrationBuilder{``0,``1,``2})">
+            <summary>
+            拦截器
+            </summary>
+            <typeparam name="TLimit"></typeparam>
+            <typeparam name="TConcreteReflectionActivatorData"></typeparam>
+            <typeparam name="TRegistrationStyle"></typeparam>
+            <param name="component"></param>
+            <param name="registrar"></param>
+        </member>
+        <member name="M:Autofac.Annotation.AutofacAnnotationModule.SetAutoActivate``2(Autofac.Annotation.ComponentModel,Autofac.Builder.IRegistrationBuilder{System.Object,``0,``1})">
+            <summary>
+            Sets the auto activation mode for the component.
+            </summary>
+            <typeparam name="TReflectionActivatorData"></typeparam>
+            <typeparam name="TSingleRegistrationStyle"></typeparam>
+            <param name="component"></param>
+            <param name="registrar"></param>
+        </member>
+        <member name="M:Autofac.Annotation.AutofacAnnotationModule.SetInjectProperties``2(Autofac.Annotation.ComponentModel,Autofac.Builder.IRegistrationBuilder{System.Object,``0,``1})">
+            <summary>
+            设置属性自动注入
+            </summary>
+            <typeparam name="TReflectionActivatorData"></typeparam>
+            <typeparam name="TSingleRegistrationStyle"></typeparam>
+            <param name="component"></param>
+            <param name="registrar"></param>
+        </member>
+        <member name="M:Autofac.Annotation.AutofacAnnotationModule.SetComponentOwnership``2(Autofac.Annotation.ComponentModel,Autofac.Builder.IRegistrationBuilder{System.Object,``0,``1})">
+            <summary>
+            设置Ownership
+            </summary>
+            <typeparam name="TReflectionActivatorData"></typeparam>
+            <typeparam name="TSingleRegistrationStyle"></typeparam>
+            <param name="component"></param>
+            <param name="registrar"></param>
+        </member>
+        <member name="M:Autofac.Annotation.AutofacAnnotationModule.SetLifetimeScope``2(Autofac.Annotation.ComponentModel,Autofac.Builder.IRegistrationBuilder{System.Object,``0,``1})">
+            <summary>
+            设置scope
+            </summary>
+            <typeparam name="TReflectionActivatorData"></typeparam>
+            <typeparam name="TSingleRegistrationStyle"></typeparam>
+            <param name="component"></param>
+            <param name="registrar"></param>
+        </member>
+        <member name="M:Autofac.Annotation.AutofacAnnotationModule.RegisterComponentValues``2(Autofac.Annotation.ComponentModel,Autofac.Builder.IRegistrationBuilder{System.Object,``0,``1})">
+            <summary>
+            动态注入打了value标签的值
+            </summary>
+            <typeparam name="TReflectionActivatorData"></typeparam>
+            <typeparam name="TSingleRegistrationStyle"></typeparam>
+            <param name="component"></param>
+            <param name="registrar"></param>
+        </member>
+        <member name="M:Autofac.Annotation.AutofacAnnotationModule.RegisterComponentServices``2(Autofac.Annotation.ComponentModel,Autofac.Builder.IRegistrationBuilder{System.Object,``0,``1})">
+            <summary>
+            注册Component
+            </summary>
+            <typeparam name="TReflectionActivatorData"></typeparam>
+            <typeparam name="TSingleRegistrationStyle"></typeparam>
+            <param name="component"></param>
+            <param name="registrar"></param>
+        </member>
+        <member name="M:Autofac.Annotation.AutofacAnnotationModule.GetAllComponent(Autofac.ContainerBuilder)">
+            <summary>
+            解析程序集
+            </summary>
+            <returns></returns>
+            <exception cref="T:System.ArgumentNullException"></exception>
+        </member>
+        <member name="M:Autofac.Annotation.AutofacAnnotationModule.GetAllAutofacConfiguration">
+            <summary>
+            解析程序集的AutofacConfiguration
+            </summary>
+            <returns></returns>
+            <exception cref="T:System.ArgumentNullException"></exception>
+        </member>
+        <member name="M:Autofac.Annotation.AutofacAnnotationModule.EnumerateComponentServices(Autofac.Annotation.Component,System.Type)">
+            <summary>
+            根据注解解析
+            </summary>
+            <param name="bean"></param>
+            <param name="currentType"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Autofac.Annotation.AutofacAnnotationModule.EnumerateMetaSourceAttributes(System.Type,System.Collections.Generic.List{Autofac.Annotation.MetaSourceData})">
+            <summary>
+            设置source源
+            </summary>
+        </member>
+        <member name="M:Autofac.Annotation.AutofacAnnotationModule.GetAssemblyLocation">
+            <summary>
+            查询指定程序集下引用的所有程序集
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Autofac.Annotation.AutofacAnnotationModule.GetAssemblies">
+            <summary>
+            获取当前Domain所有的程序集
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Autofac.Annotation.AutofacAnnotationModule.DoAutoWired(Autofac.IComponentContext,System.Collections.Generic.IEnumerable{Autofac.Core.Parameter},System.Object,System.Boolean)">
+            <summary>
+            属性注入
+            </summary>
+            <param name="context">容器</param>
+            <param name="Parameters">参数</param>
+            <param name="instance">实例</param>
+            <param name="allowCircle">是否可以循环</param>
+        </member>
+        <member name="T:Autofac.Annotation.EmbeddedConfiguration">
+            <summary>
+            资源
+            </summary>
+        </member>
+        <member name="F:Autofac.Annotation.EmbeddedConfiguration.Configurations">
+            <summary>
+            缓存 key为path
+            </summary>
+        </member>
+        <member name="M:Autofac.Annotation.EmbeddedConfiguration.LoadJson(System.String)">
+            <summary>
+            json
+            </summary>
+            <param name="configFile"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Autofac.Annotation.EmbeddedConfiguration.LoadXml(System.String)">
+            <summary>
+            xml
+            </summary>
+            <param name="configFile"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Autofac.Annotation.EmbeddedConfiguration.Load(System.Type,System.String,Autofac.Annotation.MetaSourceType,System.Boolean)">
+            <summary>
+            LoadEmbedded
+            </summary>
+            <param name="type"></param>
+            <param name="configFile"></param>
+            <param name="sourceType"></param>
+            <param name="isEmbedded"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Autofac.Annotation.EmbeddedConfigurationProvider`1">
+            <summary>
+            Configuration file proxy provider that skips loading and provides
+            contnts from a stream.
+            </summary>
+            <typeparam name="TSource">
+            The type of configuration source that generates a file provider.
+            </typeparam>
+        </member>
+        <member name="M:Autofac.Annotation.EmbeddedConfigurationProvider`1.#ctor(System.IO.Stream)">
+            <summary>
+            
+            </summary>
+            <param name="fileStream"></param>
+        </member>
+        <member name="M:Autofac.Annotation.EmbeddedConfigurationProvider`1.GetChildKeys(System.Collections.Generic.IEnumerable{System.String},System.String)">
+            <summary>
+            
+            </summary>
+            <param name="earlierKeys"></param>
+            <param name="parentPath"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Autofac.Annotation.EmbeddedConfigurationProvider`1.GetReloadToken">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Autofac.Annotation.EmbeddedConfigurationProvider`1.Load">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Autofac.Annotation.EmbeddedConfigurationProvider`1.Set(System.String,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="key"></param>
+            <param name="value"></param>
+        </member>
+        <member name="M:Autofac.Annotation.EmbeddedConfigurationProvider`1.TryGet(System.String,System.String@)">
+            <summary>
+            
+            </summary>
+            <param name="key"></param>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Autofac.Annotation.ComponentModel">
+            <summary>
+            根据注解解析
+            </summary>
+        </member>
+        <member name="M:Autofac.Annotation.ComponentModel.#ctor">
+            <summary>
+            构造方法
+            </summary>
+        </member>
+        <member name="P:Autofac.Annotation.ComponentModel.CurrentType">
+            <summary>
+            当前类所在类型
+            </summary>
+        </member>
+        <member name="P:Autofac.Annotation.ComponentModel.ComponentServiceList">
+            <summary>
+            注册的对应类型
+            </summary>
+        </member>
+        <member name="P:Autofac.Annotation.ComponentModel.AutowiredFieldInfoList">
+            <summary>
+            需要装配的Autowired的字段集合
+            </summary>
+        </member>
+        <member name="P:Autofac.Annotation.ComponentModel.AutowiredPropertyInfoList">
+            <summary>
+            需要装配的Autowired的属性集合
+            </summary>
+        </member>
+        <member name="P:Autofac.Annotation.ComponentModel.ValueFieldInfoList">
+            <summary>
+            需要装配的Value的字段集合
+            </summary>
+        </member>
+        <member name="P:Autofac.Annotation.ComponentModel.ValuePropertyInfoList">
+            <summary>
+            需要装配的Value的属性集合
+            </summary>
+        </member>
+        <member name="P:Autofac.Annotation.ComponentModel.MetaSourceList">
+            <summary>
+            PropertySource
+            </summary>
+        </member>
+        <member name="P:Autofac.Annotation.ComponentModel.AspectAttribute">
+            <summary>
+            Aspect标签
+            </summary>
+        </member>
+        <member name="P:Autofac.Annotation.ComponentModel.AutoActivate">
+            <summary>
+            A Boolean indicating if the component should auto-activate.
+            SingleInstance Scope default is true
+            </summary>
+        </member>
+        <member name="P:Autofac.Annotation.ComponentModel.InjectProperties">
+            <summary>
+            A Boolean indicating whether property (setter) injection for the component should be enabled.
+            </summary>
+        </member>
+        <member name="P:Autofac.Annotation.ComponentModel.InjectPropertyType">
+            <summary>
+            属性自动装配的类型
+            </summary>
+        </member>
+        <member name="P:Autofac.Annotation.ComponentModel.AutofacScope">
+            <summary>
+            作用域
+            </summary>
+        </member>
+        <member name="P:Autofac.Annotation.ComponentModel.Ownership">
+            <summary>
+            如果设置值为external代表需要自己管理dispose
+            </summary>
+        </member>
+        <member name="P:Autofac.Annotation.ComponentModel.Interceptor">
+            <summary>
+            指定拦截器类型
+            </summary>
+        </member>
+        <member name="P:Autofac.Annotation.ComponentModel.InterceptorKey">
+            <summary>
+            如果同一个类型的拦截器有多个 可以指定Key
+            </summary>
+        </member>
+        <member name="P:Autofac.Annotation.ComponentModel.InterceptorType">
+            <summary>
+            拦截器类型
+            </summary>
+        </member>
+        <member name="P:Autofac.Annotation.ComponentModel.InitMethod">
+            <summary>
+            被创建后执行的方法
+            </summary>
+        </member>
+        <member name="P:Autofac.Annotation.ComponentModel.DestroyMethod">
+            <summary>
+            被Release时执行的方法
+            </summary>
+        </member>
+        <member name="P:Autofac.Annotation.ComponentModel.OrderIndex">
+            <summary>
+            自定义注册顺序
+            </summary>
+        </member>
+        <member name="T:Autofac.Annotation.MetaSourceData">
+            <summary>
+            MetaSourceData
+            </summary>
+        </member>
+        <member name="P:Autofac.Annotation.MetaSourceData.Origin">
+            <summary>
+            原来的值
+            </summary>
+        </member>
+        <member name="P:Autofac.Annotation.MetaSourceData.Path">
+            <summary>
+            转换成路径
+            </summary>
+        </member>
+        <member name="P:Autofac.Annotation.MetaSourceData.Embedded">
+            <summary>
+            是否是内嵌资源
+            </summary>
+        </member>
+        <member name="P:Autofac.Annotation.MetaSourceData.Order">
+            <summary>
+            排序
+            </summary>
+        </member>
+        <member name="P:Autofac.Annotation.MetaSourceData.MetaSourceType">
+            <summary>
+            资源格式类型
+            </summary>
+        </member>
+        <member name="P:Autofac.Annotation.MetaSourceData.Configuration">
+            <summary>
+            Configuration
+            </summary>
+        </member>
+        <member name="T:Autofac.Annotation.MetaSourceType">
+            <summary>
+            MetaSource源文件的类型
+            </summary>
+        </member>
+        <member name="F:Autofac.Annotation.MetaSourceType.Auto">
+            <summary>
+            根据后缀自动判断
+            </summary>
+        </member>
+        <member name="F:Autofac.Annotation.MetaSourceType.JSON">
+            <summary>
+            json文件
+            </summary>
+        </member>
+        <member name="F:Autofac.Annotation.MetaSourceType.XML">
+            <summary>
+            xml格式
+            </summary>
+        </member>
+        <member name="T:Autofac.Annotation.ComponentServiceModel">
+            <summary>
+            注册对应的类型
+            </summary>
+        </member>
+        <member name="P:Autofac.Annotation.ComponentServiceModel.Type">
+            <summary>
+            类型
+            </summary>
+        </member>
+        <member name="P:Autofac.Annotation.ComponentServiceModel.Key">
+            <summary>
+            别名
+             1. 如果同一个类型注册多个相同别名 那么根据别名会获取到最后一个注册的
+             2. 如果一个类型 既注册了别名 又注册了非别名 那么根据别名只能获取到别名注册的，要想获取非别名注册就不能带Key去Autowired
+            </summary>
+        </member>
+        <member name="M:Autofac.Annotation.Util.ConfigurationUtil.GetConfiguredParameterValue(Microsoft.Extensions.Configuration.IConfigurationSection)">
+            <summary>
+            从配置文件中获取类型值
+            </summary>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Autofac.Annotation.Util.ConfiguredListParameter.ListTypeConverter.GetInstantiableDictionaryType(System.Type)">
+            <summary>
+            Handles type determination for the case where the dictionary
+            has numeric/ordinal keys.
+            </summary>
+            <param name="destinationType">
+            The type to which the list content should be converted.
+            </param>
+            <returns>
+            A dictionary type where the key can be numeric.
+            </returns>
+        </member>
+        <member name="M:Autofac.Annotation.Util.ConfiguredListParameter.ListTypeConverter.GetInstantiableListType(System.Type)">
+            <summary>
+            Handles type determination list conversion.
+            </summary>
+            <param name="destinationType">
+            The type to which the list content should be converted.
+            </param>
+            <returns>
+            A list type compatible with the data values.
+            </returns>
+        </member>
+        <member name="T:Autofac.Annotation.Util.ReflectionExtensions">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Autofac.Annotation.Util.ReflectionExtensions.GetElementType(System.Type)">
+            <summary>
+            获取IEnumerable泛型的类型
+            </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Autofac.Annotation.Util.ReflectionExtensions.TryGetDeclaringProperty(System.Reflection.ParameterInfo,System.Reflection.PropertyInfo@)">
+            <summary>
+            Maps from a property-set-value parameter to the declaring property.
+            </summary>
+            <param name="pi">Parameter to the property setter.</param>
+            <param name="prop">The property info on which the setter is specified.</param>
+            <returns>True if the parameter is a property setter.</returns>
+        </member>
+        <member name="M:Autofac.Annotation.Util.ReflectionExtensions.GetAllInstanceMethod(System.Type,System.Boolean)">
+            <summary>
+            Get all the method of a class instance
+            </summary>
+            <param name="type">Type object of that class</param>
+            <param name="getBaseType">is get baseType methods</param>
+            <returns></returns>
+        </member>
+        <member name="M:Autofac.Annotation.Util.ReflectionExtensions.GetAllMethod(System.Type,System.Boolean)">
+            <summary>
+            Get all the method of a class
+            </summary>
+            <param name="type">Type object of that class</param>
+            <param name="getBaseType">is get baseType methods</param>
+            <returns></returns>
+        </member>
+        <member name="M:Autofac.Annotation.Util.ReflectionExtensions.GetMethod(System.Type,System.String)">
+            <summary>
+            先获取当前类的method，没有的话在找父类的
+            </summary>
+            <param name="type"></param>
+            <param name="methodName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Autofac.Annotation.Util.ReflectionExtensions.GetAllFields(System.Type)">
+            <summary>
+            Get all the fields of a class
+            </summary>
+            <param name="type">Type object of that class</param>
+            <returns></returns>
+        </member>
+        <member name="M:Autofac.Annotation.Util.ReflectionExtensions.GetAllProperties(System.Type)">
+            <summary>
+            Get all properties of a class
+            </summary>
+            <param name="type">Type object of that class</param>
+            <returns></returns>
+        </member>
+        <member name="M:Autofac.Annotation.Util.ReflectionExtensions.GetParentTypes(System.Type)">
+            <summary>
+            获取一个类型所有的父类和继承的接口
+            </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Autofac.Annotation.Util.ReflectionExtensions.AppendItem``1(System.Collections.Generic.IEnumerable{``0},``0)">
+            <summary>
+            Appends the item to the specified sequence.
+            </summary>
+            <typeparam name="T">The type of element in the sequence.</typeparam>
+            <param name="sequence">The sequence.</param>
+            <param name="trailingItem">The trailing item.</param>
+            <returns>The sequence with an item appended to the end.</returns>
+        </member>
+        <member name="T:Autofac.Annotation.Util.TypeManipulation">
+            <summary>
+            Utilities for converting string configuration values into strongly-typed objects.
+            </summary>
+        </member>
+        <member name="M:Autofac.Annotation.Util.TypeManipulation.ChangeToCompatibleType(System.Object,System.Type,System.Reflection.ParameterInfo)">
+            <summary>
+            Converts an object to a type compatible with a given parameter.
+            </summary>
+            <param name="value">The object value to convert.</param>
+            <param name="destinationType">The destination <see cref="T:System.Type"/> to which <paramref name="value"/> should be converted.</param>
+            <param name="memberInfo">The parameter for which the <paramref name="value"/> is being converted.</param>
+            <returns>
+            An <see cref="T:System.Object"/> of type <paramref name="destinationType"/>, converted using
+            type converters specified on <paramref name="memberInfo"/> if available. If <paramref name="value"/>
+            is <see langword="null"/> then the output will be <see langword="null"/> for reference
+            types and the default value for value types.
+            </returns>
+            <exception cref="T:System.InvalidOperationException">
+            Thrown if conversion of the value fails.
+            </exception>
+        </member>
+        <member name="M:Autofac.Annotation.Util.TypeManipulation.ChangeToCompatibleType(System.Object,System.Type,System.Reflection.MemberInfo)">
+            <summary>
+            Converts an object to a type compatible with a given parameter.
+            </summary>
+            <param name="value">The object value to convert.</param>
+            <param name="destinationType">The destination <see cref="T:System.Type"/> to which <paramref name="value"/> should be converted.</param>
+            <param name="memberInfo">The parameter for which the <paramref name="value"/> is being converted.</param>
+            <returns>
+            An <see cref="T:System.Object"/> of type <paramref name="destinationType"/>, converted using
+            type converters specified on <paramref name="memberInfo"/> if available. If <paramref name="value"/>
+            is <see langword="null"/> then the output will be <see langword="null"/> for reference
+            types and the default value for value types.
+            </returns>
+            <exception cref="T:System.InvalidOperationException">
+            Thrown if conversion of the value fails.
+            </exception>
+        </member>
+        <member name="M:Autofac.Annotation.Util.TypeManipulation.ChangeToCompatibleType(System.Object,System.Type,System.ComponentModel.TypeConverterAttribute)">
+            <summary>
+            Converts an object to a type compatible with a given parameter.
+            </summary>
+            <param name="value">The object value to convert.</param>
+            <param name="destinationType">The destination <see cref="T:System.Type"/> to which <paramref name="value"/> should be converted.</param>
+            <param name="converterAttribute">A <see cref="T:System.ComponentModel.TypeConverterAttribute"/>, if available, specifying the type of converter to use.<paramref name="value"/> is being converted.</param>
+            <returns>
+            An <see cref="T:System.Object"/> of type <paramref name="destinationType"/>, converted using
+            any type converters specified in <paramref name="converterAttribute"/> if available. If <paramref name="value"/>
+            is <see langword="null"/> then the output will be <see langword="null"/> for reference
+            types and the default value for value types.
+            </returns>
+            <exception cref="T:System.InvalidOperationException">
+            Thrown if conversion of the value fails.
+            </exception>
+        </member>
+        <member name="M:Autofac.Annotation.Util.TypeManipulation.GetTypeConverterFromName(System.String)">
+            <summary>
+            Instantiates a type converter from its type name.
+            </summary>
+            <param name="converterTypeName">
+            The name of the <see cref="T:System.Type"/> of the <see cref="T:System.ComponentModel.TypeConverter"/>.
+            </param>
+            <returns>
+            The instantiated <see cref="T:System.ComponentModel.TypeConverter"/>.
+            </returns>
+            <exception cref="T:System.InvalidOperationException">
+            Thrown if <paramref name="converterTypeName"/> does not correspond
+            to a <see cref="T:System.ComponentModel.TypeConverter"/>.
+            </exception>
+        </member>
+        <member name="T:Autofac.BuilderExtensions">
+            <summary>
+            扩展类
+            </summary>
+        </member>
+        <member name="M:Autofac.BuilderExtensions.RegisterEventing(Autofac.ContainerBuilder)">
+            <summary>
+            注册消息器
+            </summary>
+            <param name="builder"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Autofac.Events.EventPublisher">
+            <summary>
+            消息发送器
+            </summary>
+        </member>
+        <member name="M:Autofac.Events.EventPublisher.#ctor(Autofac.ILifetimeScope)">
+            <summary>
+            构造方法
+            </summary>
+            <param name="scope"></param>
+        </member>
+        <member name="M:Autofac.Events.EventPublisher.Publish(System.Object)">
+            <summary>
+            发布消息
+            </summary>
+            <param name="event"></param>
+        </member>
+        <member name="M:Autofac.Events.EventPublisher.Publish``1(System.Object)">
+            <summary>
+            发布消息并且拿到返回值
+            </summary>
+            <param name="event"></param>
+            <typeparam name="T">返回值类型</typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:Autofac.Events.EventPublisher.PublishAsync(System.Object)">
+            <summary>
+            发布消息
+            </summary>
+            <param name="event"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Autofac.Events.EventPublisher.PublishAsync``1(System.Object)">
+            <summary>
+            发布消息并且拿到返回值
+            </summary>
+            <param name="event"></param>
+            <typeparam name="T">返回值类型</typeparam>
+            <returns></returns>
+        </member>
+        <member name="T:Autofac.Events.IAsyncEventPublisher">
+            <summary>
+            Publishes an event asynchronously
+            </summary>
+        </member>
+        <member name="M:Autofac.Events.IAsyncEventPublisher.PublishAsync(System.Object)">
+            <summary>
+            发布消息
+            </summary>
+            <param name="event"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Autofac.Events.IAsyncEventPublisher.PublishAsync``1(System.Object)">
+            <summary>
+            发布消息并且拿到返回值
+            </summary>
+            <param name="event"></param>
+            <typeparam name="T"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="T:Autofac.Events.IEventPublisher">
+            <summary>
+            Publishes an event
+            </summary>
+        </member>
+        <member name="M:Autofac.Events.IEventPublisher.Publish(System.Object)">
+            <summary>
+            发布消息
+            </summary>
+            <param name="event"></param>
+        </member>
+        <member name="M:Autofac.Events.IEventPublisher.Publish``1(System.Object)">
+            <summary>
+            发布消息并且拿到返回值
+            </summary>
+            <param name="event"></param>
+            <typeparam name="T"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="T:Autofac.Events.IHandleEvent`1">
+            <summary>
+            Handle an event
+            </summary>
+            <typeparam name="TEvent"></typeparam>
+        </member>
+        <member name="M:Autofac.Events.IHandleEvent`1.Handle(`0)">
+            <summary>
+            接收消息
+            </summary>
+            <param name="event"></param>
+        </member>
+        <member name="T:Autofac.Events.IReturnEvent`2">
+            <summary>
+            Handle an event and return with response of T
+            </summary>
+            <typeparam name="TEvent"></typeparam>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:Autofac.Events.IReturnEvent`2.Handle(`0)">
+            <summary>
+            接收消息 并处理返回值
+            </summary>
+            <param name="event"></param>
+        </member>
+        <member name="T:Autofac.Events.IHandleEventAsync`1">
+            <summary>
+            Handle an event asynchronously
+            </summary>
+            <typeparam name="TEvent"></typeparam>
+        </member>
+        <member name="M:Autofac.Events.IHandleEventAsync`1.HandleAsync(`0)">
+            <summary>
+            接收消息
+            </summary>
+            <param name="event"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Autofac.Events.IReturnEventAsync`2">
+            <summary>
+            Handle an event and return with response of T
+            </summary>
+            <typeparam name="TEvent"></typeparam>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:Autofac.Events.IReturnEventAsync`2.HandleAsync(`0)">
+            <summary>
+            接收消息 并处理返回值
+            </summary>
+            <param name="event"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Autofac.LifetimeScopeExtensions">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Autofac.LifetimeScopeExtensions.PublishEvent(Autofac.ILifetimeScope,System.Object)">
+            <summary>
+            发布消息
+            </summary>
+            <param name="scope"></param>
+            <param name="event"></param>
+            <exception cref="T:System.AggregateException"></exception>
+        </member>
+        <member name="M:Autofac.LifetimeScopeExtensions.SendEvent``1(Autofac.ILifetimeScope,System.Object)">
+            <summary>
+            发布消息 如果接收消息处理器有返回值则拿到返回值
+            </summary>
+            <param name="scope"></param>
+            <param name="event"></param>
+            <typeparam name="T"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:Autofac.LifetimeScopeExtensions.PublishEventAsync(Autofac.ILifetimeScope,System.Object)">
+            <summary>
+            异步发布消息 如果接收消息处理器有返回值则拿到返回值
+            </summary>
+            <param name="scope"></param>
+            <param name="event"></param>
+            <returns></returns>
+            <exception cref="T:System.AggregateException"></exception>
+        </member>
+        <member name="M:Autofac.LifetimeScopeExtensions.SendEventAsync``1(Autofac.ILifetimeScope,System.Object)">
+            <summary>
+            异步发布消息
+            </summary>
+            <param name="scope"></param>
+            <param name="event"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Autofac.LifetimeScopeExtensions.ResolveHandlers``1(Autofac.ILifetimeScope,``0)">
+            <summary>
+            找到所有注册为 IHandleEvent《T》的所有类型  
+            </summary>
+            <param name="scope"></param>
+            <param name="event"></param>
+            <typeparam name="TEvent"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:Autofac.LifetimeScopeExtensions.ResolveReturnHandlers``1(Autofac.ILifetimeScope,``0,System.Type)">
+            <summary>
+            找到所有注册为 IReturnEvent《T》的所有类型  
+            </summary>
+            <param name="scope"></param>
+            <param name="event"></param>
+            <param name="returnType"></param>
+            <typeparam name="TEvent"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:Autofac.LifetimeScopeExtensions.ResolveAsyncHandlers``1(Autofac.ILifetimeScope,``0)">
+            <summary>
+            找到所有注册为 IHandleEventAsync《T》的所有类型
+            </summary>
+            <param name="scope"></param>
+            <param name="event"></param>
+            <typeparam name="TEvent"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:Autofac.LifetimeScopeExtensions.ResolveAsyncReturnHandlers``1(Autofac.ILifetimeScope,``0,System.Type)">
+            <summary>
+            找到所有注册为 IReturnEventAsync《T》的所有类型
+            </summary>
+            <param name="scope"></param>
+            <param name="event"></param>
+            <param name="returnType"></param>
+            <typeparam name="TEvent"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="T:Autofac.Aspect.AopMethodInvokeCache">
+            <summary>
+            AOP拦截器方法Attribute的缓存
+            </summary>
+        </member>
+        <member name="M:Autofac.Aspect.AopMethodInvokeCache.#ctor(Autofac.IComponentContext)">
+            <summary>
+            构造方法
+            </summary>
+        </member>
+        <member name="P:Autofac.Aspect.AopMethodInvokeCache.CacheList">
+            <summary>
+            缓存
+            </summary>
+        </member>
+        <member name="T:Autofac.Aspect.AopIntercept">
+            <summary>
+            AOP拦截器
+            </summary>
+        </member>
+        <member name="M:Autofac.Aspect.AopIntercept.#ctor(Autofac.IComponentContext,Autofac.Aspect.AopMethodInvokeCache)">
+            <summary>
+            构造方法
+            </summary>
+        </member>
+        <member name="M:Autofac.Aspect.AopIntercept.BeforeInterceptAttribute(Castle.DynamicProxy.IInvocation)">
+            <summary>
+            拦截器
+            </summary>
+            <param name="invocation"></param>
+        </member>
+        <member name="M:Autofac.Aspect.AopIntercept.InterceptAsync(Castle.DynamicProxy.IInvocation,System.Func{Castle.DynamicProxy.IInvocation,System.Threading.Tasks.Task})">
+            <summary>
+            无返回值拦截器
+            </summary>
+            <param name="invocation"></param>
+            <param name="proceed"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Autofac.Aspect.AopIntercept.InterceptAsync``1(Castle.DynamicProxy.IInvocation,System.Func{Castle.DynamicProxy.IInvocation,System.Threading.Tasks.Task{``0}})">
+            <summary>
+            有返回值拦截器
+            </summary>
+            <typeparam name="TResult"></typeparam>
+            <param name="invocation"></param>
+            <param name="proceed"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Autofac.Aspect.AspectInvokeAttribute">
+            <summary>
+            AOP拦截器
+            </summary>
+        </member>
+        <member name="P:Autofac.Aspect.AspectInvokeAttribute.OrderIndex">
+            <summary>
+            排序 越大的先先调用
+            </summary>
+        </member>
+        <member name="T:Autofac.Aspect.AspectAttribute">
+            <summary>
+            开启AOP拦截器
+            配合 AspectAroundAttribute  AspectBeforeAttribute AspectAfterAttribute 使用
+            </summary>
+        </member>
+        <member name="M:Autofac.Aspect.AspectAttribute.#ctor">
+            <summary>
+            ctor
+            </summary>
+        </member>
+        <member name="M:Autofac.Aspect.AspectAttribute.#ctor(Autofac.Annotation.InterceptorType)">
+            <summary>
+            ctor
+            </summary>
+            <param name="type"></param>
+        </member>
+        <member name="P:Autofac.Aspect.AspectAttribute.AspectType">
+            <summary>
+            拦截器类型 默认是当前class的拦截器
+            </summary>
+        </member>
+        <member name="T:Autofac.Aspect.AspectAroundAttribute">
+            <summary>
+            AOP环绕拦截器
+            </summary>
+        </member>
+        <member name="M:Autofac.Aspect.AspectAroundAttribute.After(Autofac.Aspect.AspectContext)">
+            <summary>
+            后置执行
+            </summary>
+            <param name="aspectContext"></param>
+        </member>
+        <member name="M:Autofac.Aspect.AspectAroundAttribute.Before(Autofac.Aspect.AspectContext)">
+            <summary>
+            前置执行
+            </summary>
+            <param name="aspectContext"></param>
+        </member>
+        <member name="T:Autofac.Aspect.AspectBeforeAttribute">
+            <summary>
+            AOP前置拦截器
+            </summary>
+        </member>
+        <member name="M:Autofac.Aspect.AspectBeforeAttribute.Before(Autofac.Aspect.AspectContext)">
+            <summary>
+            前置执行
+            </summary>
+            <param name="aspectContext"></param>
+        </member>
+        <member name="T:Autofac.Aspect.AspectAfterAttribute">
+            <summary>
+            AOP后置拦截器
+            </summary>
+        </member>
+        <member name="M:Autofac.Aspect.AspectAfterAttribute.After(Autofac.Aspect.AspectContext)">
+            <summary>
+            后置执行
+            </summary>
+            <param name="aspectContext"></param>
+        </member>
+        <member name="T:Autofac.Aspect.PointcutAttribute">
+            <summary>
+            切入点拦截器
+            </summary>
+        </member>
+        <member name="M:Autofac.Aspect.PointcutAttribute.OnInvocation(Autofac.Aspect.AspectContext,Autofac.Aspect.AspectDelegate)">
+            <summary>
+            拦截器
+            </summary>
+            <param name="aspectContext">拦截上下文</param>
+            <param name="_next">下一个拦截器 最后一个是执行被拦截的方法</param>
+            <returns></returns>
+        </member>
+        <member name="T:Autofac.Aspect.AspectContext">
+            <summary>
+            拦截器上下文
+            </summary>
+        </member>
+        <member name="M:Autofac.Aspect.AspectContext.#ctor">
+            <summary>
+            空的构造方法
+            </summary>
+        </member>
+        <member name="M:Autofac.Aspect.AspectContext.#ctor(Autofac.IComponentContext,Castle.DynamicProxy.IInvocation)">
+            <summary>
+            构造方法
+            </summary>
+            <param name="context"></param>
+            <param name="invocation"></param>
+        </member>
+        <member name="M:Autofac.Aspect.AspectContext.#ctor(Autofac.IComponentContext,Castle.DynamicProxy.IInvocation,System.Exception)">
+            <summary>
+            构造方法
+            </summary>
+            <param name="context"></param>
+            <param name="invocation"></param>
+            <param name="exception"></param>
+        </member>
+        <member name="P:Autofac.Aspect.AspectContext.ComponentContext">
+            <summary>
+            autofac容器
+            </summary>
+        </member>
+        <member name="P:Autofac.Aspect.AspectContext.InvocationContext">
+            <summary>
+            执行环节上下文
+            </summary>
+        </member>
+        <member name="P:Autofac.Aspect.AspectContext.Exception">
+            <summary>
+            错误
+            </summary>
+        </member>
+        <member name="P:Autofac.Aspect.AspectContext.Result">
+            <summary>
+            有返回结果的
+            </summary>
+        </member>
+        <member name="T:Autofac.Aspect.AspectDelegate">
+            <summary>
+            拦截器
+            </summary>
+            <param name="context"></param>
+        </member>
+        <member name="T:Autofac.Aspect.AspectMiddlewareComponentNode">
+            <summary>
+            拦截node组装
+            </summary>
+        </member>
+        <member name="F:Autofac.Aspect.AspectMiddlewareComponentNode.Next">
+            <summary>
+            下一个
+            </summary>
+        </member>
+        <member name="F:Autofac.Aspect.AspectMiddlewareComponentNode.Process">
+            <summary>
+            执行器
+            </summary>
+        </member>
+        <member name="F:Autofac.Aspect.AspectMiddlewareComponentNode.Component">
+            <summary>
+            组件
+            </summary>
+        </member>
+        <member name="M:Autofac.Aspect.AspectMiddlewareBuilder.Use(System.Func{Autofac.Aspect.AspectDelegate,Autofac.Aspect.AspectDelegate})">
+            <summary>
+            新增拦截器链
+            </summary>
+            <param name="component"></param>
+        </member>
+        <member name="M:Autofac.Aspect.AspectMiddlewareBuilder.Build">
+            <summary>
+            构建拦截器链
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Autofac.Aspect.AspectMiddlewareBuilder.GetNextFunc(System.Collections.Generic.LinkedListNode{Autofac.Aspect.AspectMiddlewareComponentNode})">
+            <summary>
+            获取下一个
+            </summary>
+            <param name="node"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Castle.DynamicProxy.AsyncInterceptor">
+            <summary>
+            Intercepts method invocations and determines if is an asynchronous method.
+            </summary>
+        </member>
+        <member name="M:Castle.DynamicProxy.AsyncInterceptor.Intercept(Castle.DynamicProxy.IInvocation)">
+            <summary>
+            Intercepts a method <paramref name="invocation"/>.
+            </summary>
+            <param name="invocation">The method invocation.</param>
+        </member>
+        <member name="M:Castle.DynamicProxy.AsyncInterceptor.GetMethodType(System.Type)">
+            <summary>
+            Gets the <see cref="T:Castle.DynamicProxy.AsyncInterceptor.MethodType"/> based upon the <paramref name="returnType"/> of the method invocation.
+            </summary>
+        </member>
+        <member name="M:Castle.DynamicProxy.AsyncInterceptor.GetHandler(System.Type)">
+            <summary>
+            Gets the <see cref="T:Castle.DynamicProxy.AsyncInterceptor.GenericAsyncHandler"/> for the method invocation <paramref name="returnType"/>.
+            </summary>
+        </member>
+        <member name="M:Castle.DynamicProxy.AsyncInterceptor.CreateHandler(System.Type)">
+            <summary>
+            Creates the generic delegate for the <paramref name="returnType"/> method invocation.
+            </summary>
+        </member>
+        <member name="M:Castle.DynamicProxy.AsyncInterceptor.HandleAsyncWithResult``1(Castle.DynamicProxy.IInvocation,Castle.DynamicProxy.IAsyncInterceptor)">
+            <summary>
+            This method is created as a delegate and used to make the call to the generic
+            <see cref="M:Castle.DynamicProxy.IAsyncInterceptor.InterceptAsynchronous``1(Castle.DynamicProxy.IInvocation)"/> method.
+            </summary>
+            <typeparam name="TResult">The type of the <see cref="T:System.Threading.Tasks.Task`1"/> <see cref="P:System.Threading.Tasks.Task`1.Result"/> of the method
+            <paramref name="invocation"/>.</typeparam>
+        </member>
+        <member name="T:Castle.DynamicProxy.AsyncInterceptorBase">
+            <summary>
+            A base type for an <see cref="T:Castle.DynamicProxy.IAsyncInterceptor"/> to provided a simplified solution of method
+            <see cref="T:Castle.DynamicProxy.IInvocation"/> by enforcing only two types of interception, both asynchronous.
+            </summary>
+        </member>
+        <member name="M:Castle.DynamicProxy.AsyncInterceptorBase.InterceptSynchronous(Castle.DynamicProxy.IInvocation)">
+            <summary>
+            Intercepts a synchronous method <paramref name="invocation"/>.
+            </summary>
+            <param name="invocation">The method invocation.</param>
+        </member>
+        <member name="M:Castle.DynamicProxy.AsyncInterceptorBase.InterceptAsynchronous(Castle.DynamicProxy.IInvocation)">
+            <summary>
+            Intercepts an asynchronous method <paramref name="invocation"/> with return type of <see cref="T:System.Threading.Tasks.Task"/>.
+            </summary>
+            <param name="invocation">The method invocation.</param>
+        </member>
+        <member name="M:Castle.DynamicProxy.AsyncInterceptorBase.InterceptAsynchronous``1(Castle.DynamicProxy.IInvocation)">
+            <summary>
+            Intercepts an asynchronous method <paramref name="invocation"/> with return type of <see cref="T:System.Threading.Tasks.Task`1"/>.
+            </summary>
+            <typeparam name="TResult">The type of the <see cref="T:System.Threading.Tasks.Task`1"/> <see cref="P:System.Threading.Tasks.Task`1.Result"/>.</typeparam>
+            <param name="invocation">The method invocation.</param>
+        </member>
+        <member name="M:Castle.DynamicProxy.AsyncInterceptorBase.InterceptAsync(Castle.DynamicProxy.IInvocation,System.Func{Castle.DynamicProxy.IInvocation,System.Threading.Tasks.Task})">
+            <summary>
+            Override in derived classes to intercept method invocations.
+            </summary>
+            <param name="invocation">The method invocation.</param>
+            <param name="proceed">The function to proceed the <paramref name="invocation"/>.</param>
+            <returns>A <see cref="T:System.Threading.Tasks.Task" /> object that represents the asynchronous operation.</returns>
+        </member>
+        <member name="M:Castle.DynamicProxy.AsyncInterceptorBase.InterceptAsync``1(Castle.DynamicProxy.IInvocation,System.Func{Castle.DynamicProxy.IInvocation,System.Threading.Tasks.Task{``0}})">
+            <summary>
+            Override in derived classes to intercept method invocations.
+            </summary>
+            <typeparam name="TResult">The type of the <see cref="T:System.Threading.Tasks.Task`1"/> <see cref="P:System.Threading.Tasks.Task`1.Result"/>.</typeparam>
+            <param name="invocation">The method invocation.</param>
+            <param name="proceed">The function to proceed the <paramref name="invocation"/>.</param>
+            <returns>A <see cref="T:System.Threading.Tasks.Task" /> object that represents the asynchronous operation.</returns>
+        </member>
+        <member name="T:Castle.DynamicProxy.AsyncTimingInterceptor">
+            <summary>
+            A base type for an <see cref="T:Castle.DynamicProxy.IAsyncInterceptor"/> which only wants timings for a method
+            <see cref="T:Castle.DynamicProxy.IInvocation"/>.
+            </summary>
+        </member>
+        <member name="M:Castle.DynamicProxy.AsyncTimingInterceptor.StartingInvocation(Castle.DynamicProxy.IInvocation)">
+            <summary>
+            Signals <see cref="M:Castle.DynamicProxy.AsyncTimingInterceptor.StartingTiming(Castle.DynamicProxy.IInvocation)"/> before starting a <see cref="T:System.Diagnostics.Stopwatch"/> to time the method
+            <paramref name="invocation"/>.
+            </summary>
+            <param name="invocation">The method invocation.</param>
+            <returns>The <see cref="T:System.Diagnostics.Stopwatch"/> to time the method <paramref name="invocation"/>.</returns>
+        </member>
+        <member name="M:Castle.DynamicProxy.AsyncTimingInterceptor.CompletedInvocation(Castle.DynamicProxy.IInvocation,System.Diagnostics.Stopwatch)">
+            <summary>
+            Signals <see cref="M:Castle.DynamicProxy.AsyncTimingInterceptor.CompletedTiming(Castle.DynamicProxy.IInvocation,System.Diagnostics.Stopwatch)"/> after stopping a <paramref name="stopwatch"/> to time the method
+            <paramref name="invocation"/>.
+            </summary>
+            <param name="invocation">The method invocation.</param>
+            <param name="stopwatch">The <see cref="T:System.Diagnostics.Stopwatch"/> returned by <see cref="M:Castle.DynamicProxy.AsyncTimingInterceptor.StartingInvocation(Castle.DynamicProxy.IInvocation)"/> to time
+            the method <paramref name="invocation"/>.</param>
+        </member>
+        <member name="M:Castle.DynamicProxy.AsyncTimingInterceptor.StartingTiming(Castle.DynamicProxy.IInvocation)">
+            <summary>
+            Override in derived classes to receive signals prior method <paramref name="invocation"/> timing.
+            </summary>
+            <param name="invocation">The method invocation.</param>
+        </member>
+        <member name="M:Castle.DynamicProxy.AsyncTimingInterceptor.CompletedTiming(Castle.DynamicProxy.IInvocation,System.Diagnostics.Stopwatch)">
+            <summary>
+            Override in derived classes to receive signals after method <paramref name="invocation"/> timing.
+            </summary>
+            <param name="invocation">The method invocation.</param>
+            <param name="stopwatch">A <see cref="T:System.Diagnostics.Stopwatch"/> used to time the method <paramref name="invocation"/>.
+            </param>
+        </member>
+        <member name="T:Castle.DynamicProxy.IAsyncInterceptor">
+            <summary>
+            Implement this interface to intercept method invocations with DynamicProxy2.
+            </summary>
+        </member>
+        <member name="M:Castle.DynamicProxy.IAsyncInterceptor.InterceptSynchronous(Castle.DynamicProxy.IInvocation)">
+            <summary>
+            Intercepts a synchronous method <paramref name="invocation"/>.
+            </summary>
+            <param name="invocation">The method invocation.</param>
+        </member>
+        <member name="M:Castle.DynamicProxy.IAsyncInterceptor.InterceptAsynchronous(Castle.DynamicProxy.IInvocation)">
+            <summary>
+            Intercepts an asynchronous method <paramref name="invocation"/> with return type of <see cref="T:System.Threading.Tasks.Task"/>.
+            </summary>
+            <param name="invocation">The method invocation.</param>
+        </member>
+        <member name="M:Castle.DynamicProxy.IAsyncInterceptor.InterceptAsynchronous``1(Castle.DynamicProxy.IInvocation)">
+            <summary>
+            Intercepts an asynchronous method <paramref name="invocation"/> with return type of <see cref="T:System.Threading.Tasks.Task`1"/>.
+            </summary>
+            <typeparam name="TResult">The type of the <see cref="T:System.Threading.Tasks.Task`1"/> <see cref="P:System.Threading.Tasks.Task`1.Result"/>.</typeparam>
+            <param name="invocation">The method invocation.</param>
+        </member>
+        <member name="T:Castle.DynamicProxy.ProcessingAsyncInterceptor`1">
+            <summary>
+            A base type for an <see cref="T:Castle.DynamicProxy.IAsyncInterceptor"/> which executes only minimal processing when intercepting a
+            method <see cref="T:Castle.DynamicProxy.IInvocation"/>
+            </summary>
+            <typeparam name="TState">
+            The type of the custom object used to maintain state between <see cref="M:Castle.DynamicProxy.ProcessingAsyncInterceptor`1.StartingInvocation(Castle.DynamicProxy.IInvocation)"/> and
+            <see cref="M:Castle.DynamicProxy.ProcessingAsyncInterceptor`1.CompletedInvocation(Castle.DynamicProxy.IInvocation,`0,System.Object)"/>.
+            </typeparam>
+        </member>
+        <member name="M:Castle.DynamicProxy.ProcessingAsyncInterceptor`1.InterceptSynchronous(Castle.DynamicProxy.IInvocation)">
+            <summary>
+            Intercepts a synchronous method <paramref name="invocation"/>.
+            </summary>
+            <param name="invocation">The method invocation.</param>
+        </member>
+        <member name="M:Castle.DynamicProxy.ProcessingAsyncInterceptor`1.InterceptAsynchronous(Castle.DynamicProxy.IInvocation)">
+            <summary>
+            Intercepts an asynchronous method <paramref name="invocation"/> with return type of <see cref="T:System.Threading.Tasks.Task"/>.
+            </summary>
+            <param name="invocation">The method invocation.</param>
+        </member>
+        <member name="M:Castle.DynamicProxy.ProcessingAsyncInterceptor`1.InterceptAsynchronous``1(Castle.DynamicProxy.IInvocation)">
+            <summary>
+            Intercepts an asynchronous method <paramref name="invocation"/> with return type of <see cref="T:System.Threading.Tasks.Task`1"/>.
+            </summary>
+            <typeparam name="TResult">The type of the <see cref="T:System.Threading.Tasks.Task`1"/> <see cref="P:System.Threading.Tasks.Task`1.Result"/>.</typeparam>
+            <param name="invocation">The method invocation.</param>
+        </member>
+        <member name="M:Castle.DynamicProxy.ProcessingAsyncInterceptor`1.StartingInvocation(Castle.DynamicProxy.IInvocation)">
+            <summary>
+            Override in derived classes to receive signals prior method <paramref name="invocation"/>.
+            </summary>
+            <param name="invocation">The method invocation.</param>
+            <returns>The custom object used to maintain state between <see cref="M:Castle.DynamicProxy.ProcessingAsyncInterceptor`1.StartingInvocation(Castle.DynamicProxy.IInvocation)"/> and
+            <see cref="M:Castle.DynamicProxy.ProcessingAsyncInterceptor`1.CompletedInvocation(Castle.DynamicProxy.IInvocation,`0,System.Object)"/>.</returns>
+        </member>
+        <member name="M:Castle.DynamicProxy.ProcessingAsyncInterceptor`1.CompletedInvocation(Castle.DynamicProxy.IInvocation,`0)">
+            <summary>
+            Override in derived classes to receive signals after method <paramref name="invocation"/>.
+            </summary>
+            <param name="invocation">The method invocation.</param>
+            <param name="state">The custom object used to maintain state between
+            <see cref="M:Castle.DynamicProxy.ProcessingAsyncInterceptor`1.StartingInvocation(Castle.DynamicProxy.IInvocation)"/> and
+            <see cref="M:Castle.DynamicProxy.ProcessingAsyncInterceptor`1.CompletedInvocation(Castle.DynamicProxy.IInvocation,`0)"/>.</param>
+        </member>
+        <member name="M:Castle.DynamicProxy.ProcessingAsyncInterceptor`1.CompletedInvocation(Castle.DynamicProxy.IInvocation,`0,System.Object)">
+            <summary>
+            Override in derived classes to receive signals after method <paramref name="invocation"/>.
+            </summary>
+            <param name="invocation">The method invocation.</param>
+            <param name="state">The custom object used to maintain state between
+            <see cref="M:Castle.DynamicProxy.ProcessingAsyncInterceptor`1.StartingInvocation(Castle.DynamicProxy.IInvocation)"/> and
+            <see cref="M:Castle.DynamicProxy.ProcessingAsyncInterceptor`1.CompletedInvocation(Castle.DynamicProxy.IInvocation,`0,System.Object)"/>.</param>
+            <param name="returnValue">
+            The underlying return value of the <paramref name="invocation"/>; or <see langword="null"/> if the
+            invocation did not return a value.
+            </param>
+        </member>
+        <member name="M:Castle.DynamicProxy.ProcessingAsyncInterceptor`1.Proceed(Castle.DynamicProxy.IInvocation)">
+            <summary>
+            Signals the <see cref="M:Castle.DynamicProxy.ProcessingAsyncInterceptor`1.StartingInvocation(Castle.DynamicProxy.IInvocation)"/> then <see cref="M:Castle.DynamicProxy.IInvocation.Proceed"/> on the
+            <paramref name="invocation"/>.
+            </summary>
+            <param name="invocation">The method invocation.</param>
+            <returns>The <typeparamref name="TState"/> returned by <see cref="M:Castle.DynamicProxy.ProcessingAsyncInterceptor`1.StartingInvocation(Castle.DynamicProxy.IInvocation)"/>.</returns>
+        </member>
+        <member name="M:Castle.DynamicProxy.ProcessingAsyncInterceptor`1.SignalWhenComplete(Castle.DynamicProxy.IInvocation,`0)">
+            <summary>
+            Returns a <see cref="T:System.Threading.Tasks.Task"/> that replaces the <paramref name="invocation"/>
+            <see cref="P:Castle.DynamicProxy.IInvocation.ReturnValue"/>, that only completes after
+            <see cref="M:Castle.DynamicProxy.ProcessingAsyncInterceptor`1.CompletedInvocation(Castle.DynamicProxy.IInvocation,`0,System.Object)"/> has been signaled.
+            </summary>
+            <param name="invocation">The method invocation.</param>
+            <param name="state">
+            The <typeparamref name="TState"/> returned by <see cref="M:Castle.DynamicProxy.ProcessingAsyncInterceptor`1.StartingInvocation(Castle.DynamicProxy.IInvocation)"/>.
+            </param>
+        </member>
+        <member name="M:Castle.DynamicProxy.ProcessingAsyncInterceptor`1.SignalWhenComplete``1(Castle.DynamicProxy.IInvocation,`0)">
+            <summary>
+            Returns a <see cref="T:System.Threading.Tasks.Task`1"/> that replaces the <paramref name="invocation"/>
+            <see cref="P:Castle.DynamicProxy.IInvocation.ReturnValue"/>, that only completes after
+            <see cref="M:Castle.DynamicProxy.ProcessingAsyncInterceptor`1.CompletedInvocation(Castle.DynamicProxy.IInvocation,`0,System.Object)"/> has been signaled.
+            </summary>
+            <param name="invocation">The method invocation.</param>
+            <param name="state">
+            The <typeparamref name="TState"/> returned by <see cref="M:Castle.DynamicProxy.ProcessingAsyncInterceptor`1.StartingInvocation(Castle.DynamicProxy.IInvocation)"/>.
+            </param>
+        </member>
+    </members>
+</doc>

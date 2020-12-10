@@ -1,0 +1,484 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>BPM 流程系统 离职表单</title>
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+
+    <link href="~/Scripts/element/2.8.2/theme-chalk/index.css" rel="stylesheet" />
+    <link href="~/Content/css/reset.css" rel="stylesheet" />
+    <link href="~/Content/iconfont/iconfont.css" rel="stylesheet" />
+    <link href="~/Content/css/form/form.css" rel="stylesheet" />
+    <link href="~/Content/css/components/headerSubtitle.css" rel="stylesheet" />
+</head>
+<body>
+    <div id="app" v-cloak>
+        <el-container>
+            <!-- 头部header悬浮按钮工具栏 -->
+            <headertoolbar :formtype="vmFormType" :formbtnmodel="vmKStarFormButtons" :formbackactivity="vmBackActivitys" :formoperationmodel="vmOperation"></headertoolbar>
+            <main class="wrap">
+                <div class="form">
+                    <!-- 标题头 -->
+                    <headertitle :formheadmodel='vmFormInstance' :formprocessroute="vmProcessRoute"></headertitle>
+
+                    <div class="center">
+                        <!-- 当前处理人 -->
+                        <moduleprocessingpeople v-if="vmFormType!='Application'&& vmFormInstance.Status==2"></moduleprocessingpeople>
+
+                        <!-- 基本信息 -->
+                        <modulebasicinformation :formtype="vmFormType" :formbasicinformationmodel='vmFormInstance' ref="refComBasicInfo"></modulebasicinformation>
+
+                        <!-- 流程说明 -->
+                        <moduleprocessthat v-if="vmFormSetting.ShowProcDescModule" :formsettingmodel="vmFormSetting"></moduleprocessthat>
+
+                        <!-- 相关流程 -->
+                        @*<modulerelatedprocesses></modulerelatedprocesses>*@
+
+                        <!-- 表单信息 -->
+                        <headersubtitle header-title="表单信息">
+                            <i slot="subIcon" class="icon-sub icon iconfont iconbiaodanxinxi"></i>
+                            <el-form :model="vmFormContent" :rules="formContentRules" ref="refFormContent" class="demo-vmFormContent" label-width="150px" inline-message size="mini">
+
+                                <headersubtitle header-title="离职信息">
+                                    <el-row>
+                                        <el-col :xs="24" :sm="24" :md="12" :lg="12">
+                                            <el-form-item label="到职日期：" prop="JoinedDate">
+                                                <div v-if="getUserInfo" class="form-item-div">{{ vmFormContent.JoinedDate }}</div>
+                                            </el-form-item>
+                                        </el-col>
+                                        <el-col :xs="24" :sm="24" :md="12" :lg="12">
+                                            <el-form-item label="资位：" prop="PayGrade">
+                                                <div class="form-item-div">{{ vmFormContent.PayGrade }}</div>
+                                            </el-form-item>
+                                        </el-col>
+
+                                    </el-row>
+                                    <el-row>
+                                        <el-col :xs="24" :sm="24" :md="12" :lg="12">
+                                            <el-form-item label="离职类别：" prop="DimissionType">
+                                                <el-radio-group :disabled="isSubmiterDisabled" v-model="vmFormContent.DimissionType">
+                                                    <el-radio :label="0">辞职</el-radio>
+                                                    <el-radio :label="1">调职</el-radio>
+                                                    <el-radio :label="2">资遣</el-radio>
+                                                    <el-radio :label="3">自离</el-radio>
+                                                    <el-radio :label="4">退休</el-radio>
+                                                </el-radio-group>
+                                            </el-form-item>
+                                        </el-col>
+                                        <el-col :xs="24" :sm="24" :md="12" :lg="12">
+                                            <el-form-item label="紧急程度：" prop="UrgencyDegree">
+                                                <el-radio-group v-model="vmFormContent.UrgencyDegree">
+                                                    <el-radio :disabled="isSubmiterDisabled&&isUrgencyDegreeDisabled1" :label="1">一般</el-radio>
+                                                    <el-radio :disabled="isSubmiterDisabled&&isUrgencyDegreeDisabled2" :label="2">急件</el-radio>
+                                                    <el-radio :disabled="isSubmiterDisabled&&isUrgencyDegreeDisabled3" :label="3">特急</el-radio>
+                                                </el-radio-group>
+                                            </el-form-item>
+                                        </el-col>
+                                    </el-row>
+
+                                    <el-row>
+                                        <el-col :xs="24" :sm="24" :md="12" :lg="12">
+                                            <el-form-item v-if="isNOTFirstStarProcess" label="最后工作日期：" prop="DimissionLastDate">
+                                                <el-date-picker v-model="vmFormContent.DimissionLastDate"
+                                                                   :disabled="isApplyDisabled"
+                                                                type="date"
+                                                                v-on:change="DimissionLastDateChange"
+                                                                format="yyyy-MM-dd">
+                                                    :disabled="isApplyDisabled"
+                                                    placeholder="选择日期">
+                                                </el-date-picker>
+                                                <div class="form-item-div">{{ vmFormContent.Timedifference}}</div>
+                                            </el-form-item>
+                                        </el-col>
+                                        <el-col :xs="24" :sm="24" :md="12" :lg="12">
+                                            <el-form-item v-if="isNOTFirstStarProcess" label="职务交接人：" prop="DimissionHandoverPerson">
+                                                <el-select v-model="vmFormContent.DimissionHandoverPerson"
+                                                           :disabled="isApplyDisabled"
+                                                           filterable
+                                                           remote
+                                                           reserve-keyword
+                                                           placeholder="请输入关键词"
+                                                           :remote-method="remoteMethod"
+                                                           :loading="loading">
+                                                    <el-option v-for="item in options"
+                                                               :key="item.value"
+                                                               :label="item.label"
+                                                               :value="item.value">
+                                                    </el-option>
+                                                </el-select>
+
+                                            </el-form-item>
+                                        </el-col>
+                                    </el-row>
+                                    <el-row>
+                                        <el-col :xs="24" :sm="24" :md="24" :lg="24">
+                                            <el-form-item v-if="isNOTFirstStarProcess" label="原因说明：" prop="DimissionReason">
+                                                <el-input type="textarea" :disabled="isApplyDisabled" v-model="vmFormContent.DimissionReason" maxlength="100"></el-input>
+                                            </el-form-item>
+                                        </el-col>
+                                    </el-row>
+
+
+
+                                </headersubtitle>
+
+                                <headersubtitle header-title="财务" v-if="isFinancialView">
+                                    <el-row>
+                                        <el-col :xs="24" :sm="24" :md="12" :lg="12">
+                                            <el-form-item label="借支金额：" prop="CashAdvanceAmount">
+                                                @*<el-input-number v-if="isEdit" v-model="vmFormContent.CashAdvanceAmount" :precision="2" :step="500" size="medium"></el-input-number>*@
+                                                <div class="form-item-div">{{ vmFormContent.CashAdvanceAmount }}</div>
+                                            </el-form-item>
+                                        </el-col>
+                                        <el-col :xs="24" :sm="24" :md="12" :lg="12">
+                                            <el-form-item label="费用申请：" prop="CostApplication">
+                                                @*<el-input-number v-if="isEdit" v-model="vmFormContent.CostApplication" :precision="2" :step="500" size="medium"></el-input-number>*@
+                                                <div class="form-item-div">{{ vmFormContent.CostApplication }}</div>
+                                            </el-form-item>
+
+                                        </el-col>
+                                    </el-row>
+                                </headersubtitle>
+                                <headersubtitle header-title="IT">
+                                    <el-row>
+                                        <el-col :xs="24" :sm="24" :md="12" :lg="12">
+                                            <el-form-item label="处理项：">
+                                                <el-checkbox-group :disabled="isITDisabled" v-model="vmFormContent.Email">
+                                                    <el-checkbox label="E-Mail"></el-checkbox>
+                                                    <el-checkbox label="Notes/Super Notes"></el-checkbox>
+                                                    <el-checkbox label="Web Mail"></el-checkbox>
+                                                    <el-checkbox label="其他"></el-checkbox>
+                                                </el-checkbox-group>
+                                            </el-form-item>
+                                        </el-col>
+                                        <el-col :xs="24" :sm="24" :md="12" :lg="12">
+                                            <el-form-item v-if="hasOther" prop="OtherDetail">
+                                                <el-input :disabled="isITDisabled" v-model="vmFormContent.OtherDetail" size="mini"></el-input>
+                                            </el-form-item>
+                                            @*<el-form-item v-if="hasOther==false" prop="仅显示">
+                                                    <div class="form-item-div"> {{ vmFormContent.OtherDetail }}</div>
+                                                </el-form-item>*@
+                                        </el-col>
+                                    </el-row>
+                                </headersubtitle>
+                                <headersubtitle header-title="总务">
+                                    <el-row>
+                                        <el-col :xs="24" :sm="24" :md="12" :lg="12">
+                                            <el-form-item label="是否住宿：" prop="是否住宿">
+                                                <el-radio-group :disabled="isGeneralServicesDisabled" v-model="vmFormContent.Isaccommodation">
+                                                    <el-radio :label="false">否</el-radio>
+                                                    <el-radio :label="true">是</el-radio>
+                                                </el-radio-group>
+                                            </el-form-item>
+                                        </el-col>
+                                        <el-col :xs="24" :sm="24" :md="12" :lg="12">
+                                            <el-form-item v-if="vmFormContent.Isaccommodation" prop="RoomCardAndRoomKey">
+                                                <el-checkbox-group :disabled="isGeneralServicesDisabled" v-model="vmFormContent.RoomCardAndRoomKey">
+                                                    <el-checkbox label="房卡"></el-checkbox>
+                                                    <el-checkbox label="钥匙"></el-checkbox>
+                                                </el-checkbox-group>
+                                            </el-form-item>
+                                        </el-col>
+                                    </el-row>
+                                </headersubtitle>
+                            </el-form>
+
+                        </headersubtitle>
+
+                        <!-- 附件 -->
+                        <moduletheattachment :formtype="vmFormType" :attachmentmodel="vmFormSetting"  :formattachmentsmodel="vmFormAttachments" :attachmenttype="'Platform'"  :attachmenttitle="'附件'"></moduletheattachment>
+
+                        <!-- 步骤信息 -->
+                        <modulestepinformation :formtype="vmFormType" :procpredictionmodel="vmProcPrediction"></modulestepinformation>
+
+                        <!-- 流程处理 -->
+                        <moduleprocesstodealwith v-if="vmFormType=='Approval'||vmFormType=='ReApproval'||vmFormType=='CommunicateFeedback'" :formprocesstodealwithmodel="vmFormSetting" :formoperationmodel="vmOperation" :formbtnmodel="vmKStarFormButtons" :formbackactivitymodel="vmBackActivitys" ref="refComProcessToDeal"></moduleprocesstodealwith>
+
+                        <!-- 审批记录 -->
+                        <moduleApprovalRecords v-if="vmFormType!='Application'" :formapprovalmodel="vmFormApprovalHistorys"></moduleApprovalRecords>
+                    </div>
+                </div>
+            </main>
+        </el-container>
+
+    </div>
+    <script src="~/Scripts/lodash/lodash.min.js"></script>
+    <script src="~/Scripts/axios/0.19.0/axios.min.js"></script>
+    <script src="~/Scripts/moment.min.js"></script>
+    <script src="~/Scripts/vue/2.6.10/vue.js"></script>
+    <script src="~/Scripts/element/2.8.2/index.js"></script>
+
+    <script src="~/Scripts/components/headerToolbar.js"></script>
+    <script src="~/Scripts/components/headertitle.js"></script>
+    <script src="~/Scripts/components/headerSubtitle.js"></script>
+    <script src="~/Scripts/components/moduleProcessingPeople.js"></script>
+    <script src="~/Scripts/components/moduleBasicInformation.js"></script>
+    <script src="~/Scripts/components/moduleProcessThat.js"></script>
+    <script src="~/Scripts/components/moduleRelatedProcesses.js"></script>
+    <script src="~/Scripts/components/moduleTheAttachment.js"></script>
+    <script src="~/Scripts/components/moduleStepInformation.js"></script>
+    <script src="~/Scripts/components/moduleProcessToDealWith.js"></script>
+    <script src="~/Scripts/components/moduleApprovalRecords.js"></script>
+    <script src="~/Scripts/components/subtitlet.js"></script>
+    <script src="~/Scripts/components/userRemotePick.js"></script>
+    <script src="~/Scripts/components/returnDialog.js"></script>
+    <script src="~/Scripts/IE-promise.js"></script>
+    <script src="~/Areas/FIN/Models/Dimission.js"></script>
+    <script src="~/Scripts/formmain.js"></script>
+
+    <script type="text/javascript">
+
+        //初始化数据后绑定之前
+        KStarForm.initFormDataAfter = function () {
+        
+            KStarForm.vmFormData.UrgencyDegreeFlag = KStarForm.vmFormData.vmFormContent.UrgencyDegree;
+
+            //todo test
+            //KStarForm.vmFormData.vmOperation.ActivityDisplayName = ""
+        }
+        //计算是否允许修改紧急程度。提单人可以修改。申请人仅可以提高紧急程度。其他不允许修改
+        var isUrgencyDegreeDisabled = function (label) {
+            if (this.vmFormType == 'Application' || this.vmFormType == 'Draft' || this.vmFormType == 'ReApproval')
+                return false;
+            if (KStarForm.vmFormData.vmOperation.ActivityDisplayName == "" && label >= KStarForm.vmFormData.UrgencyDegreeFlag) {
+                return false;
+            }
+            return true;
+        }
+        var isCrueentActivityName = function (name) {
+            if (KStarForm.vmFormData.vmOperation.ActivityDisplayName == name) {
+                return true;
+            }
+            return false;
+        }
+        var formatCurrency = function (num) {
+            num = num.toString().replace(/\$|\,/g, '');
+            if (isNaN(num))
+                num = "0";
+            sign = (num == (num = Math.abs(num)));
+            num = Math.floor(num * 100 + 0.50000000001);
+            cents = num % 100;
+            num = Math.floor(num / 100).toString();
+            if (cents < 10)
+                cents = "0" + cents;
+            for (var i = 0; i < Math.floor((num.length - (1 + i)) / 3); i++)
+                num = num.substring(0, num.length - (4 * i + 3)) + ',' +
+                    num.substring(num.length - (4 * i + 3));
+            return (((sign) ? '' : '-') + num + '.' + cents);
+        }
+        var getMonths = function (date1, date2) {
+            //用-分成数组
+            date1 = date1.split("-");
+            date2 = date2.split("-");
+            //获取年,月数
+            var year1 = parseInt(date1[0]),
+                month1 = parseInt(date1[1]),
+                year2 = parseInt(date2[0]),
+                month2 = parseInt(date2[1]),
+                //通过年,月差计算月份差
+                months = (year2 - year1) * 12 + (month2 - month1) + 1;
+            return months;
+        }
+        var getLocalTime = function (dateText) {////json日期格式转换为正常格式
+            //new Date():返回一个日期对象，可以调用getDate()
+            //parseInt():可解析一个字符串,并返回一个整数
+            //10：十进制
+            //replace():方法用于在字符串中用一些字符替换另一些字符
+            var date = new Date(parseInt(dateText.replace("/Date(", "").replace(")/", ""), 10));
+            var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+            var day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+            var hours = date.getHours();
+            var minutes = date.getMinutes();
+            var seconds = date.getSeconds();
+            return date.getFullYear() + "-" + month + "-" + day + " " + hours + ":" + minutes + ":" + seconds;
+        };
+        Date.prototype.Format = function (fmt) { //author: meizz
+            var o = {
+                "M+": this.getMonth() + 1,                 //月份
+                "d+": this.getDate(),                    //日
+                "h+": this.getHours(),                   //小时
+                "m+": this.getMinutes(),                 //分
+                "s+": this.getSeconds(),                 //秒
+                "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+                "S": this.getMilliseconds()             //毫秒
+            };
+            if (/(y+)/.test(fmt))
+                fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+            for (var k in o)
+                if (new RegExp("(" + k + ")").test(fmt))
+                    fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+            return fmt;
+        }
+        //扩展
+        KStarForm.formModelExtend = {
+            data: function () {
+
+                return {
+                    list: [],
+                    options: [],
+                    loading: false,
+                    //等待其它系统会写
+                    //WaittingActivity: ['010环节'],//需校验等待环节
+                    //WaittingItemName: { '010环节': 'IsPayed' },
+                    //ActivityName: KStarForm.vmFormData.vmOperation.ActivityName,
+                    //校验规则
+                    formContentRules: {
+                        //DimissionType: [
+                        //    { required: true, message: '请输入单据编号', trigger: 'blur' },
+                        //    { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+                        //],
+                        DimissionType: [{ required: true, message: '请输入离职类别', trigger: 'blur' }],
+                        DimissionLastDate: [{ required: true, message: '请输入最后工作日期', trigger: 'blur' }],
+                        DimissionHandoverPerson: [{ required: true, message: '请输入职务交接人', trigger: 'blur' }],
+                        DimissionReason: [{ required: true, message: '请输入原因说明', trigger: 'blur' }],
+                        OtherDetail: [{ required: true, message: '请输入其他信息', trigger: 'blur' }],
+                        RoomCardAndRoomKey: [{ required: true, message: '鑰匙至少需要勾選一項', trigger: 'blur' }],
+                        UrgencyDegree: [{ required: true, message: '请输入紧急程度', trigger: 'blur' }]
+                    },
+
+                }
+            },
+            //方法
+            methods: {
+                remoteMethod(query) {
+                    if (query !== '') {
+                        var that = this;
+                        this.loading = true;
+                        setTimeout(() => {
+
+                            axios.post("/Dimission/FinUserInfo", { input: query }).then(function (res) {
+                                that.loading = false;
+                               
+                                that.options = res.data;
+                                //KStarForm.vmFormData.list = res.data;
+                                //KStarForm.vmFormData.options = KStarForm.vmFormData.list.filter(item => {
+                                //    return item.label.toLowerCase()
+                                //        .indexOf(query.toLowerCase()) > -1;
+                                //});;
+
+                            }).catch(function (err) {
+                                throw new Error(err);
+                            });
+
+                            //this.loading = false;
+                            //this.list = [{ value: "123", label: "123" }, { value: "asdf", label: "asdf" }];
+
+
+                            //this.options = this.list.filter(item => {
+                            //    return item.label.toLowerCase()
+                            //        .indexOf(query.toLowerCase()) > -1;
+                            //});
+                        }, 200);
+                    } else {
+                        this.options = [];
+                    }
+                },
+                DimissionLastDateChange: function () {
+                    var enddate = KStarForm.vmFormData.vmFormContent.DimissionLastDate;
+                    var stardate = KStarForm.vmFormData.vmFormContent.JoinedDate;
+                    var endateStr = enddate.getFullYear() + "-" + (enddate.getMonth() + 1) + "-" + enddate.getDate();
+
+                    KStarForm.vmFormData.vmFormContent.Timedifference = "累计年资：" + formatCurrency(Math.abs(getMonths(stardate, endateStr)) / 12) + "年";
+
+
+                },
+                submitForm2: function (formName) {
+                    // alert(formName);
+                    this.$refs[formName].validate(function (valid) {
+                        if (valid) {
+                            alert('submit!');
+                        } else {
+                            console.log('error submit!!');
+                            return false;
+                        }
+                    });
+                }
+            },
+            //计算属性
+            computed: {
+                isEdit: function () {
+                    return false;
+                    //return this.vmFormType == 'Application' || this.vmFormType == 'Draft' || this.vmFormType == 'ReApproval' ? true : false;
+                },
+                getUserInfo: function () {
+                    // 根据申请人信息获取对应用户信息并更新
+                    var applicantAccount = KStarForm.vmFormData.vmFormInstance.ApplicantAccount;
+                    axios.post("/Dimission/GetUserInfo", { applicantAccount: applicantAccount }).then(function (data) {
+                       
+                        var result = JSON.parse(data.data.UserExt);
+                        if (result.Result) {
+                            KStarForm.vmFormData.vmFormContent.CashAdvanceAmount = formatCurrency(result.Data.Cash);
+                            KStarForm.vmFormData.vmFormContent.CostApplication = formatCurrency(result.Data.Expense);
+                            KStarForm.vmFormData.vmFormContent.JoinedDate = getLocalTime(data.data.UserInfo.CreatedTime);
+                            KStarForm.vmFormData.vmFormContent.PayGrade = data.data.JobTitle
+                        }
+                        else {
+                        }
+                    }).catch(function () {
+                    })
+                    KStarForm.vmFormData.vmFormContent.PayGrade = "123";
+                    var t = this.vmFormInstance.ApplicantAccount;
+                    return true;
+                },
+                hasOther: function () {
+                    if (this.vmFormContent.Email && this.vmFormContent.Email.includes("其他")) {
+                        return true;
+                    }
+                    this.vmFormContent.OtherDetail = "";
+                    return false;
+                },
+                isFinancialView: function () {
+                    //職務交接人\總務\IT  return false;
+                    if (isCrueentActivityName("职务交接人") || (KStarForm.vmFormData.vmOperation.CurrentUserPositionName == "IT-離職") || (KStarForm.vmFormData.vmOperation.CurrentUserPositionName == "總務-離職"))//财务可以看到
+                        return false;
+                    return true;
+                },
+                isNOTFirstStarProcess: function () {
+                     return false;
+                    return KStarForm.vmFormData.vmOperation.ActivityName;
+                },
+                isSubmiterDisabled: function () {
+                     return false;
+                    //return (this.vmFormType == 'Application' || this.vmFormType == 'Draft' || this.vmFormType == 'ReApproval' ? true : false);
+                    return !(isCrueentActivityName("000_重新提交") || (this.vmFormType == 'Application' || this.vmFormType == 'Draft' || this.vmFormType == 'ReApproval' ? true : false));
+                },
+                isApplyDisabled: function () {
+                     return false;
+                    return !isCrueentActivityName("申请人");
+                },
+                isITDisabled: function () {
+                     return false;
+                    return !(KStarForm.vmFormData.vmOperation.CurrentUserPositionName == "IT-離職");//isCrueentActivityName("会签");
+                },
+                isGeneralServicesDisabled: function () {
+                    return false;
+                    return !(KStarForm.vmFormData.vmOperation.CurrentUserPositionName == "總務-離職");//isCrueentActivityName("会签");//总务
+                },
+                isUrgencyDegreeDisabled1: function () {
+                    return isUrgencyDegreeDisabled(1);
+                },
+                isUrgencyDegreeDisabled2: function () {
+                    return isUrgencyDegreeDisabled(2);
+                },
+                isUrgencyDegreeDisabled3: function () {
+                    return isUrgencyDegreeDisabled(3);
+                },
+            }
+
+        }
+        KStarForm.init();
+    </script>
+</body>
+
+
+
+
+</html>

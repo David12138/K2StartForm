@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="29px" height="35px" viewBox="0 0 29 35" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 53 (72520) - https://sketchapp.com -->
+    <title>Icon TXT</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <path d="M3.45014988,0 L17.2507494,0 L27.601199,10.2286796 L27.601199,30.6860389 C27.601199,32.5612969 26.0486316,34.0955988 24.1510492,34.0955988 L3.45014988,34.0955988 C1.55256745,34.0955988 0,32.5612969 0,30.6860389 L0,3.40955988 C0,1.53430195 1.55256745,0 3.45014988,0 Z M4.05899986,24.3539991 L23.5421992,24.3539991 L24.3539991,24.3539991 L24.3539991,22.7303992 L23.5421992,22.7303992 L4.05899986,22.7303992 L3.24719989,22.7303992 L3.24719989,24.3539991 L4.05899986,24.3539991 Z M4.05899986,29.224799 L23.5421992,29.224799 L24.3539991,29.224799 L24.3539991,27.601199 L23.5421992,27.601199 L4.05899986,27.601199 L3.24719989,27.601199 L3.24719989,29.224799 L4.05899986,29.224799 Z" id="path-1"></path>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="画板" transform="translate(-882.000000, -610.000000)">
+            <g id="Icon-TXT" transform="translate(882.719962, 610.640000)">
+                <g id="Group-3">
+                    <g id="Group-7">
+                        <mask id="mask-2" fill="white">
+                            <use xlink:href="#path-1"></use>
+                        </mask>
+                        <use id="Combined-Shape" fill="#B1BAC1" xlink:href="#path-1"></use>
+                    </g>
+                    <text id="T" font-family="TimesNewRomanPSMT, Times New Roman" font-size="22.7303992" font-weight="normal" fill="#FFFFFF">
+                        <tspan x="4.87079983" y="20">T</tspan>
+                    </text>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

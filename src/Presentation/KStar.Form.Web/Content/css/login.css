@@ -1,0 +1,216 @@
+﻿#app {
+    font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-align: center;
+    color: #2c3e50;
+    margin-top: 160px;
+}
+
+.login {
+    min-width: 350px;
+    width: 25%;
+    margin: auto;
+}
+
+.lf {
+    float: left;
+}
+
+.box {
+    min-width: 350px;
+    margin-left: 50px;
+    width: 30%;
+}
+
+.rf {
+    float: right;
+}
+
+.clearfix:after {
+    content: ".";
+    display: block;
+    height: 0;
+    visibility: hidden;
+    clear: both;
+}
+
+.clearfix {
+    *zoom: 1;
+}
+
+body {
+    font: 12px Helvetica Neue,Helvetica,PingFang SC,Tahoma,Arial,sans-serif;
+    background: url('../images/Login.png');
+    background-size: 100%;
+}
+
+.wrap {
+    min-width: 1200px;
+    width: 100%;
+    min-height: 700px;
+    height: 100%;
+    position: relative;
+}
+.el-form-item__content{
+    margin-left:10px!important;
+}
+.el-form-item{
+margin-left:53px!important;
+}
+.message {
+    height: 60px;
+    line-height: 60px;
+    border-bottom: 1px solid #d9d9d9;
+    display: flex;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+}
+.lineTitle {
+    height: 19px;
+    border-left: 5px solid #0795ee;
+    margin-top: 20px;
+    position: absolute;
+    top: -1px;
+    left: 8px;
+    margin: 33px 38px;
+}
+    .lineTitle h2 {
+        font-size: 16px;
+        font-weight: 600;
+        margin-top: -66px;
+        margin-left: -285px;
+    }
+.message .lineTitle {
+    height: 19px;
+    border-left: 5px solid #0795ee;
+    margin-top: 20px;
+    margin: 33px 38px;
+}
+
+.login-box {
+    width: 610px;
+    height: 390px;
+    background: #fff;
+    border-radius: 20px;
+    position: absolute;
+    /*top: 5%;*/
+    left: 34%;
+}
+
+.layui-elem-field {
+    height: 50px;
+    line-height: 50px;
+    border: 0;
+    border-bottom: 1px solid #000;
+}
+
+
+.layui-field-title {
+    margin-top: 0;
+}
+
+.layui-elem-field legend {
+    width: 85%;
+}
+
+    .layui-elem-field legend span {
+        display: inline-block;
+        width: 4px;
+        height: 25px;
+        background: blue;
+        vertical-align: middle;
+        margin-right: 3%;
+    }
+
+.layui-form-label {
+    height: 32px;
+    line-height: 32px;
+    font-size: 14px;
+    margin: 0 10px;
+}
+
+.layui-form-item {
+    margin: 0;
+    display: flex;
+    margin-bottom: 40px;
+    margin-left: 50px;
+}
+
+    .layui-form-item .layui-input-inline {
+        width: 300px;
+    }
+
+.layui-input {
+    border: 1px solid #e6e6e6;
+    padding-left: 20px;
+}
+
+.layui-input, .layui-select, .layui-textarea {
+    height: 30px;
+    border-radius: 5px;
+}
+
+
+/*.el-form-item__label:nth-child(1) {
+    width: 100px;
+    position: absolute;
+    top: 116px;
+    left: 72px
+}
+.el-form-item__label:nth-child(2) {
+    width: 100px;
+    position: absolute;
+    top: 180px;
+    left: 72px
+}*/
+.el-form-item{
+    display:flex!important;
+}
+.info {
+    color: red;
+    display: block;
+    margin: 10px 0;
+    padding-left: 5px;
+}
+
+.form-footer {
+    width: 60%;
+    margin: 10px 60px 10px 171px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.layui-form input[type=checkbox], .layui-form input[type=radio], .layui-form select {
+    display: inline-block;
+    width: 15px;
+    height: 15px;
+    vertical-align: middle;
+    margin-right: 5px;
+}
+
+.layui-form-item .layui-input-inline.input-verCode {
+    width: 200px;
+}
+
+.button {
+    margin: 10px 150px 10px 115px;
+    text-align: center;
+}
+
+    .button button {
+        width: 100%;
+        border-radius: 5px;
+        height: 30px;
+        line-height: 30px;
+        background: #0795ee;
+        border: none;
+    }
+
+.banQuan {
+    position: absolute;
+    top: 125%;
+    left: 23%;
+    color: white;
+    font-size:14px;
+}

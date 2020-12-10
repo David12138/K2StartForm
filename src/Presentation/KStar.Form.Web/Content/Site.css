@@ -1,0 +1,8 @@
+﻿body {
+    font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
+}
+
+/* 修复表单在加载过程中会显示vue表达式的问题 */
+[v-cloak]{
+    display:none;
+}

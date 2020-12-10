@@ -1,0 +1,286 @@
+﻿<div id="app" class="bg-white pd-24 height-100">
+
+    <el-row class="header-search">
+        <el-col class="text-align-right">
+            <el-input size="medium" :placeholder="$t('Portal.PleaseEnterContent')" v-model="form.keyword" class="search" v-on:keyup.enter.native="search()"></el-input>
+            <el-button size="medium" type="primary" v-on:click="search()" plain>{{ $t("Portal.BusinessProcessTaskSearch") }}</el-button>
+            <el-button size="medium" type="primary" class="search-btn" :loading="btnLoading" v-on:click="exportData()" plain>{{ $t("Portal.Export") }}</el-button>
+            <!-- 高级搜索 -->
+            <advancedsearch :isloading="loading"
+                            ref="advancedsearch"
+                            :form-items="formItems"
+                            v-on:search="search"
+                            v-on:reset="reset" />
+        </el-col>
+        
+    </el-row>
+
+    <modaltable 
+        :table-columns="tableColumns"
+        :table-data="tableData" 
+        :form="form" 
+        :loading="loading"
+        :isflowviewurl="true"
+        v-on:handleSort="handleChange" 
+        v-on:handleSelectRow="handleSelectionChange" />
+    <!-- 分页 -->
+    <pages :total="total" :form="form" v-on:change="handleChange"></pages>
+
+</div>
+
+<script src="~/Scripts/portal/advancedsearch.js"></script>
+<script src="~/Scripts/portal/pages.js"></script>
+<script src="~/Scripts/portal/modalTable.js"></script>
+<script>
+    new Vue({
+        el: '#app',
+        i18n: i18n,
+        data: function () {
+            return {
+                form: {
+                    SortField: null, // 排序字段
+                    SortDirection: null, // 排序方式 asc or desc
+                    PageIndex: 1, // 当前页码
+                    PageSize: 20, // 页面码大小
+                    keyword: '',
+                }, // 表单数据
+                tableData: [],
+                total: 0,
+                loading: false,
+                btnLoading: false,
+                selectRows: [] // 表格选中 的数据
+                //formItems: ['编号', '主题', '申请人', '申请日期', '流程类别', '申请人部门', '流程名称', '结束日期', '流程摘要', '流程状态'],
+                //,formItems: [
+                //    advancedSearchItem.ProcessNum,
+                //    advancedSearchItem.FormSubject,
+                //    advancedSearchItem.Originator,
+                //    advancedSearchItem.ApplicationDate,
+                //    advancedSearchItem.ProcessName,
+                //    advancedSearchItem.ID, //申请人部门
+                //    advancedSearchItem.ProcessStatus,
+                //    advancedSearchItem.EndDate,
+                //    advancedSearchItem.Summary]
+                //tableColumns: ['FlowViewUrl', '流程编号', '流程名称', '流程主题', '申请人', '当前处理人', '当前环节', '开始时间', '结束时间', '流程状态']
+                //,tableColumns: [
+                //    tableColumn.Folio,
+                //    tableColumn.ProcessName,
+                //    tableColumn.FormSubject,
+                //    tableColumn.ApplicantDisplayName,
+                //    tableColumn.ApprovalUsers,
+                //    tableColumn.SubmitDate1,
+                //    tableColumn.FinishDate,
+                //    tableColumn.StatusName]
+            }
+        },
+        computed: {
+
+            tableColumns: {
+
+                get: function () {
+
+                    tableColumn.Folio.label = this.$t('Portal.HomeProcessCode');
+                    tableColumn.Folio.width = "160";
+                    tableColumn.ProcessName.label = this.$t('Portal.HomeProcessName');
+                    tableColumn.FormSubject.label = this.$t('Portal.HomeProcessTitle');
+                    tableColumn.SubmitterDisplayName.label = this.$t('Portal.HomeProcessWrittenBy');
+                    tableColumn.SubmitterDisplayName.width = "200";
+                    tableColumn.ApplicantDisplayName.label = this.$t('Portal.HomeProcessApplicant');
+                    tableColumn.ApplicantDisplayName.width = "200";
+                    tableColumn.ActivityDisplayName.label = this.$t('Portal.HomeProcessNodeName');
+                    tableColumn.ActivityDisplayName.width = "220";
+                    tableColumn.SubmitDate1.label = this.$t('Portal.HomeProcessApplicationDate');
+                    tableColumn.SubmitDate1.width = "160";
+                    tableColumn.TaskArriveDate.label = this.$t('Portal.HomeProcessTaskArrivalTime');
+                    tableColumn.TaskArriveDate.width = "160";
+
+                    tableColumn.ProcessingDate.label = this.$t('Portal.HomeProcessApprovalTime');
+                    tableColumn.ProcessingDate.width = "160";
+                    tableColumn.FinishDate.label = this.$t('Portal.HomeProcessEndTime');
+                    tableColumn.FinishDate.width = "160";
+                    tableColumn.ApprovalUsers.label = this.$t('Portal.HomeProcessCurrentProcessor');
+                    tableColumn.ApprovalUsers.width = "200";
+                    tableColumn.ReceiverEndDate.label = this.$t('Portal.HomeProcessReviewDate');
+                    tableColumn.ReceiverEndDate.width = "160";
+                    tableColumn.IsReadName.label = this.$t('Portal.HomeProcessReviewStatus');
+                    tableColumn.OriginatorName.label = this.$t('Portal.HomeProcessCCFrom');
+                    tableColumn.OriginatorName.width = "200";
+                    tableColumn.ReceiverDate.label = this.$t('Portal.HomeProcessCCTime');
+                    tableColumn.ReceiverDate.width = "160";
+                    tableColumn.SubmitDate.label = this.$t('Portal.HomeProcessCCArrivalTime');
+                    tableColumn.SubmitDate.width = "160";
+                    //tableColumn.StatusName.label = this.$t('Portal.HomeProcessStatus');
+                    //tableColumn.StatusName.width = "80";
+
+                    return [
+                        tableColumn.Folio,
+                        // tableColumn.ProcessName,
+                        tableColumn.FormSubject,
+                        tableColumn.ApplicantDisplayName,
+                        tableColumn.ApprovalUsers,
+                        tableColumn.SubmitDate1,
+                        tableColumn.FinishDate,
+                        //tableColumn.StatusName,
+                        {
+                            prop: 'StatusName',
+                            label: this.$t('Portal.HomeProcessStatus'),
+                            width: 160,
+                            proStatus: true,
+                            startProp: 'StatusName'
+                        }
+                    ];
+                }
+            }
+
+            , formItems: {
+                get: function () {
+                    //001待审
+                    advancedSearchItem.ProcessNum.label = this.$t('Portal.HomeSearchProcessNum');
+                    advancedSearchItem.FormSubject.label = this.$t('Portal.HomeSearchFormSubject');
+                    advancedSearchItem.Originator.label = this.$t('Portal.HomeSearchOriginator');
+                    advancedSearchItem.ApplicationDate.label = this.$t('Portal.HomeSearchApplicationDate');
+                    advancedSearchItem.ProcessName.label = this.$t('Portal.HomeSearchProcessName');
+                    advancedSearchItem.ID.label = this.$t('Portal.HomeSearchID');
+                    //002已审 
+                    advancedSearchItem.processingTime.label = this.$t('Portal.HomeSearchProcessingTime');
+                    advancedSearchItem.EndDate.label = this.$t('Portal.HomeSearchEndDate');
+                    advancedSearchItem.Summary.label = this.$t('Portal.HomeSearchSummary');
+                    //003传阅
+                    advancedSearchItem.SubmitterAccount.label = this.$t('Portal.HomeProcessCCFrom');
+                    //004抄送
+                    advancedSearchItem.FormCCUser.label = this.$t('Portal.HomeSearchWrittenBy');
+                    advancedSearchItem.CcDate.label = this.$t('Portal.HomeProcessCCTime');
+                    advancedSearchItem.ReviewDate.label = this.$t('Portal.HomeProcessReviewDate');
+                    advancedSearchItem.ReaderStatus.label = this.$t('Portal.HomeProcessReviewStatus');
+
+                    //005查询
+                    advancedSearchItem.delegationUser.label = this.$t('Portal.HomeProcessAgentListFromUser');
+
+                    advancedSearchItem.ProcessStatus.label = this.$t('Portal.HomeSearchProcessStatus');
+                    advancedSearchItem.ProcessStatus.option = [ //重新定义流程状态选项
+                        { value: null, label: this.$t('Portal.All') },
+                        { value: 0, label: this.$t('Portal.ProError') },
+                        { value: 2, label: this.$t('Portal.ProInOperation') },
+                        { value: 3, label: this.$t('Portal.ProApprovalComplete') },
+                        { value: 31, label: this.$t('Portal.ProCancel') },
+                        { value: 32, label: this.$t('Portal.ProDelete') },
+                        { value: 33, label: this.$t('Portal.ProFinalAdoption') },
+                        { value: 34, label: this.$t('Portal.ProRefuse') }];
+
+                    this.getDelegationUser();
+
+                    return [
+                        advancedSearchItem.ProcessNum,
+                        advancedSearchItem.FormSubject,
+                        advancedSearchItem.Originator,
+                        advancedSearchItem.ApplicationDate,
+                        // advancedSearchItem.ProcessName,
+                        advancedSearchItem.ID, //申请人部门
+                        advancedSearchItem.ProcessStatus,
+                        advancedSearchItem.EndDate,
+                        advancedSearchItem.Summary,
+                        advancedSearchItem.delegationUser
+                    ];
+
+                }
+            }
+
+        },
+        mounted: function () {
+            this.getDate()
+        },
+        methods: {
+            // 搜索、重置
+            search: function (val) {
+                var form = {
+                    SortField: this.form.SortField,
+                    SortDirection: this.form.SortDirection,
+                    PageIndex: 1,
+                    PageSize: this.form.PageSize,
+                    keyword: this.form.keyword
+                }
+                this.form = form
+                if (val) {
+                    for (var i in val) {
+                        this.form[i] = val[i]
+                    }
+                }
+                this.getDate(true);
+                portalLog("查询流程-搜索", "/Portal/WorkFlow/GetMyInvolvedsOrRights");
+            },
+            // 重置
+            reset: function() {
+                var form = {
+                    SortField: this.form.SortField,
+                    SortDirection: this.form.SortDirection,
+                    PageIndex: 1,
+                    PageSize: this.form.PageSize,
+                    keyword: this.form.keyword
+                }
+                this.form = form
+                this.getDate();
+                portalLog("查询流程-搜索", "/Portal/WorkFlow/GetMyInvolvedsOrRights");
+            },
+            // 获取业务流程数据
+            getDate: function (val) {
+                // 当val属于search搜索时，一定要把页码重置为1
+                if (val) {
+                    this.form.PageIndex = 1
+                }
+                var that = this
+                this.loading = true
+                GetMyInvolvedsOrRights(this.form).then(function (res) {
+                    that.loading = false
+                    that.tableData = res.data.data.item
+                    that.total = res.data.data.total
+                })
+            },
+            // 改变条数/排序
+            handleChange: function(val) {
+                this.form = val
+                this.getDate()
+            },
+            handleSelectionChange: function (val) {
+                this.selectRows = val
+            },
+            //获取高级搜索授权人
+            getDelegationUser: function () {
+                debugger;
+                var that = this
+                getDelegationUser().then(function (res) {
+                    var deleUserList = res.data.data;
+                    if (deleUserList) {
+                        var op = deleUserList.map(function (el) {
+                            return { value: el.FromUserAccount, label: el.FromUserName};
+                        });
+                        op = _.uniqBy(op,'value');
+                        advancedSearchItem.delegationUser.option = op;
+                    }
+                    
+                })
+            },
+            //导出
+            exportData: function () {
+                this.btnLoading = true;
+                if (this.total > 5000) {
+                    that.$message.error(this.$t('Portal.HomeLeftMenuQueryProcess') + this.$t('Portal.ExportErrorTips'));
+                    this.btnLoading = false;
+                    return false;
+                }
+
+                var advancedSearchForm = this.$refs["advancedsearch"].form;
+                var parameter = "keyword=" + this.form.keyword;
+                if (advancedSearchForm) {
+                    for (var field in advancedSearchForm) {
+                        parameter += "&" + field + "=" + advancedSearchForm[field];
+                    }
+                }
+
+                this.btnLoading = false;
+                var url = "/Portal/WorkFlow/ExportMyInvolvedsOrRights";
+                window.location.href = url + "?" + parameter;
+            }
+        }
+    })
+</script>
+
+

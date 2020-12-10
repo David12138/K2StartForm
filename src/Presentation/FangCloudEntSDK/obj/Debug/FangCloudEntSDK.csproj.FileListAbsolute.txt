@@ -1,0 +1,10 @@
+D:\ProjectCodes\KStar-Platform\02_KStarPortal\KStarForm\src\Presentation\FangCloudEntSDK\bin\Debug\FangCloudEntSDK.dll
+D:\ProjectCodes\KStar-Platform\02_KStarPortal\KStarForm\src\Presentation\FangCloudEntSDK\bin\Debug\FangCloudEntSDK.pdb
+D:\ProjectCodes\KStar-Platform\02_KStarPortal\KStarForm\src\Presentation\FangCloudEntSDK\bin\Debug\BouncyCastle.Crypto.dll
+D:\ProjectCodes\KStar-Platform\02_KStarPortal\KStarForm\src\Presentation\FangCloudEntSDK\bin\Debug\jose-jwt.dll
+D:\ProjectCodes\KStar-Platform\02_KStarPortal\KStarForm\src\Presentation\FangCloudEntSDK\bin\Debug\Newtonsoft.Json.dll
+D:\ProjectCodes\KStar-Platform\02_KStarPortal\KStarForm\src\Presentation\FangCloudEntSDK\bin\Debug\Newtonsoft.Json.xml
+D:\ProjectCodes\KStar-Platform\02_KStarPortal\KStarForm\src\Presentation\FangCloudEntSDK\obj\Debug\FangCloudEntSDK.csproj.CoreCompileInputs.cache
+D:\ProjectCodes\KStar-Platform\02_KStarPortal\KStarForm\src\Presentation\FangCloudEntSDK\obj\Debug\FangCloudEntSDK.csproj.CopyComplete
+D:\ProjectCodes\KStar-Platform\02_KStarPortal\KStarForm\src\Presentation\FangCloudEntSDK\obj\Debug\FangCloudEntSDK.dll
+D:\ProjectCodes\KStar-Platform\02_KStarPortal\KStarForm\src\Presentation\FangCloudEntSDK\obj\Debug\FangCloudEntSDK.pdb

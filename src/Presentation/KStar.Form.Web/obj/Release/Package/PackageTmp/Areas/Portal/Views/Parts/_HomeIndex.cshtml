@@ -1,0 +1,868 @@
+﻿<div id="app" class="home-index">
+    <div class="left-content">
+        <el-tabs v-model="activeNameLeft" v-on:tab-click="changTab">
+            <el-tab-pane name="first" >
+                <span slot="label">
+                    <el-badge :value="workFlowTotal" :max="99" class="item">&nbsp;&nbsp;{{ $t("Portal.MyToDoItems") }}&nbsp;&nbsp;</el-badge> <!--&nbsp;&nbsp;<strong v-if="workFlowTotal > 0" class="labelNum">{{ workFlowTotal }}</strong>&nbsp;&nbsp; -->
+                </span>
+            </el-tab-pane>
+            <el-tab-pane label="待阅" name="second">
+                <span slot="label">
+                    <el-badge :value="tODOReadTotal" :max="99" class="item">&nbsp;&nbsp;{{ $t("Portal.MyToReadItems") }}&nbsp;&nbsp;</el-badge>
+                    <!-- &nbsp;&nbsp;<strong v-if="tODOReadTotal > 0" class="labelNum">{{ tODOReadTotal }}</strong>&nbsp;&nbsp; -->
+                </span>
+            </el-tab-pane>
+        </el-tabs>
+        <el-row class="list" v-loading="elTabsOneLoading">
+            <el-col v-for="(item, index) in listLeft" :key="index" class="li">
+                <el-row class="li-top">
+                    <el-col class="li-title">
+                        <i v-if="item.Urgency == 3" class="urgency">{{ $t("Portal.HomeUrgent") }}</i>
+                        <a  href="javascript:;" v-on:click="gotoDetail(item.Url, item.IsRead)" class="title" v-if="!(item.Summary&&item.Summary.replace(/<[^<>]+>/g,'').trim().length>0)">{{ item.FormSubject }}</a>
+                        <el-popover placement="bottom-start" popper-class="my-poper-style" :open-delay="500" width="500" trigger="hover" v-else>
+                            <div v-html="item.Summary"></div>
+                            <a slot="reference"  href="javascript:;" v-on:click="gotoDetail(item.Url, item.IsRead)" class="title">{{ item.FormSubject }}</a>
+                        </el-popover>
+                    </el-col>
+                    <el-col class="li-btn">
+                        <span v-if="item.dodoType != 3 && item.Url.indexOf('StartProcess.aspx') == -1">
+                            <el-button v-for="(i, ind) in item.Buttons" :key="ind" v-on:click.native="openDialog(i, item)" v-if="i.Code === 'Approve' || item.Buttons.length == 1" size="medium" type="info" plain>{{ getButtonName(i.Code)}}</el-button>
+                            <span v-if="item.Buttons && item.Buttons.length > 1" class="more-btn">
+                                <el-dropdown>
+                                    <span class="el-dropdown-link">{{ $t("Portal.HomeMore") }}<i class="el-icon-caret-bottom"></i></span>
+                                    <el-dropdown-menu slot="dropdown" class="my-poper-style" placement="bottom">
+                                        <el-dropdown-item v-for="(i, ind) in item.Buttons" :key="ind" v-on:click.native="openDialog(i, item)" v-if="i.Code !== 'Approve'">{{getButtonName(i.Code)}}</el-dropdown-item>
+                                    </el-dropdown-menu>
+                                </el-dropdown>
+                            </span>
+                        </span>
+                        <el-button v-else-if="item.dodoType == 3" v-on:click="openDialog('feedback', item)" size="medium" type="info" plain>{{ $t("Portal.HomeListFeedback") }}{{item.collectionUserName}}</el-button>
+                    </el-col>
+                </el-row>
+                <el-row class="li-bottom" :gutter="16">
+                    <el-col :span="6" class="ellipsis-one" :title="item.Folio">{{ $t("Portal.HomeListCode") }}{{item.Folio}}</el-col>
+                    <el-col :span="6" class="ellipsis-one">
+                        {{ $t("Portal.HomeListApplicant") }}
+                        <el-popover placement="bottom" width="300" trigger="hover" :open-delay="500" popper-class="my-poper-style" v-on:show='getUserInfo(item)'>
+                            <el-row class="home-userInfo">
+                                <el-col class="userInfo">
+                                    <img :src="userInfo.Photo ? userInfo.Photo : '../../../../Content/portal/images/userLogo.png'" style="width: 45px;height: 45px;border: 1px solid #eee;border-radius: 50%;text-align: center;" />
+                                </el-col>
+                                <el-col class="detailInfo">
+                                    <el-row>
+                                        <el-col class="user-info-title">{{userInfo.Name}}</el-col>
+                                        <el-col class="user-info-li">{{ $t("Portal.HomeListApplicantDept") }}{{userInfo.Department}}</el-col>
+                                        <el-col class="user-info-li">{{ $t("Portal.HomeListApplicantTel") }}{{userInfo.Telephone}}</el-col>
+                                        <el-col class="user-info-li">{{ $t("Portal.HomeListApplicantMobile") }}{{userInfo.Mobile}}</el-col>
+                                        <el-col class="user-info-li">{{ $t("Portal.HomeListApplicantEMail") }}{{userInfo.Email}}</el-col>
+                                    </el-row>
+                                </el-col>
+                            </el-row>
+                            <span slot="reference">{{item.ApplicantDisplayName}}</span>
+                        </el-popover>
+                    </el-col>
+                    <el-col :span="6" class="ellipsis-one" :title="item.ActivityDisplayName">{{ $t("Portal.HomeListCurrentNode") }} {{ item.ActivityDisplayName }}</el-col>
+                    <el-col :span="6" class="ellipsis-one">{{ $t("Portal.HomeListStartTime") }}{{ getFormatDate(item.SubmitDate)}}</el-col>
+                </el-row>
+            </el-col>
+            <div class="addmore" v-on:click="changePage('left')" v-if="activeNameLeft =='first' && listLeft.length < workFlowTotal || activeNameLeft =='second' && listLeft.length < tODOReadTotal">
+                <p>{{ $t("Portal.HomeLoadMore") }}<i class="el-icon-arrow-down"></i></p>
+            </div>
+        </el-row>
+        <!--<el-tabs v-model="activeNameLeft" v-loading="elTabsOneLoading">
+            <el-tab-pane name="first" >
+                <span slot="label">&nbsp;&nbsp;待办<strong v-if="workFlowTotal > 0" class="labelNum">{{ workFlowTotal }}</strong>&nbsp;&nbsp;</span>
+                <el-row v-for="(item, index) in workFlowList" :key="index" class="row">
+                    <div class="left-floor">
+                        <div>
+                            <i v-if="item.Urgency == 3">紧急</i>
+                            <a  href="javascript:;" v-on:click="gotoDetail(item.Url)" class="title" v-if="!(item.Summary&&item.Summary.replace(/<[^<>]+>/g,'').trim().length>0)">{{ item.FormSubject }}</a>
+                            <el-popover placement="bottom-start" popper-class="my-poper-style" :open-delay="500" width="500" trigger="hover" v-else>
+                                <div v-html="item.Summary"></div>
+                                <a slot="reference"  href="javascript:;" v-on:click="gotoDetail(item.Url)" class="title">{{ item.FormSubject }}</a>
+                            </el-popover> 
+                        </div>
+                        <div>
+                            <span v-if="item.dodoType != 3 && item.Url.indexOf('StartProcess.aspx') == -1">
+                                <el-button v-for="(i, ind) in item.Buttons" :key="ind" v-on:click.native="openDialog(i, item)" v-if="i.Code === 'Approve' || item.Buttons.length == 1" round size="mini">{{i.DisplayName}}</el-button>
+                            </span>
+                            <el-button v-else-if="item.dodoType == 3" v-on:click="openDialog('feedback', item)" round size="mini">反馈意见：{{item.collectionUserName}}</el-button>
+                        </div>
+                        <div class="intro">
+                            <div>编号：{{item.Folio}}</div>
+                            <div>申请人：
+                                <el-popover
+                                    placement="bottom"
+                                    width="300"
+                                    trigger="hover"
+                                    :open-delay="500"
+                                    popper-class="my-poper-style"
+                                    v-on:show='getUserInfo(item)'>
+                                    <el-row class="home-userInfo">
+                                        <el-col class="userInfo">
+                                            <img :src="userInfo.Photo ? userInfo.Photo : '../../../../Content/portal/images/userLogo.png'" style="width: 45px;height: 45px;border: 1px solid #eee;border-radius: 50%;text-align: center;"/>
+                                        </el-col>
+                                        <el-col>
+                                            <el-row>
+                                                <el-col class="user-info-title">{{userInfo.Name}}</el-col>
+                                                <el-col class="user-info-li">部门：{{userInfo.Department}}</el-col>
+                                                <el-col class="user-info-li">座机：{{userInfo.Telephone}}</el-col>
+                                                <el-col class="user-info-li">手机：{{userInfo.Mobile}}</el-col>
+                                                <el-col class="user-info-li">邮箱：{{userInfo.Email}}</el-col>
+                                            </el-row>
+                                        </el-col>
+                                    </el-row>
+                                    <span slot="reference">{{item.ApplicantDisplayName}}</span>
+                                </el-popover>
+                            </div>
+                            <div>当前环节: {{ item.ActivityDisplayName }}</div>
+                            <div>开始时间：{{ getFormatDate(item.SubmitDate)}}</div>
+                        </div>
+                    </div>
+                    <div v-if="item.Buttons && item.Buttons.length > 1" class="more-btn">
+                       <el-dropdown>
+                            <span class="el-dropdown-link">
+                               <i class="el-icon-more"></i>
+                            </span>
+                            <el-dropdown-menu slot="dropdown" class="my-poper-style">
+                                <el-dropdown-item v-for="(i, ind) in item.Buttons" :key="ind" v-on:click.native="openDialog(i, item)" v-if="i.Code !== 'Approve'">{{i.DisplayName}}</el-dropdown-item>
+                            </el-dropdown-menu>
+                        </el-dropdown>
+                    </div>
+                    <div v-else class="more-btn">&nbsp;</div>
+                </el-row>
+                <div class="addmore" v-on:click="changePage('Workflow')" v-if="workFlowTotal > workFlowList.length">
+                    <p>加载更多</p>
+                    <p><i class="el-icon-arrow-down"></i></p>
+                </div>
+            </el-tab-pane>
+            <el-tab-pane label="待阅" name="second">
+                <span slot="label">&nbsp;&nbsp;待阅<strong v-if="tODOReadTotal > 0" class="labelNum">{{ tODOReadTotal }}</strong>&nbsp;&nbsp;</span>
+                <el-row v-for="(item, index) in tODOReadList" :key="index" class="row">
+                    <div class="left-floor">
+                        <div>
+                            <i v-if="item.Urgency == 3">紧急</i>
+                            <a  href="javascript:;" v-on:click="gotoDetail(item.Url)" class="title" v-if="!(item.Summary&&item.Summary.replace(/<[^<>]+>/g,'').trim().length>0)">{{ item.FormSubject }}</a>
+                            <el-popover placement="bottom-start" popper-class="my-poper-style" :open-delay="500" width="500" trigger="hover" v-else>
+                                <div v-html="item.Summary"></div>
+                                <a slot="reference"  href="javascript:;" v-on:click="gotoDetail(item.Url)" class="title">{{ item.FormSubject }}</a>
+                            </el-popover> 
+                        </div>
+                        <div>
+                            <span v-if="item.dodoType != 3 && item.Url.indexOf('StartProcess.aspx') == -1">
+                                <el-button v-for="(i, ind) in item.Buttons" :key="ind" v-on:click.native="openDialog(i, item)" v-if="i.Code === 'Approve' || item.Buttons.length == 1" round size="mini">{{i.DisplayName}}</el-button>
+                            </span>
+                            <el-button v-else-if="item.dodoType == 3" v-on:click="openDialog('feedback', item)" round size="mini">反馈意见：{{item.collectionUserName}}</el-button>
+    
+                        </div>
+                        <div class="intro">
+                            <div>编号：{{item.Folio}}</div>
+                            <div>申请人：
+                                <el-popover
+                                    placement="bottom"
+                                    width="300"
+                                    trigger="hover"
+                                    :open-delay="500"
+                                    popper-class="my-poper-style"
+                                    v-on:show='getUserInfo(item)'>
+                                    <el-row class="home-userInfo">
+                                        <el-col :span="5" class="userInfo">
+                                            <img :src="userInfo.Photo ? userInfo.Photo : '../../../../Content/portal/images/userLogo.png'"  style="width: 45px;height: 45px;border: 1px solid #eee;border-radius: 50%;text-align: center;"/>
+                                        </el-col>
+                                        <el-col :span="19">
+                                            <el-row>
+                                                <el-col class="user-info-title">{{userInfo.Name}}</el-col>
+                                                <el-col class="user-info-li">部门：{{userInfo.Department}}</el-col>
+                                                <el-col class="user-info-li">座机：{{userInfo.Telephone}}</el-col>
+                                                <el-col class="user-info-li">手机：{{userInfo.Mobile}}</el-col>
+                                                <el-col class="user-info-li">邮箱：{{userInfo.Email}}</el-col>
+                                            </el-row>
+                                        </el-col>
+                                    </el-row>
+                                    <span slot="reference">{{item.ApplicantDisplayName}}</span>
+                                </el-popover>
+                            </div>
+                            <div>当前环节: {{ item.ActivityDisplayName }}</div>
+                            <div>开始时间：{{ getFormatDate(item.SubmitDate)}}</div>
+                        </div>
+                    </div>
+                    <div v-if="item.Buttons && item.Buttons.length > 1" class="more-btn">
+                       <el-dropdown>
+                            <span class="el-dropdown-link">
+                               <i class="el-icon-more"></i>
+                            </span>
+                            <el-dropdown-menu slot="dropdown" class="my-poper-style">
+                                <el-dropdown-item v-for="(i, ind) in item.Buttons" :key="ind" v-on:click.native="openDialog(i, item)" v-if="i.Code !== 'Approve'">{{i.DisplayName}}</el-dropdown-item>
+                            </el-dropdown-menu>
+                        </el-dropdown>
+                    </div>
+                    <div v-else class="more-btn">&nbsp;</div>
+                </el-row>
+                <div class="addmore" v-on:click="changePage('tODORead')" v-if="tODOReadTotal > tODOReadList.length">
+                    <p>加载更多</p>
+                    <p><i class="el-icon-arrow-down"></i></p>
+                </div>
+            </el-tab-pane>
+             <div class="noResult" v-if="activeNameLeft == 'first' ?  workFlowList.length > 0 ? false : true : tODOReadList.length == 0 ? true : false ">
+                    <el-row>
+                        <svg width="100px" height="100px" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"  xmlns:xlink="http://www.w3.org/1999/xlink"><image xlink:href="~/Content/portal/images/empty.svg" x="0" y="0" height="20" width="20" /></svg>
+                    </el-row>
+                </div>
+        </el-tabs>-->
+    </div>
+    <div class="right-content ">
+        <el-tabs v-model="activeNameRight" v-on:tab-click="tabClickTwo">
+            <el-tab-pane name="first" >
+                <span slot="label">{{ $t("Portal.MyFavorites") }}</span>
+            </el-tab-pane>
+            <el-tab-pane name="second">
+                <span slot="label">{{ $t("Portal.MyFrequentlyUsed") }}</span>
+            </el-tab-pane>
+        </el-tabs>
+        <el-row class="list" v-loading="elTabsTwoLoading">
+            <el-col v-for="(item, index) in listRight" :key="index" class="li">
+                <el-col :span="6" class="li-left text-align-center" v-if="activeNameRight == 'first'"  v-on:click.native="delWorkflowFavorite(item)">
+                    <el-row><i class="el-icon-star-on"></i></el-row>
+                    <el-row class="info">{{ $t("Portal.MyFavoritesDel") }}</el-row>
+                </el-col>
+                <el-col :span="activeNameRight == 'first' ? 18 : 24" class="li-right">
+                    <el-row v-on:click.native="gotoDetail(item.Url)"><a href="javascript:;"  class="title" :title="item.Name">{{ item.Name }}</a></el-row>
+                    <el-row class="ellipsis-one info" :title="item.Path ? item.Path.replace(/,/g, '/') : ''">{{ item.Path ? item.Path.replace(/,/g, '/') : '' }}</el-row>
+                </el-col>
+            </el-col>
+            <div class="addmore" v-on:click="changePage('right')" 
+                v-if="activeNameRight =='first' && listRight.length < myFavoriteWorkflowTotal || activeNameRight =='second' && listRight.length < commonWorkflowTotal">
+                <p>{{ $t("Portal.HomeLoadMore") }}<i class="el-icon-arrow-down"></i></p>
+            </div>
+        </el-row>
+        <!-- <el-tabs v-model="activeNameRight" v-loading="elTabsTwoLoading" v-on:tab-click="tabClickTwo">
+            <el-tab-pane label=" 我的收藏 " name="first" >
+                <el-row v-for="(item, index) in myFavoriteWorkflowList" :key="index" class="row">
+                    <div class="more-btn">
+                        <i class="el-icon-star-on" v-on:click="delWorkflowFavorite(item)"></i>
+                    </div>
+                    <div class="left-floor" v-on:click="gotoDetail(item.Url)">
+                        <el-col>
+                            <a href="javascript:;"  class="title">{{ item.Name }}</a>
+                        </el-col>
+                        <el-col class="intro">{{ item.Path ? item.Path.replace(/,/g, '/') : '' }}</el-col>
+                    </div>
+                    <div class="more-btn">
+                        <i class="el-icon-arrow-right"></i>
+                    </div>
+                </el-row>
+                <div class="addmore" v-on:click="changePage('myFavoriteWorkflow')" v-if="myFavoriteWorkflowTotal > myFavoriteWorkflowList.length">
+                    <p>加载更多</p>
+                    <p><i class="el-icon-arrow-down"></i></p>
+                </div>
+            </el-tab-pane>
+            <el-tab-pane label="常用流程" name="second">
+                <el-row v-for="(item, index) in commonWorkflowList" :key="index" class="row">
+                    <div class="left-floor" v-on:click="gotoDetail(item.Url)">
+                        <el-col>
+                            <a href="javascript:;"  class="title">{{ item.Name }}</a>
+                        </el-col>
+                        <el-col class="intro">{{ item.Path ? item.Path.replace(/,/g, '/') : '' }}</el-col>
+                    </div>
+                    <div class="more-btn">
+                        <i class="el-icon-arrow-right"></i>
+                    </div>
+                </el-row>
+                <div class="addmore" v-on:click="changePage('tODORead')" v-if="commonWorkflowTotal > commonWorkflowList.length">
+                    <p>加载更多</p>
+                    <p><i class="el-icon-arrow-down"></i></p>
+                </div>
+            </el-tab-pane>
+            <div class="noResult" v-if="activeNameRight == 'first' ? myFavoriteWorkflowList.length == 0 ? true : false : commonWorkflowList.length == 0 ? true : false">
+                    <el-row>
+                        <svg width="100px" height="100px" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"  xmlns:xlink="http://www.w3.org/1999/xlink"><image xlink:href="~/Content/portal/images/empty.svg" x="0" y="0" height="20" width="20" /></svg>
+                    </el-row>
+                </div>
+        </el-tabs> -->
+    </div>
+
+    <userpick :parmdialog="userpickParam" v-on:closedialog="closeUserPick" v-on:requseturl="userpickCallback"></userpick>
+    <!-- 弹框 -->
+    <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" width="750px" class="my-dialog-style" :close-on-click-modal="false">
+        <el-form :model="dialogForm" ref="dialogForm" label-position="right" size="mini">
+            <!-- 同意 -->
+            <el-row v-if="dialogType === 'Approve'">
+                <el-form-item :label="$t('Portal.HomeProcessDealAgreeApprovalOpinion')" prop="comment" :rules="rules" label-width="100px">
+                    <el-input v-model="dialogForm.comment" type="textarea" :autosize="{ minRows: 5, maxRows: 7}"></el-input>
+                </el-form-item>
+            </el-row>
+            <!-- 退回 -->
+            <el-row v-else-if="dialogType === 'Returned'">
+                <el-form-item :label="$t('Portal.HomeProcessDealRejectReturnTo')" label-width="150px">
+                    <el-select v-model="dialogForm.activityName">
+                        <el-option v-for="(item,index) in getPortalRejectData.rejectData" :key="index" :label="item.label" :value="item.value"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item :label="$t('Portal.HomeProcessDealRejectReturnToMode')" label-width="150px">
+                    <el-radio-group v-model="dialogForm.isRejectNotGoBack">
+                        <el-radio label="true">{{ $t("Portal.HomeProcessDealRejectRerouteAllNode") }}</el-radio>
+                        <el-radio label="false" v-if="getPortalRejectData.IsRejectNotGoBack">{{ $t("Portal.HomeProcessDealRejectDirectGoCurrentNode") }}</el-radio>
+                    </el-radio-group>
+                </el-form-item>
+                <el-form-item :label="$t('Portal.HomeProcessDealRejectOpinionComments')" prop="comment" :rules="rules"  label-width="150px">
+                    <el-input v-model="dialogForm.comment" type="textarea" :autosize="{ minRows: 5, maxRows: 7}"></el-input>
+                </el-form-item>
+            </el-row>
+            <!-- 取消沟通 -->
+            <el-row v-else-if="dialogType === 'CancelCommunicate'">
+                <el-form-item :label="$t('Portal.HomeProcessDealCancelCommunicationComments')"prop="comment" :rules="rules" label-width="120px">
+                    <el-input v-model="dialogForm.comment" type="textarea" :autosize="{ minRows: 5, maxRows: 7}"></el-input>
+                </el-form-item>
+            </el-row>
+            <!-- 沟通 -->
+            <el-row v-else-if="dialogType === 'Communication'">
+                <el-form-item :label="$t('Portal.HomeProcessDealCommunicationUser')" label-width="120px">
+                    <el-input v-model="userInfoName" disabled><el-button slot="append" icon="el-icon-user-solid" v-on:click="UserInfo(true)"></el-button></el-input>
+                </el-form-item>
+                <el-form-item :label="$t('Portal.HomeProcessDealCommunicationComments')"prop="comment" :rules="rules" label-width="120px">
+                    <el-input v-model="dialogForm.comment" type="textarea" :autosize="{ minRows: 5, maxRows: 7}"></el-input>
+                </el-form-item>
+            </el-row>
+            <!-- 转办 -->
+            <el-row v-else-if="dialogType === 'Redirect'">
+                <el-form-item :label="$t('Portal.HomeProcessDealRedirectUser')" label-width="120px">
+                    <el-input v-model="userInfoName" disabled><el-button slot="append" icon="el-icon-user-solid" v-on:click="UserInfo(false)"></el-button></el-input>
+                </el-form-item>
+                <el-form-item :label="$t('Portal.HomeProcessDealRedirectComments')"prop="comment" :rules="rules" label-width="120px">
+                    <el-input v-model="dialogForm.comment" type="textarea" :autosize="{ minRows: 5, maxRows: 7}"></el-input>
+                </el-form-item>
+            </el-row>
+            <!-- 反馈内容 -->
+            <el-row v-else>
+                <el-form-item :label="$t('Portal.HomeProcessDealCommunicateFeedbackComments')" prop="comment" :rules="rules" label-width="100px">
+                    <el-input v-model="dialogForm.comment" type="textarea" :autosize="{ minRows: 5, maxRows: 7}"></el-input>
+                </el-form-item>
+            </el-row>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+            <el-button v-on:click="handleDialog(false)" class="cancle" plain>{{ $t("Portal.Cancel") }}</el-button>
+            <el-button type="primary" v-on:click="handleDialog(true)" :loading="btnLoading" v-if="dialogType != 'see'" class="submit" plain>{{ $t("Portal.Confirm") }}</el-button>
+        </div>
+    </el-dialog>
+
+</div>
+
+<script>
+    new Vue({
+        el: '#app',
+        i18n: i18n,
+        data: function() {
+            return {
+                workFlowList: [], // 我的代办列表
+                workFlowPageSize: 10, // 我的代办页数
+                workFlowPageIndex: 1, // 我的代办当前页码
+                workFlowTotal: 0, // 我的代办总条数
+                workFlowLoading: true, // 我的代办loading
+                myFavoriteWorkflowList: [], // 我的收藏列表
+                myFavoriteWorkflowPageSize: 10, // 我的收藏列表页数
+                myFavoriteWorkflowPageIndex: 1, // 我的收藏列表当前页码
+                myFavoriteWorkflowTotal: 0, // 我的收藏列表总条数
+               // myFavoriteWorkflowLoading: true, // 我的收藏loading
+
+                commonWorkflowList: [], // 常用列表
+                commonWorkflowPageSize: 10, // 常用列表页数
+                commonWorkflowPageIndex: 1, // 常用列表当前页码
+                commonWorkflowTotal: 0, // 常用列表总条数
+               // commonWorkflowLoading: true, // 常用loading
+
+                tODOReadList: [], // 待阅列表
+                tODOReadPageSize: 10, // 待阅列表页数
+                tODOReadPageIndex: 1, // 待阅列表当前页码
+                tODOReadTotal: 0, // 待阅列表总条数
+                //tODOReadLoading: true, // 待阅loading
+
+                form: {}, // 表单数据
+                dialogTitle: '', // 弹框title
+                dialogInitDate: {}, // 弹框的原始数据
+                dialogVisible: false, // 弹框是否显示
+                dialogType: '', // 当前弹框是哪种类型
+                dialogForm: {}, // 弹框内容
+                getPortalRejectData: { // 回退节点数据
+                    rejectData: [],
+                    IsRejectNotGoBack: ''
+                },
+                btnLoading: false,
+                activeNameLeft: 'first',
+                activeNameRight: 'first',
+                userInfo: {},
+                //选人控件参数
+                userpickParam: {
+                    dialogvisible: false,
+                    multiplelimit: false
+                },
+                rules: [],
+                userList: [],
+                userInfoName: '',
+                elTabsOneLoading: true,
+                elTabsTwoLoading: true,
+                listLeft: [],
+                listRight: [],
+                timer: null, // 计时器
+            }
+        },
+        mounted: function() {
+            this.getWorkFlow()
+            this.getMyFavoriteWorkflow()
+            this.getTODOReadlist()
+            this.getCommonWorkflow()
+        },
+        methods: {
+            //多语言按钮特别处理
+            getButtonName: function (code) {
+                if (code == 'Approve') {
+                    return this.$t('Portal.HomeProcessDealAgreeName');
+                } else if (code == 'Redirect') {
+                    return this.$t('Portal.HomeProcessDealRedirectName');
+                } else if (code == 'Returned') {
+                    return this.$t('Portal.HomeProcessDealRejectName');
+                } else if (code == 'Communication') {
+                    return this.$t('Portal.HomeProcessDealCommunicationName');
+                } else if (code == 'CancelCommunicate') {
+                    return this.$t('Portal.HomeProcessDealCancelCommunicationName');
+                } else {//CommunicateFeedback
+                    return this.$t('Portal.HomeProcessDealCommunicateFeedbackName');
+                }
+                
+            },
+            // 获取代办数据
+            getWorkFlow: function() {
+                var that = this
+                this.elTabsOneLoading = true
+                GetWorkFlow({
+                    pageIndex: 1,
+                    pageSize: that.workFlowPageSize * that.workFlowPageIndex
+                }).then(function(res) {
+                    that.elTabsOneLoading = false
+                    that.workFlowTotal = res.data.data.total
+                    that.workFlowList = res.data.data.item
+
+                    //console.log(that.workFlowList);
+
+                    if (that.activeNameLeft == 'first') {
+                       that.listLeft = that.workFlowList
+                    }
+                })
+            },
+            // 获取我的收藏
+            getMyFavoriteWorkflow: function() {
+                var that = this
+                this.elTabsTwoLoading = true
+                GetMyFavoriteWorkflow({
+                    pageIndex: 1,
+                    pageSize: that.myFavoriteWorkflowPageSize * that.myFavoriteWorkflowPageIndex
+                }).then(function(res) {
+                    that.elTabsTwoLoading = false
+                    that.myFavoriteWorkflowList = res.data.data.items
+                    that.myFavoriteWorkflowTotal = res.data.data.count
+                    if (that.activeNameRight == 'first') {
+                        that.listRight = that.myFavoriteWorkflowList
+                    }
+                })
+            },
+            // 获取常用流程
+            getCommonWorkflow: function() {
+                var that = this
+                this.elTabsTwoLoading = true
+                GetCommonWorkflow({
+                    pageIndex: 1,
+                    pageSize: that.commonWorkflowPageSize * that.commonWorkflowPageIndex
+                }).then(function(res) {
+                    that.elTabsTwoLoading = false
+                    that.commonWorkflowList = res.data.data
+                    that.commonWorkflowTotal = res.data.data.count
+                    if (that.activeNameRight == 'second') {
+                        that.listRight = that.commonWorkflowList
+                    }
+                })
+            },
+            // 获取待阅
+            getTODOReadlist: function() {
+                var that = this
+                this.elTabsOneLoading = true
+                GetTODOReadlist({
+                    pageIndex: 1,
+                    pageSize: that.tODOReadPageSize * that.tODOReadPageIndex
+                }).then(function(res) {
+                    that.elTabsOneLoading = false
+                    that.tODOReadList = res.data.data.item
+                    that.tODOReadTotal = res.data.data.total
+                    if (that.activeNameLeft == 'second') {
+                        that.listLeft = that.tODOReadList
+                    }
+                })
+            },
+            // 待阅和待审tab点击事件
+            changTab: function() {
+                if (this.activeNameLeft == 'first') {
+                    this.listLeft = this.workFlowList
+                } else {
+                    this.listLeft = this.tODOReadList
+                }
+            },
+            // 收藏和常用tab点击事件
+            tabClickTwo: function() {
+                if (this.activeNameRight == 'first') {
+                    this.listRight = this.myFavoriteWorkflowList
+                } else {
+                    this.listRight = this.commonWorkflowList
+                }
+            },
+            // 获取当前用户信息
+            getUserInfo: function(val) {
+                var that = this
+                GetUserInfo({
+                    userAccount: val.ApplicantAccount,
+                    FormId: val.FormId
+                }).then(function(res) {
+                    that.userInfo = res.data.data
+                })
+            },
+            // 改变页码
+            changePage: function(type) {
+                if ( type == 'left' && this.activeNameLeft == 'first') {
+                    this.workFlowPageIndex = this.workFlowPageIndex + 1
+                    this.getWorkFlow()
+                } else if(type == 'right' && this.activeNameRight == 'first') {
+                    this.myFavoriteWorkflowPageIndex = this.myFavoriteWorkflowPageIndex + 1
+                    this.getMyFavoriteWorkflow()
+                } else if (type == 'right' && this.activeNameRight == 'second') {
+                    this.commonWorkflowPageIndex = this.commonWorkflowPageIndex + 1
+                    this.getCommonWorkflow()
+                } else if (type == 'left' && this.activeNameLeft == 'second') {
+                    this.tODOReadPageIndex = this.tODOReadPageIndex + 1
+                    this.getTODOReadlist()
+                }
+            },
+            // 取消收藏
+            delWorkflowFavorite: function (item, index) {
+                //that.$message.success(this.$t("Portal.MyFavoritesDelSuccess"))
+                var that = this
+                DelWorkflowFavorite({ processCode: item.ProcessCode }).then(function (res) {
+                    that.$message.success(that.$t("Portal.MyFavoritesDelSuccess")) //'取消收藏成功'
+                    that.getMyFavoriteWorkflow()
+                });
+                portalLog("首页-取消收藏", "/Portal/WorkFlow/DelWorkflowFavorite");
+            },
+            // 去详情页
+            gotoDetail: function(url, IsRead) {
+                console.log(url)
+                window.open(url,'_blank');
+                // 待阅点击刷新数据, 有分页要考虑条数减少对分页的影响
+                if (this.activeNameLeft == 'second') {
+                    var num = 1
+                    var that = this
+                    clearInterval(this.timer)
+                    this.timer = setInterval(function(){
+                        if (num > 1) {
+                            clearInterval(that.timer)
+                        }
+                        that.getTODOReadlist()
+                        getKStarWorklistCount(window.that)
+                        num++
+                    }, 2000)
+                    
+                }
+            },
+            validators: function(rule,value,callback) {
+                if (!value) {
+                    callback(new Error(this.$t('Portal.HomeProcessDealApprovalOpinionHint')))  //new Error('请输入意见')
+                } else if (value.length < rule.min) {
+                    var info = this.$t('Portal.HomeProcessDealApprovalOpinionHintStart') + rule.min + this.$t('Portal.HomeProcessDealApprovalOpinionHintEnd')   //var info = '意见至少' + rule.min + '个字符'
+                    callback(new Error(info))
+                } else {
+                    callback()
+                }
+            },
+            // 显示弹框
+            openDialog: function(val, item) {
+                var that = this
+                if (item.ActivityNumLimit > 0) {
+                    this.rules = []
+                    this.rules.push({ required: true, trigger: 'blur', validator: that.validators, min: item.ActivityNumLimit })
+                } else {
+                    this.rules = []
+                }
+                if (val.Code === 'Approve') {
+                    this.dialogTitle = this.$t('Portal.HomeProcessDealAgreeTitle') //'你确定同意该流程'
+                    this.dialogType = 'Approve'
+                    this.dialogVisible = true
+                    
+                } else if (val.Code === 'Returned') {
+                    this.dialogTitle = this.$t('Portal.HomeProcessDealRejectTitle')  //'退回流程'
+                    this.dialogType = 'Returned'
+                    this.getPortalRejectData.rejectData = []
+                    
+                    // 获取回退节点数据
+                    GetPortalRejectData({
+                        sharedUser: item.SharedUser,
+                            workItemId:item.Id
+                    }).then(function(res){
+                        if (res.data.code == 200) {
+                            res.data.data.BackActivitys.map(function(item) {
+                                that.getPortalRejectData.rejectData.push({
+                                    label: item.ActivityDisplayName,
+                                    value: item.ActivityName
+                                })
+                            })
+                            that.getPortalRejectData.IsRejectNotGoBack = res.data.data.IsRejectNotGoBack
+                            that.$set(that.dialogForm, 'isRejectNotGoBack', 'true')
+                            that.$set(that.dialogForm, 'activityName', that.getPortalRejectData.rejectData[0].value)
+                            that.dialogVisible = true
+                        }
+                    }).catch(function(err) {
+                        that.$message.error(res.response.data.message)
+                    })
+                } else if (val.Code === 'CancelCommunicate') {
+                    this.dialogTitle = this.$t('Portal.HomeProcessDealCancelCommunicationName')  //'取消沟通'
+                    this.dialogType = 'CancelCommunicate'
+                    this.dialogVisible = true
+                } else if (val.Code === 'Communication') {
+                    this.dialogTitle = this.$t('Portal.HomeProcessDealCommunicationName')//'沟通'
+                    this.userList = []
+                    this.dialogType = 'Communication'
+                    this.dialogVisible = true
+                }  else if (val.Code === 'Redirect') {
+                    this.userList = []
+                    this.dialogTitle = this.$t('Portal.HomeProcessDealRedirectName') //'转办'
+                    this.dialogType = 'Redirect'
+                    this.dialogVisible = true
+                } else {
+                    this.dialogTitle = this.$t('Portal.HomeProcessDealCommunicateFeedbackName') //'意见反馈'
+                    this.dialogType = 'feedback'
+                    this.dialogInitDate = item
+                    this.dialogVisible = true
+                }
+                this.$set(this.dialogInitDate, 'self', val)
+                this.$set(this.dialogInitDate, 'parent', item)
+            },
+            // 日期转换
+            getFormatDate: function(date) {
+                if (date) { return moment(date).format('YYYY-MM-DD HH:mm:ss') }
+            },
+            getReset: function() {
+                // this.workFlowList = []
+                // this.workFlowPageIndex = 1
+                this.getWorkFlow()
+                this.btnLoading = false
+                this.dialogVisible = false
+                this.dialogForm = {}
+                getKStarWorklistCount(window.that)
+            },
+            // 提交弹框内容
+            handleDialog: function(val) {
+                var that = this
+                if (val && this.dialogType === 'Approve') {
+                    this.$refs['dialogForm'].validate(function(valid) {
+                        if (valid) {
+                            that.btnLoading = true
+                            PortalApprove({
+                                sharedUser: that.dialogInitDate.parent.SharedUser,
+                                workItemId: that.dialogInitDate.parent.Id,
+                                comment: that.dialogForm.comment
+                            }).then(function(res) {
+                                if (res.data.code == 200) {
+                                    that.$message.success(that.$t('Portal.HomeProcessDealAgreeSuccess')) //'审批通过'
+                                } else {
+                                    that.$message.warning(that.$t('Portal.HomeProcessDealAgreeWarn')) //'审批不通过'
+                                }
+                                that.getReset()
+                            }).catch(function(err) {
+				                that.btnLoading = false
+                                that.$message.error(err.response.data.message)
+                            })
+                        } else {
+                            return false;
+                        }
+                    })
+                    portalLog("首页-审批流程-同意操作", "/Portal/WorkFlow/PortalApprove");
+                } else if (val) {
+                    if (this.dialogType === 'Returned') {
+                        this.btnLoading = true
+                        PortalReject({
+                            sharedUser: that.dialogInitDate.parent.SharedUser,
+                            workItemId: that.dialogInitDate.parent.Id,
+                            comment: that.dialogForm.comment,
+                            activityName: that.dialogForm.activityName,
+                            isRejectNotGoBack: that.dialogForm.isRejectNotGoBack,
+                        }).then(function (res) {
+                            if (res.data.code == 200) {
+                                that.$message.success(that.$t('Portal.HomeProcessDealRejectSuccess')) //'退回成功'
+                            } else {
+                                that.$message.warning(that.$t('Portal.HomeProcessDealRejectWarn')) //'退回失败'
+                            }
+                            that.getReset()
+                        }).catch(function (err) {
+				            that.btnLoading = false
+                            that.$message.error(err.response.data.message)
+                        });
+                        portalLog("首页-审批流程-退回操作", "/Portal/WorkFlow/PortalReject");
+                    } else if (this.dialogType === 'CancelCommunicate') {
+                        this.btnLoading = true
+                        PortalCancelCommunicate({
+                            sharedUser: that.dialogInitDate.parent.SharedUser,
+                            workItemId: that.dialogInitDate.parent.Id,
+                            comment: that.dialogForm.comment,
+                            processNum: that.dialogInitDate.parent.Folio,
+                        }).then(function (res) {
+                            if (res.data.code == 200) {
+                                that.$message.success(that.$t('Portal.HomeProcessDealCancelCommunicationSuccess'))//'取消沟通成功'
+                            } else {
+                                that.$message.warning(that.$t('Portal.HomeProcessDealCancelCommunicationWarn'))//'取消沟通失败'
+                            }
+                            that.getReset()
+                        }).catch(function (err) {
+                            that.btnLoading = false
+                            that.$message.error(err.response.data.message)
+                        });
+                        portalLog("首页-审批流程-取消沟通操作", "/Portal/WorkFlow/PortalCancelCommunicate");
+                    } else if (this.dialogType === 'Redirect') {
+
+                        if (this.userInfoName) {
+                            that.btnLoading = true
+                            PortalRedirect({
+                                sharedUser: that.dialogInitDate.parent.SharedUser,
+                                workItemId: that.dialogInitDate.parent.Id,
+                                toUser: that.userList,
+                                comment: that.dialogForm.comment,
+                                processNum: that.dialogInitDate.parent.Folio,
+                            }).then(function (res) {
+                                if (res.data.code == 200) {
+                                    that.$message.success(that.$t('Portal.HomeProcessDealRedirectSuccess'))//'转办成功'
+                                } else {
+                                    that.$message.warning(that.$t('Portal.HomeProcessDealRedirectWarn'))//'转办失败'
+                                }
+                                that.getReset()
+                            }).catch(function (err) {
+                                that.btnLoading = false
+                                that.$message.error(err.response.data.message)
+                            });
+                            portalLog("首页-审批流程-转办操作", "/Portal/WorkFlow/PortalRedirect");
+                        } else {
+                            that.$message.error(that.$t('Portal.HomeProcessDealRedirectError'))//'请选择转办人'
+                        }
+                                
+ 
+                    } else if (this.dialogType === 'Communication') {
+                        if (this.userInfoName) {
+                            that.btnLoading = true
+                            PortalCommunication({
+                                sharedUser: that.dialogInitDate.parent.SharedUser,
+                                workItemId: that.dialogInitDate.parent.Id,
+                                processNum: that.dialogInitDate.parent.Folio,
+                                comment: that.dialogForm.comment,
+                                toUser: this.userList
+                            }).then(function (res) {
+                                if (res.data.code == 200) {
+                                    that.$message.success(that.$t('Portal.HomeProcessDealCommunicationSuccess'))//'沟通成功'
+                                } else {
+                                    that.$message.warning(that.$t('Portal.HomeProcessDealCommunicationWarn'))//'沟通失败'
+                                }
+                                that.getReset()
+                            }).catch(function (err) {
+                                that.btnLoading = false
+                                that.$message.error(err.response.data.message)
+                            });
+                            portalLog("首页-审批流程-沟通操作", "/Portal/WorkFlow/PortalCommunication");
+                        } else {
+                            that.$message.error(that.$t('Portal.HomeProcessDealCommunicationError'))//'请选择沟通人'
+                        }
+                    }  else {
+                        PortalCommunicateFeedback({
+                            sharedUser: that.dialogInitDate.parent.SharedUser,
+                            workItemId: that.dialogInitDate.parent.Id,
+                            comment: that.dialogForm.comment,
+                            processNum: that.dialogInitDate.parent.Folio,
+                        }).then(function (res) {
+                            if (res.data.code == 200) {
+                                that.$message.success(that.$t('Portal.HomeProcessDealCommunicateFeedbackSuccess')) //'沟通反馈成功'
+                            } else {
+                                that.$message.warning(that.$t('Portal.HomeProcessDealCommunicateFeedbackWarn')) //'沟通反馈失败'
+                            }
+                            that.getReset()
+                        }).catch(function (err) {
+                            that.btnLoading = false
+                            that.$message.error(err.response.data.message)
+                        });
+                        portalLog("首页-审批流程-沟通反馈操作", "/Portal/WorkFlow/PortalCommunicateFeedback");
+                    } 
+                } else {
+                    this.dialogVisible = false
+                    this.dialogForm = {}
+                    this.$refs['dialogForm'].clearValidate()
+                }
+                that.userInfoName = ''
+                                
+            },
+            //选人控件
+            showdialog: function (val, multiple) {
+                if (this.dialogType == 'Redirect') {
+                    this.userpickParam.clicktype = 'Redirect';
+                    this.userpickParam.type = "User"; //只选人员
+                    this.userpickParam.ctype = "UserPick"; //选人控件
+                    this.userpickParam.dialogvisible = true;
+                    this.userpickParam.title = this.$t('Portal.HomeProcessDealDialogUserSelect'); //弹出框标题 "请选择人员"
+                    this.userpickParam.multiplelimit = false; //是否多选
+                } else {
+                    this.userpickParam.clicktype = 'Communication';
+                    this.userpickParam.type = "User"; //只选人员
+                    this.userpickParam.ctype = "UserPick"; //选人控件
+                    this.userpickParam.dialogvisible = true;
+                    this.userpickParam.title = this.$t('Portal.HomeProcessDealDialogUserSelect'); //弹出框标题 "请选择人员"
+                    this.userpickParam.multiplelimit = true; //是否多选
+                }
+                var json = [];
+                this.userList.map(function (item) {
+                    json.push({
+                        Type: 'User',
+                        Value: item.UserAccount,
+                        Name: item.UserDisplayName
+                    })
+                })
+                this.userpickParam.json = json;
+                return false;
+            },
+            //关闭弹窗
+            closeUserPick: function (val) {
+                this.userpickParam.dialogvisible = false;
+            },
+            //选人控件返回
+            userpickCallback: function (val, type) {
+                if (val.length > 0) {
+                    this.userList = []
+                    var list = []
+                    var name = []
+                    val.map(function(item) {
+                        list.push({
+                            UserAccount: item.Value,
+                            UserDisplayName: item.Name
+                        })
+                        name.push(item.Name)
+                    })
+                    this.userList = list
+                    this.userInfoName = name.join(',')
+                }
+                return false;
+            },
+            //调用选人控件
+            UserInfo: function(val){
+                this.showdialog('toUser', val);
+            },
+        }
+    })
+</script>
+<style>
+    .el-dropdown-menu__item {
+        width:100px;
+        box-sizing: border-box;
+        text-align: center;
+    }
+    .el-dropdown-menu__item:focus, .el-dropdown-menu__item:not(.is-disabled):hover {
+        color: #606266;
+        background: #e7e8eb
+    }
+</style>

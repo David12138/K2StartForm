@@ -1,0 +1,126 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>BPM 流程系统</title>
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <link rel="shortcut icon" href="~/favicon.ico" type="image/x-icon" />
+    <link href="~/Scripts/element/2.8.2/theme-chalk/index.css" rel="stylesheet" />
+    <link href="~/Content/login.css" rel="stylesheet" />
+</head>
+<body>
+    <div id="app">
+        <el-container>
+            <el-header><h3>BPM 流程系统</h3></el-header>
+            <el-main>
+                <div class="login">
+                    <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="50px" class="demo-ruleForm">
+
+                        <el-form-item label="账号" prop="username">
+                            <el-input v-model="ruleForm.username" autocomplete="on" ></el-input>
+                        </el-form-item>
+
+                        <el-form-item label="密码" prop="password">
+                            <el-input type="password" v-model="ruleForm.password" autocomplete="on"></el-input>
+                        </el-form-item>
+                        <el-form-item>
+                            <el-button type="primary"  v-on:click="submitForm('ruleForm')" style="width:100%;">登录</el-button>
+                        </el-form-item>
+                    </el-form>
+                </div>
+            </el-main>
+        </el-container>
+        <template>
+           
+        </template>
+    </div>
+    <script src="~/Scripts/vue/2.6.10/vue.js"></script>
+    <script src="~/Scripts/element/2.8.2/index.js"></script>
+    <script src="~/Scripts/axios/0.19.0/axios.js"></script>
+    <script>
+        function loadJS() {
+            if (!!window.ActiveXObject || "ActiveXObject" in window) {
+                var script = document.createElement('script');
+                script.type = 'text/javascript';
+                script.src = "/Scripts/es6-promise/es6-promise.min.js";
+                document.getElementsByTagName('head')[0].appendChild(script);
+                var script2 = document.createElement('script');
+                script2.type = 'text/javascript';
+                script2.src = "/Scripts/es6-promise/es6-promise.auto.min.js"
+                document.getElementsByTagName('head')[0].appendChild(script2);
+            }
+        }
+        loadJS();
+        new Vue({
+            el: '#app',
+            data: {
+                ruleForm: { username: '', password: '' },
+                rules: {
+                    username: [
+                        { required: true, message: '请输入账号', trigger: 'blur' },
+                        { min: 1, max: 16, message: '长度在 1 到 16 个字符', trigger: 'blur' }
+                    ],
+                    password: [
+                        { required: true, message: '请输入密码', trigger: 'blur' },
+                        { min: 1, max: 16, message: '长度在 1 到 16 个字符', trigger: 'blur' }
+                    ]
+                },
+                checked: false
+            },
+            created: function () {
+                var lett = this;
+                document.onkeydown = function (e) {
+                    var key = window.event.keyCode;
+                    if (key == 13) {
+                        lett.submitForm('ruleForm');
+                    }
+                }
+            },
+            methods: {
+                submitForm: function (formName) {
+                    var _self = this;
+                    this.$refs[formName].validate(function (valid) {
+                        if (valid) {
+                            axios.post("/account/login", _self.ruleForm)
+                                .then(function (response) {
+                                    var data = response.data;
+                                    if (data.IsAuthenticated) {
+                                        _self.$message({
+                                            message: data.Message,
+                                            type: 'success'
+                                        });
+                                        window.location.href = "/";
+                                    }
+                                    else {
+                                        _self.$message({
+                                            message: data.Message,
+                                            type: 'warning'
+                                        });
+                                    }
+                                })
+                                .catch(function (error) {
+                                    _self.$message({
+                                        showClose: true,
+                                        message: '登陆失败，请重试！',
+                                        type: 'error'
+                                    });
+                                });
+                        }
+                        else {
+                           
+                        }
+                    });
+                },
+            }
+        })
+    </script>
+</body>
+</html>

@@ -1,0 +1,147 @@
+﻿<div id="app">
+    <div v-if="searchContentVisible">
+        <searchcontent v-on:click="getSearch" btn-title="批量审批" :isloading="isLoading" :disabled="selectRows.length < 1" :form-items="formItems" v-on:open="dialogVisible = true">
+            <span slot="title">合同结算</span>
+        </searchcontent>
+    </div>
+    
+    <modaltable :table-data="tableData" :form="form" v-on:handleSort="sortChange" v-on:handleSelectRow="handleSelectionChange" :table-columns="tableColumns"></modaltable>
+    <!-- 分页 -->
+    <pages :total="total" :form="form" v-on:click="handleChangePage"></pages>
+
+    <!-- 批量审批 -->
+    <el-dialog :visible.sync="dialogVisible" title="批量审批" class="my-dialog-style">
+        <el-form :model="dialogForm" label-width="100px" ref="dialogForm">
+            <el-form-item label="审批意见：">
+                <el-input type="textarea" :rows="8" v-model="dialogForm.Comment"></el-input>
+            </el-form-item>
+            <el-form-item label="办理人：">{{ dialogForm.userName }}</el-form-item>
+            <el-form-item label="办理时间：">{{ dialogForm.time }}</el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+            <el-button v-on:click="handleMutliApprove(false)" class="cancle">取 消</el-button>
+            <el-button class="submit" v-on:click="handleMutliApprove(true)" :loading="btnLoading">确 定</el-button>
+        </div>
+    </el-dialog>
+</div>
+<script src="~/Scripts/portal/searchcontent.js"></script>
+<script src="~/Scripts/portal/page.js"></script>
+<script src="~/Scripts/portal/modalTable.js"></script>
+<script>
+    new Vue({
+        el: '#app',
+        data: function() {
+            return {
+               form: {
+                    SortField: null, // 排序字段
+                    SortDirection: null, // 排序方式 asc or desc
+                    PageIndex: 1, // 当前页码
+                    PageSize: 10 // 页面码大小
+                }, // 表单数据
+                tableData: [],
+                total: 0,
+                loading: false,
+                selectRows: [], // 表格选中 的数据
+                dialogVisible: false,
+                dialogForm: {
+                    Comment: '',
+                    userName: sessionStorage.getItem('userName'),
+                    time: moment(new Date()).format('YYYY-MM-DD')
+                },
+                btnLoading: false,
+                isLoading: true,
+                searchContentVisible: false,
+                formItems: ['编号', '主题', '申请人', '申请日期', '流程名称', '流程类别', '申请人部门','流程摘要'],
+                tableColumns: ['selection','FlowViewUrl', '流程编号', '紧急度', '流程名称', '流程主题','申请人','节点名称', '开始时间', '任务到达时间']
+            }
+        },
+        mounted: function() {
+            this.searchContentVisible = true
+            this.getDate()
+        },
+        methods: {
+            // 搜索、重置
+            getSearch: function(val) {
+                var form = {
+                    SortField: this.form.SortField,
+                    SortDirection: this.form.SortDirection,
+                    PageIndex: this.form.PageIndex,
+                    PageSize: this.form.PageSize
+                }
+                this.form = form
+                if (val) {
+                    for(var i in val) {
+                        this.form[i] = val[i]
+                    }
+                }
+                this.getDate(true);
+                portalLog("待审任务-合同结算-搜索", "/Portal/WorkFlow/GetWorklistContractSettlement");
+            },
+            // 获取流程数据
+            getDate: function(val) {
+                // 当val属于search搜索时，一定要把页码重置为1
+                if (val) {
+                    this.form.PageIndex = 1
+                }
+                var that = this
+                this.loading = true
+                this.searchBtnLoading = true
+                this.resetBtnLoading = true
+                GetWorklistContractSettlement(this.form).then(function(res) {
+                    that.loading = false
+                    that.isLoading = !that.isLoading
+                    that.tableData = res.data.data.item
+                    that.total = res.data.data.total
+                })
+            },
+            // 改变条数
+            handleChangePage: function(val) {
+                this.form = val
+                this.getDate()
+            },
+            // 批量审批确定/取消
+            handleMutliApprove: function(val) {
+                // 提交
+                if (val) {
+                    var that = this
+                    var list = []
+                    this.btnLoading = true
+                    this.selectRows.map(function(item) {
+                        list.push({
+                            SharedUser: item.SharedUser,
+                            WorkItemId: item.Id,
+                            Comment: that.dialogForm.Comment
+                        })
+                    })
+                    
+                    MutliApprove(list).then(function (res) {
+                        that.btnLoading = false
+                        if (res.data && res.data.code == 200) {
+                            that.$message.success('审批成功！')
+                        }
+                        that.getDate(true)
+                        that.$refs['dialogForm'].resetFields();
+                        that.dialogVisible = false
+                        getKStarWorklistCount()
+                    }).catch(function (err) {
+                        that.btnLoading = false
+                        that.$message.error('审批失败!ERROR MESSAGE:' + err.response.data.message)
+                    });
+                    portalLog("待审任务-合同结算-批量审批", "/Portal/WorkFlow/MutliApprove");
+                } else {
+                    this.$refs['dialogForm'].resetFields();
+                    this.dialogVisible = false
+                }
+            },
+            sortChange: function(val) {
+                this.form = val
+                this.getDate(true)
+            },
+            handleSelectionChange: function(val) {
+                this.selectRows = val
+            }
+        }
+    })
+</script>
+
+
