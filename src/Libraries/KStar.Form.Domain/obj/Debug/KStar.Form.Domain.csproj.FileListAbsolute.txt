@@ -248,8 +248,8 @@ D:\06-工作资料\K2StarForm\src\Libraries\KStar.Form.Domain\bin\Debug\Exceptio
 D:\06-工作资料\K2StarForm\src\Libraries\KStar.Form.Domain\bin\Debug\Newtonsoft.Json.xml
 D:\06-工作资料\K2StarForm\src\Libraries\KStar.Form.Domain\bin\Debug\RestSharp.xml
 D:\06-工作资料\K2StarForm\src\Libraries\KStar.Form.Domain\bin\Debug\System.Threading.Tasks.Dataflow.xml
-D:\06-工作资料\K2StarForm\src\Libraries\KStar.Form.Domain\obj\Debug\KStar.Form.Domain.csprojAssemblyReference.cache
 D:\06-工作资料\K2StarForm\src\Libraries\KStar.Form.Domain\obj\Debug\KStar.Form.Domain.csproj.CoreCompileInputs.cache
 D:\06-工作资料\K2StarForm\src\Libraries\KStar.Form.Domain\obj\Debug\KStar.Form.Domain.csproj.CopyComplete
 D:\06-工作资料\K2StarForm\src\Libraries\KStar.Form.Domain\obj\Debug\KStar.Form.Domain.dll
 D:\06-工作资料\K2StarForm\src\Libraries\KStar.Form.Domain\obj\Debug\KStar.Form.Domain.pdb
+D:\06-工作资料\K2StarForm\src\Libraries\KStar.Form.Domain\obj\Debug\KStar.Form.Domain.csprojAssemblyReference.cache

@@ -4,6 +4,8 @@ namespace KStar.Form.Domain.ViewModels.NewBusiness.SocialSecurity
 {
     public class SocialSecurityModel
     {
+        public string ApplicationAmount_ { get; set; }
+
         public List<BillInfo> TableBillInfos { get; set; }
     }
 

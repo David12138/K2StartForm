@@ -877,9 +877,6 @@ D:\06-工作资料\K2StarForm\src\Presentation\KStar.BPMService\bin\System.Web.W
 D:\06-工作资料\K2StarForm\src\Presentation\KStar.BPMService\bin\WebActivatorEx.dll
 D:\06-工作资料\K2StarForm\src\Presentation\KStar.BPMService\bin\WebGrease.dll
 D:\06-工作资料\K2StarForm\src\Presentation\KStar.BPMService\bin\System.Threading.Tasks.Dataflow.dll
-D:\06-工作资料\K2StarForm\src\Presentation\KStar.BPMService\bin\KStar.WorkFlow.dll
-D:\06-工作资料\K2StarForm\src\Presentation\KStar.BPMService\bin\KStar.Jobs.dll
-D:\06-工作资料\K2StarForm\src\Presentation\KStar.BPMService\bin\SourceCode.Workflow.Management.dll
 D:\06-工作资料\K2StarForm\src\Presentation\KStar.BPMService\bin\KStar.Form.Domain.pdb
 D:\06-工作资料\K2StarForm\src\Presentation\KStar.BPMService\bin\KStar.Form.Domain.dll.config
 D:\06-工作资料\K2StarForm\src\Presentation\KStar.BPMService\bin\Antlr3.Runtime.pdb
@@ -934,7 +931,6 @@ D:\06-工作资料\K2StarForm\src\Presentation\KStar.BPMService\bin\zh-Hans\Syst
 D:\06-工作资料\K2StarForm\src\Presentation\KStar.BPMService\bin\zh-Hans\System.Web.WebPages.Deployment.resources.dll
 D:\06-工作资料\K2StarForm\src\Presentation\KStar.BPMService\bin\zh-Hans\System.Web.WebPages.Razor.resources.dll
 D:\06-工作资料\K2StarForm\src\Presentation\KStar.BPMService\bin\zh-Hans\System.Web.Optimization.resources.dll
-D:\06-工作资料\K2StarForm\src\Presentation\KStar.BPMService\bin\en-US\KStar.WorkFlow.resources.dll
 D:\06-工作资料\K2StarForm\src\Presentation\KStar.BPMService\obj\Debug\KStar.BPMService.csprojAssemblyReference.cache
 D:\06-工作资料\K2StarForm\src\Presentation\KStar.BPMService\obj\Debug\KStar.BPMService.csproj.CoreCompileInputs.cache
 D:\06-工作资料\K2StarForm\src\Presentation\KStar.BPMService\obj\Debug\KStar.BPMService.csproj.CopyComplete
