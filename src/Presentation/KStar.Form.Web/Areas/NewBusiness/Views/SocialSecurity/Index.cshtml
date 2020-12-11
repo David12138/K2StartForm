@@ -516,10 +516,10 @@
                     return false;
                 }
 
-                if (!luhnCheck(FeeSchedule[i].AccountOfPayee)) {
-                    alertInfo("第" + (i + 1) + "行收款账号填写错误。");
-                    return false;
-                }
+                //if (!luhnCheck(FeeSchedule[i].AccountOfPayee)) {
+                //    alertInfo("第" + (i + 1) + "行收款账号填写错误。");
+                //    return false;
+                //}
 
                 TempTotal = numToFixed(parseFloat(FeeSchedule[i].UnitPart)) + numToFixed(parseFloat(FeeSchedule[i].PersonalPart));
                 FeeSchedule[i].TotalAmount = TempTotal;
