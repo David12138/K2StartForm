@@ -56,6 +56,7 @@
             <el-form-item label="付款公司名称" prop="NameOfPayingCompany">
                 <el-select v-if="isFormCanBeEdit" v-model="vmFormContent.NameOfPayingCompany">
                     <el-option value="成都新大瀚人力资源管理有限公司"></el-option>
+                    <el-option value="成都激水信息技术有限公司"></el-option>
                     <el-option value="成都新大瀚人力资源管理有限公司江苏分公司"></el-option>
                     <el-option value="成都新大瀚人力资源管理有限公司成华分公司"></el-option>
                     <el-option value="成都新大瀚人力资源管理有限公司高新分公司"></el-option>
@@ -147,7 +148,6 @@
             </el-form-item>
         </el-col>
     </el-row>
-
     <subtitle subtitle="账单信息" class="line-sub-title"></subtitle>
     <el-table :data="vmFormContent.TableBillInfos" border>
         <el-table-column align="center" v-if="isFormCanBeEdit">
@@ -162,12 +162,17 @@
         </el-table-column>
         <el-table-column label="序号" type="index" show-overflow-tooltip width="50" align="center">
         </el-table-column>
-        <el-table-column label="费用类型" header-align="center" width="180" property="FeeType">
+        <el-table-column label="费用类型" header-align="center" width="200" property="FeeType">
             <template v-slot:default="{ row, column, $index }">
                 <el-form-item label-width="0" :prop="'TableBillInfos.' + $index + '.FeeType'"
-                              :rules="{required: true, message: '请输入费用类型'}">
-                    <el-input v-model="row.FeeType" v-if="isFormCanBeEdit" style="width: 100%;"
-                              size="mini"></el-input>
+                              :rules="{required: true, message: '请选择费用类型'}">
+                    <el-select v-if="isFormCanBeEdit" style="width: 100%;"
+                               placeholder="请选择"
+                               v-model="row.FeeType">
+                        <el-option value="社保"></el-option>
+                        <el-option value="公积金"></el-option>
+                        <el-option value="其他"></el-option>
+                    </el-select>
                     <div v-else class="form-item-div">{{ row.FeeType }}</div>
                 </el-form-item>
             </template>
@@ -243,6 +248,14 @@
             </template>
         </el-table-column>
     </el-table>
+    <el-row>
+        <el-col>
+            <el-form-item label="其他说明" prop="otherReasons" :rules="{required: false, message: '请填写其他说明'}">
+                <el-input v-if="isFormCanBeEdit" type="text" placeholder="请填写其他说明" v-model="vmFormContent.otherReasons"></el-input>
+                <div v-else class="form-item-div">{{ vmFormContent.otherReasons }}</div>
+            </el-form-item>
+        </el-col>
+    </el-row>
 </el-form>
 
 @section KStarFormJs{
