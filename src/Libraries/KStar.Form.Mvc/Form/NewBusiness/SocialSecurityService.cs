@@ -1,4 +1,8 @@
-﻿using KStar.Form.Mvc.Common.Attributes;
+﻿using KStar.Form.Domain.ViewModels.NewBusiness.SocialSecurity;
+using KStar.Form.Mvc.Common.Attributes;
+using KStar.Platform.ViewModel.Workflow;
+using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace KStar.Form.Mvc.Form.NewBusiness
 {
@@ -11,6 +15,13 @@ namespace KStar.Form.Mvc.Form.NewBusiness
         public SocialSecurityService(KStar.Form.Domain.Service.NewBusiness.ISocialSecurityService socialSecurityService)
         {
             _socialSecurityService = socialSecurityService;
+        }
+
+        public override void OnKStarFormStartupAfter(KStarFormModel context)
+        {
+            SocialSecurityModel viewModel = new SocialSecurityModel();
+            viewModel.TableBillInfos = new List<BillInfo>() { new BillInfo() };
+            context.FormContent.FormDataToJson = JsonConvert.SerializeObject(viewModel);
         }
     }
 }

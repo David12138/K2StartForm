@@ -1,0 +1,527 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>定标审批 表单</title>
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+
+    <link href="~/Scripts/element/2.8.2/theme-chalk/index.css" rel="stylesheet" />
+    <link href="~/Content/css/reset.css" rel="stylesheet" />
+    <link href="~/Content/iconfont/iconfont.css" rel="stylesheet" />
+    <link href="~/Content/css/form/form.css" rel="stylesheet" />
+    <link href="~/Content/css/components/headerSubtitle.css" rel="stylesheet" />
+</head>
+<body>
+    <div id="app">
+        <el-container>
+            <!-- 头部header悬浮按钮工具栏 -->
+            <headertoolbar :formtype="vmFormType" :formbtnmodel="vmKStarFormButtons" :formbackactivity="vmBackActivitys"></headertoolbar>
+            <main class="wrap">
+                <div class="form">
+                    <!-- 标题头 -->
+                    <headertitle :formheadmodel='vmFormInstance' :formprocessroute="vmProcessRoute"></headertitle>
+
+                    <div class="center">
+                        <!-- 当前处理人 -->
+                        <!-- <moduleprocessingpeople></moduleprocessingpeople>-->
+                        <!-- 基本信息 -->
+                        <modulebasicinformation :formtype="vmFormType" :formbasicinformationmodel='vmFormInstance' ref="refComBasicInfo"></modulebasicinformation>
+
+                        <!-- 流程说明 -->
+                        @*<moduleprocessthat></moduleprocessthat>*@
+
+                        <!-- 相关流程 -->
+                        @*<modulerelatedprocesses></modulerelatedprocesses>*@
+
+                        <!-- 表单信息 -->
+                        <headersubtitle header-title="招标概况">
+                            <i slot="subIcon" class="icon-sub icon iconfont iconbiaodanxinxi"></i>
+                            <el-form :model="vmFormContent" ref="refFormContent" :rules="formContentRules" label-width="130px" class="demo-ruleForm" inline-message size="mini">
+                                <el-row>
+                                    <el-col :xs="24" :sm="24" :md="12" :lg="8">
+                                        <el-form-item label="采购计划名称" prop="PurchasePlanName">
+                                            <el-input v-model="vmFormContent.PurchasePlanName" size="mini"></el-input>
+                                        </el-form-item>
+                                    </el-col>
+
+                                    <el-col :xs="24" :sm="24" :md="12" :lg="8">
+                                        <el-form-item label="所属项目" prop="AffiliatedProjects">
+                                            <el-select v-model="vmFormContent.AffiliatedProjects" placeholder="请选择所属项目" size="mini">
+                                                <el-option label="潮州" value="潮州"></el-option>
+                                                <el-option label="清远" value="清远"></el-option>
+                                                <el-option label="其它" value="其它"></el-option>
+                                            </el-select>
+                                        </el-form-item>
+                                    </el-col>
+
+                                    <el-col :xs="24" :sm="24" :md="12" :lg="8">
+                                        <el-form-item label="税率(%)" prop="TaxRate">
+                                            <el-input v-model="vmFormContent.TaxRate" size="mini"></el-input>
+                                        </el-form-item>
+                                    </el-col>
+                                </el-row>
+                                <el-row>
+                                    <el-col :xs="24" :sm="24" :md="12" :lg="6">
+                                        <el-form-item label="采购单位" prop="PurchasingUnit">
+                                            <el-input v-model="vmFormContent.PurchasingUnit" size="mini"></el-input>
+                                        </el-form-item>
+                                    </el-col>
+                                    <el-col :xs="24" :sm="24" :md="12" :lg="6">
+                                        <el-form-item label="项目定档" prop="ProjectCalibration">
+                                            <el-input v-model="vmFormContent.ProjectCalibration" size="mini"></el-input>
+                                        </el-form-item>
+                                    </el-col>
+                                    <el-col :xs="24" :sm="24" :md="12" :lg="6">
+                                        <el-form-item label="规模" prop="Scale">
+                                            <el-input v-model="vmFormContent.Scale" size="mini"></el-input>
+                                        </el-form-item>
+                                    </el-col>
+                                    <el-col :xs="24" :sm="24" :md="12" :lg="6">
+                                        <el-form-item label="成本指标(万元)" prop="CostIndicators">
+                                            <el-input v-model="vmFormContent.CostIndicators" size="mini"></el-input>
+                                        </el-form-item>
+                                    </el-col>
+                                </el-row>
+                                <el-row>
+                                    <el-col :xs="24" :sm="24" :md="12" :lg="6">
+                                        <el-form-item label="专业类型" prop="ProfessionalType">
+                                            <el-select v-model="vmFormContent.ProfessionalType" filterable placeholder="请选择专业类型" size="mini">
+                                                <el-option label="园林景观" value="园林景观"></el-option>
+                                                <el-option label="造价咨询" value="造价咨询"></el-option>
+                                                <el-option label="户外软装" value="户外软装"></el-option>
+                                                <el-option label="垃圾桶" value="垃圾桶"></el-option>
+                                                <el-option label="园林景观灯具" value="园林景观灯具"></el-option>
+                                                <el-option label="苗木" value="苗木"></el-option>
+                                                <el-option label="户外家私" value="户外家私"></el-option>
+                                                <el-option label="户外小品" value="户外小品"></el-option>
+                                                <el-option label="监测" value="监测"></el-option>
+                                                <el-option label="土石方" value="土石方"></el-option>
+                                                <el-option label="地质勘察" value="地质勘察"></el-option>
+                                                <el-option label="基坑支护" value="基坑支护"></el-option>
+                                                <el-option label="桩基" value="桩基"></el-option>
+                                                <el-option label="钢结构检测" value="钢结构检测"></el-option>
+                                                <el-option label="幕墙" value="幕墙"></el-option>
+                                                <el-option label="钢结构" value="钢结构"></el-option>
+                                                <el-option label="外墙砖" value="外墙砖"></el-option>
+                                                <el-option label="石材供应及安装" value="石材供应及安装"></el-option>
+                                                <el-option label="其它情况" value="其它情况"></el-option>
+                                            </el-select>
+                                        </el-form-item>
+                                    </el-col>
+                                    <el-col :xs="24" :sm="24" :md="12" :lg="6">
+                                        <el-form-item label="采购类型" prop="PurchaseType">
+                                            <el-input v-model="vmFormContent.PurchaseType" size="mini"></el-input>
+                                        </el-form-item>
+                                    </el-col>
+                                    <el-col :xs="24" :sm="24" :md="12" :lg="6">
+                                        <el-form-item label="采购方式" prop="PurchasingMethod">
+                                            <el-input v-model="vmFormContent.PurchasingMethod" size="mini"></el-input>
+                                        </el-form-item>
+                                    </el-col>
+                                    <el-col :xs="24" :sm="24" :md="12" :lg="6">
+                                        <el-form-item label="经办部门" prop="HandlingDept">
+                                            <el-input v-model="vmFormContent.HandlingDept" size="mini"></el-input>
+                                        </el-form-item>
+                                    </el-col>
+                                </el-row>
+                                <el-row>
+                                    <el-col :xs="24" :sm="24" :md="12" :lg="6">
+                                        <el-form-item label="投标均价(万元)" prop="BidAveragePrice">
+                                            <el-input v-model="vmFormContent.BidAveragePrice" size="mini"></el-input>
+                                        </el-form-item>
+                                    </el-col>
+                                    <el-col :xs="24" :sm="24" :md="12" :lg="6">
+                                        <el-form-item label="中标金额(万元)" prop="WinningAmount">
+                                            <el-input v-model="vmFormContent.WinningAmount" size="mini"></el-input>
+                                        </el-form-item>
+                                    </el-col>
+                                    <el-col :xs="24" :sm="24" :md="12" :lg="6">
+                                        <el-form-item label="标底金额(万元)" prop="BidBottomAmount">
+                                            <el-input v-model="vmFormContent.BidBottomAmount" size="mini"></el-input>
+                                        </el-form-item>
+                                    </el-col>
+                                    <el-col :xs="24" :sm="24" :md="12" :lg="6">
+                                        <el-form-item label="经办人" prop="AgentUser">
+                                            <el-input v-model="vmFormContent.AgentUser" size="mini"></el-input>
+                                        </el-form-item>
+                                    </el-col>
+                                </el-row>
+                                <el-row>
+                                    <el-col :xs="24" :sm="24" :md="12" :lg="6">
+                                        <el-form-item label="工期(天)" prop="DurationDay">
+                                            <el-input v-model="vmFormContent.DurationDay" size="mini"></el-input>
+                                        </el-form-item>
+                                    </el-col>
+                                    <el-col :xs="24" :sm="24" :md="12" :lg="6">
+                                        <el-form-item label="中标金额与标底差额(万元)" prop="DifferenceAmount">
+                                            <el-input v-model="vmFormContent.DifferenceAmount" size="mini" :disabled="true"></el-input>
+                                        </el-form-item>
+                                    </el-col>
+                                    <el-col :xs="24" :sm="24" :md="12" :lg="6">
+                                        <el-form-item label="投标指导价(万元)" prop="BidGuidePrice">
+                                            <el-input v-model="vmFormContent.BidGuidePrice" size="mini"></el-input>
+                                        </el-form-item>
+                                    </el-col>
+                                    <el-col :xs="24" :sm="24" :md="12" :lg="6">
+                                        <el-form-item label="历史价格(万元)" prop="HistoricalPrice">
+                                            <el-input v-model="vmFormContent.HistoricalPrice" size="mini"></el-input>
+                                        </el-form-item>
+                                    </el-col>
+                                </el-row>
+                                <el-row>
+                                    <el-col :xs="24" :sm="24" :md="12" :lg="6">
+                                        <el-form-item label="是否正常中标" prop="IsNormalWinning">
+                                            <el-input v-model="vmFormContent.IsNormalWinning" size="mini"></el-input>
+                                        </el-form-item>
+                                    </el-col>
+                                    <el-col :xs="24" :sm="24" :md="12" :lg="6">
+                                        <el-form-item label="异常定标类型" prop="ExceptionCalibrationType">
+                                            <el-input v-model="vmFormContent.ExceptionCalibrationType" size="mini"></el-input>
+                                        </el-form-item>
+                                    </el-col>
+                                    <el-col :xs="24" :sm="24" :md="12" :lg="6">
+                                        <el-form-item label="本次招标次数" prop="TendersCount">
+                                            <el-input v-model="vmFormContent.TendersCount" size="mini"></el-input>
+                                        </el-form-item>
+                                    </el-col>
+                                    <el-col :xs="24" :sm="24" :md="12" :lg="6">
+                                        <el-form-item label="历史价格对比下浮率(%)" prop="FloatRate">
+                                            <el-input v-model="vmFormContent.FloatRate" size="mini"></el-input>
+                                        </el-form-item>
+                                    </el-col>
+                                </el-row>
+                                <el-row>
+                                    <el-col :xs="24" :sm="24" :md="24" :lg="24">
+                                        <el-form-item label="工程范围" prop="ScopeProject">
+                                            <el-input type="textarea" v-model="vmFormContent.ScopeProject" class="textarea"></el-input>
+                                        </el-form-item>
+                                    </el-col>
+                                </el-row>
+                                <el-row>
+                                    <el-col :xs="24" :sm="24" :md="24" :lg="24">
+                                        <el-form-item label="报名条件" prop="ConditionsApplication">
+                                            <el-input type="textarea" v-model="vmFormContent.ConditionsApplication" class="textarea"></el-input>
+                                        </el-form-item>
+                                    </el-col>
+                                </el-row>
+                                <el-row>
+                                    <el-col :xs="24" :sm="24" :md="24" :lg="24">
+                                        <el-form-item label="定标说明" prop="CalibrationInstructions">
+                                            <el-input type="textarea" v-model="vmFormContent.CalibrationInstructions" class="textarea"></el-input>
+                                        </el-form-item>
+                                    </el-col>
+                                </el-row>
+                            </el-form>
+                        </headersubtitle>
+
+                        <!-- 表单信息 -->
+                        <headersubtitle header-title="计划执行情况">
+                            <i slot="subIcon" class="icon-sub icon iconfont iconbiaodanxinxi"></i>
+                            <el-form :model="vmFormContent" ref="refFormContent2" label-width="130px" class="demo-ruleForm" inline-message size="mini">
+                                <el-row>
+                                    <el-col :xs="24" :sm="24" :md="12" :lg="6">
+                                        <el-form-item label="计划定标审批时间" prop="ScheduledCalibrationApprovalTime">
+                                            <el-date-picker v-model="vmFormContent.ScheduledCalibrationApprovalTime" type="date" size="mini">
+                                            </el-date-picker>
+                                        </el-form-item>
+                                    </el-col>
+                                    <el-col :xs="24" :sm="24" :md="12" :lg="6">
+                                        <el-form-item label="实际定标审批时间" prop="ActualCalibrationApprovalTime">
+                                            <el-date-picker v-model="vmFormContent.ActualCalibrationApprovalTime" type="date" size="mini">
+                                            </el-date-picker>
+                                        </el-form-item>
+                                    </el-col>
+                                    <el-col :xs="24" :sm="24" :md="12" :lg="6">
+                                        <el-form-item label="延期天数" prop="ExtendedDays">
+                                            <el-input v-model="vmFormContent.ExtendedDays" size="mini"></el-input>
+                                        </el-form-item>
+                                    </el-col>
+                                    <el-col :xs="24" :sm="24" :md="12" :lg="6">
+                                        <el-form-item label="招标用时(天)" prop="TimingBidding">
+                                            <el-input v-model="vmFormContent.TimingBidding" size="mini"></el-input>
+                                        </el-form-item>
+                                    </el-col>
+                                </el-row>
+                                <el-row>
+                                    <el-col :xs="24" :sm="24" :md="12" :lg="6">
+                                        <el-form-item label="同类平均用时(天)" prop="AverageTime">
+                                            <el-input v-model="vmFormContent.AverageTime" size="mini"></el-input>
+                                        </el-form-item>
+                                    </el-col>
+                                </el-row>
+                            </el-form>
+                        </headersubtitle>
+                        <!-- 表单信息 -->
+                        <headersubtitle header-title="计划执行异常情况分析">
+                            <i slot="subIcon" class="icon-sub icon iconfont iconbiaodanxinxi"></i>
+                            <el-form :model="vmFormContent" ref="refFormContent3" label-width="130px" class="demo-ruleForm" inline-message size="mini">
+                                <el-row>
+                                    <el-col :xs="24" :sm="24" :md="24" :lg="24">
+                                        <el-input type="textarea" v-model="vmFormContent.ExecutionExceptionAnalysis" class="textarea" style="margin-top: 10px;"></el-input>
+                                    </el-col>
+                                </el-row>
+                            </el-form>
+                        </headersubtitle>
+
+                        <!-- 表单信息 -->
+                        <headersubtitle header-title="供应商情况">
+                            <i slot="subIcon" class="icon-sub icon iconfont iconbiaodanxinxi"></i>
+                            <el-form :model="vmFormContent" ref="refFormContent4" label-width="130px" class="demo-ruleForm" inline-message size="mini">
+                                <p class="tag-remind">
+                                    <i class="icon iconfont iconcaozuo"></i>
+                                    <el-link type="primary">年内同类招标定标情况</el-link>&nbsp;&nbsp;
+                                    <el-link type="primary">供应商情况</el-link>&nbsp;&nbsp;
+                                    <el-link type="primary">评审小组成员名单</el-link>
+                                </p>
+                                <br />
+                                <el-row>
+                                    <el-col :xs="24" :sm="24" :md="12" :lg="6">
+                                        <el-form-item label="网上报名数" prop="OnlineNumber">
+                                            <el-input v-model="vmFormContent.OnlineNumber" size="mini"></el-input>
+                                        </el-form-item>
+                                    </el-col>
+                                    <el-col :xs="24" :sm="24" :md="12" :lg="6">
+                                        <el-form-item label="网上报名合格数" prop="OnlineQualifiedNumber">
+                                            <el-input v-model="vmFormContent.OnlineQualifiedNumber" size="mini"></el-input>
+                                        </el-form-item>
+                                    </el-col>
+                                    <el-col :xs="24" :sm="24" :md="12" :lg="6">
+                                        <el-form-item label="符合入围条件数" prop="ShortlistedConditionsNumber">
+                                            <el-input v-model="vmFormContent.ShortlistedConditionsNumber" size="mini"></el-input>
+                                        </el-form-item>
+                                    </el-col>
+                                    <el-col :xs="24" :sm="24" :md="12" :lg="6">
+                                        <el-form-item label="邀请数" prop="InvitationsNumber">
+                                            <el-input v-model="vmFormContent.InvitationsNumber" size="mini"></el-input>
+                                        </el-form-item>
+                                    </el-col>
+                                </el-row>
+                                <el-row>
+                                    <el-col :xs="24" :sm="24" :md="12" :lg="6">
+                                        <el-form-item label="邀请入围数" prop="InvitationsShortlistedNumber">
+                                            <el-input v-model="vmFormContent.InvitationsShortlistedNumber" size="mini"></el-input>
+                                        </el-form-item>
+                                    </el-col>
+                                    <el-col :xs="24" :sm="24" :md="12" :lg="6">
+                                        <el-form-item label="发标单位数" prop="IssuedUnitsNumber">
+                                            <el-input v-model="vmFormContent.IssuedUnitsNumber" size="mini"></el-input>
+                                        </el-form-item>
+                                    </el-col>
+                                    <el-col :xs="24" :sm="24" :md="12" :lg="6">
+                                        <el-form-item label="弃标单位数" prop="DeprecatedUnitsNumber">
+                                            <el-input v-model="vmFormContent.DeprecatedUnitsNumber" size="mini"></el-input>
+                                        </el-form-item>
+                                    </el-col>
+                                    <el-col :xs="24" :sm="24" :md="12" :lg="6">
+                                        <el-form-item label="回标单位数" prop="ReturnUnitsNumber">
+                                            <el-input v-model="vmFormContent.ReturnUnitsNumber" size="mini"></el-input>
+                                        </el-form-item>
+                                    </el-col>
+                                </el-row>
+
+                                <el-row>
+                                    <el-col :xs="24" :sm="24" :md="24" :lg="24">
+                                        <el-form-item label="开标及过程简介其他说明" prop="OpeningIntroductionProcessNote">
+                                            <el-input type="textarea" v-model="vmFormContent.OpeningIntroductionProcessNote" class="textarea"></el-input>
+                                        </el-form-item>
+                                    </el-col>
+                                </el-row>
+                            </el-form>
+                        </headersubtitle>
+
+                        <!-- 表单信息 -->
+                        <headersubtitle header-title="其它条件">
+                            <i slot="subIcon" class="icon-sub icon iconfont iconbiaodanxinxi"></i>
+                            <el-form :model="vmFormContent" ref="refFormContent5" :rules="formContentRules" label-width="130px" class="demo-ruleForm" inline-message size="mini">
+                                <br />
+                                <el-row>
+                                    <el-col :xs="24" :sm="24" :md="12" :lg="8">
+                                        <el-form-item label="所属公司" prop="AffiliatedCompanies">
+                                            <el-select v-model="vmFormContent.AffiliatedCompanies" filterable placeholder="请选择所属公司" size="mini">
+                                                <el-option label="龙光集团" value="龙光集团"></el-option>
+                                                <el-option label="深圳" value="深圳"></el-option>
+                                                <el-option label="南宁" value="南宁"></el-option>
+                                                <el-option label="惠州" value="惠州"></el-option>
+                                                <el-option label="佛山" value="佛山"></el-option>
+                                                <el-option label="汕头" value="汕头"></el-option>
+                                                <el-option label="预览" value="预览"></el-option>
+                                                <el-option label="珠海" value="珠海"></el-option>
+                                                <el-option label="神湾" value="神湾"></el-option>
+                                                <el-option label="阳江" value="阳江"></el-option>
+                                                <el-option label="防城港" value="防城港"></el-option>
+                                                <el-option label="桂林" value="桂林"></el-option>
+                                                <el-option label="上海" value="上海"></el-option>
+                                                <el-option label="成都" value="成都"></el-option>
+                                                <el-option label="中山" value="中山"></el-option>
+                                                <el-option label="肇庆" value="肇庆"></el-option>
+                                            </el-select>
+                                        </el-form-item>
+                                    </el-col>
+                                    <el-col :xs="24" :sm="24" :md="12" :lg="8">
+                                        <el-form-item label="定标金额" prop="CalibrationAmount">
+                                            <el-input v-model="vmFormContent.CalibrationAmount" size="mini"></el-input>
+                                        </el-form-item>
+                                    </el-col>
+                                    <el-col :xs="24" :sm="24" :md="12" :lg="8">
+                                        <el-form-item label="中标金额与成本指标差额" prop="ConditionDifferenceAmount">
+                                            <el-input v-model="vmFormContent.ConditionDifferenceAmount" size="mini"></el-input>
+                                        </el-form-item>
+                                    </el-col>
+
+                                </el-row>
+
+                            </el-form>
+                        </headersubtitle>
+
+                        <!-- 附件 -->
+                        <moduletheattachment></moduletheattachment>
+
+                        <!-- 步骤信息 -->
+                        @*<modulestepinformation :formtype="vmFormType"></modulestepinformation>*@
+                        <!-- 流程处理 -->
+                        <moduleprocesstodealwith v-if="vmFormType=='Approval'||vmFormType=='ReApproval'||vmFormType=='CommunicateFeedback'" :formprocesstodealwithmodel="vmFormSetting" :formoperationmodel="vmOperation"></moduleprocesstodealwith>
+
+                        <!-- 审批记录 -->
+                        <moduleApprovalRecords :formapprovalmodel="vmFormApprovalHistorys"></moduleApprovalRecords>
+                    </div>
+                </div>
+            </main>
+        </el-container>
+
+    </div>
+    <script src="~/Scripts/jquery-3.4.1.min.js"></script>
+    <script src="~/Scripts/lodash/lodash.min.js"></script>
+    <script src="~/Scripts/axios/0.19.0/axios.min.js"></script>
+    <script src="~/Scripts/moment.min.js"></script>
+    <script src="~/Scripts/vue/2.6.10/vue.js"></script>
+    <script src="~/Scripts/element/2.8.2/index.js"></script>
+
+    <script src="~/Scripts/components/headerToolbar.js"></script>
+    <script src="~/Scripts/components/headertitle.js"></script>
+    <script src="~/Scripts/components/headerSubtitle.js"></script>
+    <script src="~/Scripts/components/moduleProcessingPeople.js"></script>
+    <script src="~/Scripts/components/moduleBasicInformation.js"></script>
+    <script src="~/Scripts/components/moduleProcessThat.js"></script>
+    <script src="~/Scripts/components/moduleRelatedProcesses.js"></script>
+    <script src="~/Scripts/components/moduleTheAttachment.js"></script>
+    <script src="~/Scripts/components/moduleStepInformation.js"></script>
+    <script src="~/Scripts/components/moduleProcessToDealWith.js"></script>
+    <script src="~/Scripts/components/moduleApprovalRecords.js"></script>
+    <script src="~/Scripts/components/subtitlet.js"></script>
+    <script src="~/Scripts/IE-promise.js"></script>
+    <script src="~/Scripts/components/userRemotePick.js"></script>
+    <script src="~/Scripts/formmain.js"></script>
+    <script type="text/javascript">
+
+
+        //初始化数据后绑定之前
+        KStarForm.initFormDataAfter = function () {
+            KStarForm.vmFormData.vmOperation.ActionName = "同意";
+
+        }
+        FormContentModel = {
+            "AffiliatedProjects": "",
+            "ProfessionalType": "",
+            "AffiliatedCompanies": "",
+            "CalibrationAmount": "",
+            "ConditionDifferenceAmount": "",
+            "PurchasePlanName": "",
+            "TaxRate": "",
+            "PurchasingUnit": "",
+            "ProjectCalibration": "",
+            "Scale": "",
+            "CostIndicators": "",
+            "HandlingDept": "",
+            "PurchasingMethod": "",
+            "PurchaseType": "",
+            "BidAveragePrice": "",
+            "WinningAmount": "",
+            "BidBottomAmount": "",
+            "AgentUser": "",
+            "HistoricalPrice": "",
+            "BidGuidePrice": "",
+            "DurationDay": "",
+            "IsNormalWinning": "",
+            "ExceptionCalibrationType": "",
+            "TendersCount": "",
+            "FloatRate": "",
+            "ScopeProject": "",
+            "ConditionsApplication": "",
+            "CalibrationInstructions": "",
+            "ScheduledCalibrationApprovalTime": "",
+            "ActualCalibrationApprovalTime": "",
+            "ExtendedDays": "",
+            "TimingBidding": "",
+            "AverageTime": "",
+            "ExecutionExceptionAnalysis": "",
+            "OnlineNumber": "",
+            "OnlineQualifiedNumber": "",
+            "ShortlistedConditionsNumber": "",
+            "InvitationsNumber": "",
+            "DeprecatedUnitsNumber": "",
+            "ReturnUnitsNumber": "",
+            "IssuedUnitsNumber": "",
+            "InvitationsShortlistedNumber": "",
+            "OpeningIntroductionProcessNote": "",
+
+            //等待状态
+            IsPayed: false,
+
+        };
+        //扩展
+        KStarForm.formModelExtend = {
+            data: function () {
+                return {
+                    WaittingActivity: ["050_采购管理中心组长"],//需校验等待环节
+                    WaittingItemName: { "050_采购管理中心组长": 'IsPayed' },
+
+                    formContentRules: {
+                        AffiliatedProjects: [
+                            { required: true, message: '请选择所属项目', trigger: 'blur' }
+                        ],
+                        ProfessionalType: [
+                            { required: true, message: '请选择专业类型', trigger: 'blur' },
+                        ],
+                        AffiliatedCompanies: [
+                            { required: true, message: '请选择所属公司', trigger: 'blur' },
+                        ],
+                        CalibrationAmount: [
+                            { required: true, message: '请输入定标金额', trigger: 'blur' },
+                        ],
+                        ConditionDifferenceAmount: [
+                            { required: true, message: '请输入中标金额与成本指标差额', trigger: 'blur' },
+                        ]
+                    }
+                }
+            },
+            //方法
+            methods: {
+                hello: function () {
+                    alert("aa");
+                },
+                alert2: function () {
+                    alertInfo.call(this, "好样的！！");
+                }
+            },
+            //计算属性
+            computed: {
+
+            }
+
+        }
+        KStarForm.init();
+    </script>
+</body>
+
+
+
+
+</html>

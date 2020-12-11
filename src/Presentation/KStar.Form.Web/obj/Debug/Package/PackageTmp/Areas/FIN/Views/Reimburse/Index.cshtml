@@ -1,0 +1,259 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset=utf-8>
+    <meta http-equiv=X-UA-Compatible content="IE=edge">
+    <meta name=viewport content="width=device-width,initial-scale=1">
+    <title>KStar工作流平台</title>
+
+    <link href="~/Scripts/element/2.8.2/theme-chalk/index.css" rel="stylesheet" />
+    <style>
+        .el-input {
+            width: 180px;
+        }
+    </style>
+    <script src="~/Scripts/jquery-3.4.1.min.js"></script>
+    <script src="~/Scripts/userpickHtml/userpickhtml.js"></script>
+</head>
+<body>
+    <div id="app">
+        <div>
+            <el-button v-on:click="actSubmit" type="success">提交</el-button>
+            <el-button v-on:click="actDraft" type="success">草稿</el-button>
+            <el-button v-on:click="actApprove" type="success">同意</el-button>
+            <el-button v-on:click="actCommunication" type="success">沟通:excegroup\\xuxh</el-button>
+            <el-button v-on:click="actRedirect" type="success">转办:excegroup\\xuxh</el-button>
+            <el-button v-on:click="actCirculate" type="success">传阅:excegroup\\xuxh</el-button>
+
+            <div style="margin-top:10px;">
+
+            </div>
+        </div>
+        @*<div>
+            <form-button v-bind:formbottonmodel="button" v-for="button in vmKStarFormButtons">
+            </form-button>
+        </div>*@
+
+        <form-header v-bind:formheadmodel="vmFormInstance">
+        </form-header>
+        <form-info v-bind:forminfomodel="vmFormContent" ref="contentForm">
+        </form-info>
+        @*加载片段*@
+        <form-infoload v-bind:forminfomodel="vmFormContent" ref="contentFormLoad">
+        </form-infoload>
+
+        <form-opinion v-bind:formopinionmodel="vmOperation">
+        </form-opinion>
+
+        <div>
+            <h3>审批历史</h3>
+            <ul>
+                <li><label style="float:left;width:100px;">环节名称</label><label style="float:left;width:100px;">审批人</label><label style="float:left;width:100px;">审批动作</label><label style="float:left;width:100px;">审批意见</label> </li>
+                <form-historyli v-bind:formhistorymodel="historyItem" v-for="historyItem in vmFormApprovalHistorys">
+                </form-historyli>
+            </ul>
+        </div>
+
+    </div>
+</body>
+<script src="~/Scripts/lodash/lodash.min.js"></script>
+<script src="~/Scripts/axios/0.19.0/axios.min.js"></script>
+<!-- 先引入 Vue -->
+<script src="~/Scripts/vue/2.6.10/vue.js"></script>
+<!-- 引入组件库 -->
+<script src="~/Scripts/element/2.8.2/index.js"></script>
+<script src="~/Areas/FIN/Models/ReimburseModel.js"></script>
+<script src="~/Scripts/formmain.js"></script>
+
+<script type="text/javascript">
+  
+
+    //初始化数据后绑定之前
+    KStarForm.initFormDataAfter = function () {
+        KStarForm.vmFormData.vmOperation.ActionName = "同意";
+    }
+    //扩展
+    KStarForm.formModelExtend = {
+        data: function () {
+            return {
+                abcrules: {
+                    OrderNo: [
+                        { required: true, message: '请输入活动名称', trigger: 'blur' },
+                        { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+                    ],
+                    OrderName: [
+                        { required: true, message: '请输入活动名称', trigger: 'blur' },
+                    ],
+                }
+            }
+        },
+        //方法
+        methods: {
+            hello: function () {
+                alert("aa");
+            },
+            alert2: function () {
+                alertInfo.call(this, "好样的！！");
+            },
+            submitForm2(formName) {
+                // alert(formName);
+               
+                this.$refs[formName].validate((valid) => {
+                    if (valid) {
+                        alert('submit!');
+                    } else {
+                        console.log('error submit!!');
+                        return false;
+                    }
+                });
+            }
+        },
+        //计算属性
+        computed: {
+
+        }
+
+    }
+    KStarForm.init();
+</script>
+<template id="tpl-header">
+    <div>
+        <h3>表头信息</h3>
+        <label>申请人</label>
+        <el-input v-model="formheadmodel.ApplicantDisplayName"></el-input>
+        <label>发起人</label>
+        <el-input v-model="formheadmodel.SubmitterDisplayName"></el-input>
+        <label>主题</label>
+        <el-input v-model="formheadmodel.FormSubject"></el-input>
+
+        <label>岗位</label>
+        <el-select v-model="formheadmodel.ApplicantPositionId" v-on:change="actPositionChange">
+            <el-option v-for="item in formheadmodel.UserPosList"
+                       :key="item.OrgPosSysId"
+                       :label="item.PosName"
+                       :value="item.OrgPosSysId">
+            </el-option>
+        </el-select>
+        <label>组织</label>
+        <el-input v-model="formheadmodel.ApplicantOrgName"></el-input>
+
+        <el-button type="primary" v-on:click="submitForm('ruleForm')">立即创建</el-button>
+
+    </div>
+</template>
+<template id="tpl-info">
+    <div>
+        <h3>表单信息</h3>
+        <label>单据编号</label>
+        <el-input v-model="forminfomodel.OrderNo"></el-input>
+        <label>单据名称</label>
+        <el-input v-model="forminfomodel.OrderName"></el-input>
+        <label>合同名称</label>
+        <el-input v-model="forminfomodel.ContractName"></el-input>
+        <label>合同金额</label>
+        <el-input v-model="forminfomodel.ContractAmount"></el-input>
+        <el-button v-on:click="hello" type="success">测试扩展方法</el-button>
+        <el-button v-on:click="alert2" type="success">测试提示框</el-button>
+
+
+        <el-form :model="forminfomodel" :rules="abcrules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+            <el-form-item label="单据编号" prop="OrderNo">
+                <el-input v-model="forminfomodel.OrderNo"></el-input>
+            </el-form-item>
+            <el-form-item label="单据名称" prop="OrderName">
+                <el-input v-model="forminfomodel.OrderName"></el-input>
+                @*<el-button type="primary" v-on:click="submitForm2('ruleForm')">立即创建</el-button>*@
+            </el-form-item>
+        </el-form>
+    </div>
+</template>
+
+<template id="tpl-infoload">
+</template>
+
+<script id="tpl-button" type="text/x-template">
+    <el-button v-on:click="aa" type="success">{{formbottonmodel.DisplayName}}</el-button>
+</script>
+@*审批意见*@
+<script id="tpl-opinion" type="text/x-template">
+    <div>
+        <h3>审批意见</h3>
+        <label>动作名称</label>
+        <el-input v-model="formopinionmodel.ActionName"></el-input>
+        <label>审批意见</label>
+        <el-input v-model="formopinionmodel.Comment"></el-input>
+    </div>
+
+</script>
+@*审批历史*@
+<script id="tpl-historyli" type="text/x-template">
+    <li><label style="float:left;width:100px;">{{formhistorymodel.ActivityName}}</label><label style="float:left;width:100px;">{{formhistorymodel.UserDisplayName}}</label><label style="float:left;width:100px;">{{formhistorymodel.ActionName}}</label><label style="float:left;width:100px;">{{formhistorymodel.Comment}}</label> </li>
+</script>
+
+<script type="text/javascript">
+    //表头按钮
+    Vue.component('form-button', {
+        props: ["formbottonmodel"],
+        template: "#tpl-button",
+        methods: {
+            aa: function () {
+                alert("aaa");
+            },
+            actDraft: function () {
+                KStarForm.formDraft();
+            }
+        }
+    })
+    //表头
+    Vue.component('form-header', {
+        props: ["formheadmodel"],
+        template: "#tpl-header",
+        methods: {
+            actPositionChange: function (value) {
+               
+                KStarForm.positionChange(value);
+            },
+            submitForm(formName) {
+                // alert(formName);
+               
+                this.$root.$refs["contentForm"].$refs[formName].validate((valid) => {
+                    if (valid) {
+                        alert('submit!');
+                    } else {
+                        console.log('error submit!!');
+                        return false;
+                    }
+                });
+            }
+        }
+
+    })
+    //表单
+    Vue.component('form-info', {
+        mixins: [KStarForm.formModelExtend],
+        props: ["forminfomodel"],
+        template: "#tpl-info"
+    })
+    //表单2
+    Vue.component('form-infoload', {
+        mixins: [KStarForm.formModelExtend],
+        props: ["forminfomodel"],
+        template: "#tpl-infoload"
+    })
+    //审批意见
+    Vue.component('form-opinion', {
+        props: ["formopinionmodel"],
+        template: "#tpl-opinion"
+    })
+    //审批历史
+    Vue.component('form-historyli', {
+        props: ["formhistorymodel"],
+        template: "#tpl-historyli"
+    })
+</script>
+</html>

@@ -143,6 +143,7 @@
     <Compile Include="ViewModels\NewBusiness\NewClientCompact\NewClientCompactViewModel.cs" />
     <Compile Include="ViewModels\NewBusiness\PaySalaryApplication\PaySalaryApplicationViewModel.cs" />
     <Compile Include="ViewModels\NewBusiness\RefundApplication\RefundApplicationViewModel.cs" />
+    <Compile Include="ViewModels\NewBusiness\SocialSecurity\SocialSecurityModel.cs" />
     <Compile Include="WebServiceModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
