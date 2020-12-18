@@ -122,12 +122,14 @@
     <Compile Include="Service\NewBusiness\IPaySalaryApplicationService.cs" />
     <Compile Include="Service\NewBusiness\IRefundApplicationService.cs" />
     <Compile Include="Service\NewBusiness\ISocialSecurityService.cs" />
+    <Compile Include="Service\NewBusiness\ITrainCostService.cs" />
     <Compile Include="Service\NewBusiness\MyTestService.cs" />
     <Compile Include="Service\NewBusiness\NewClientCompactService.cs" />
     <Compile Include="Service\NewBusiness\PaySalaryApplicationTService.cs" />
     <Compile Include="Service\NewBusiness\PaySalaryApplicationService.cs" />
     <Compile Include="Service\NewBusiness\RefundApplicationService.cs" />
     <Compile Include="Service\NewBusiness\SocialSecurityService.cs" />
+    <Compile Include="Service\NewBusiness\TrainCostService.cs" />
     <Compile Include="ViewModels\BaseFormModel.cs" />
     <Compile Include="ViewModels\BPMService\BPMBaseModel.cs" />
     <Compile Include="ViewModels\BPMService\BPMServiceModel.cs" />
@@ -144,6 +146,7 @@
     <Compile Include="ViewModels\NewBusiness\PaySalaryApplication\PaySalaryApplicationViewModel.cs" />
     <Compile Include="ViewModels\NewBusiness\RefundApplication\RefundApplicationViewModel.cs" />
     <Compile Include="ViewModels\NewBusiness\SocialSecurity\SocialSecurityModel.cs" />
+    <Compile Include="ViewModels\NewBusiness\TrainCost\TrainCostModel.cs" />
     <Compile Include="WebServiceModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

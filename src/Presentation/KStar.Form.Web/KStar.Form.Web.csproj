@@ -297,6 +297,7 @@
     <Compile Include="Areas\NewBusiness\Controllers\PaySalaryApplicationTController.cs" />
     <Compile Include="Areas\NewBusiness\Controllers\RefundApplicationController.cs" />
     <Compile Include="Areas\NewBusiness\Controllers\SocialSecurityController.cs" />
+    <Compile Include="Areas\NewBusiness\Controllers\TrainCostController.cs" />
     <Compile Include="Areas\NewBusiness\NewBusinessAreaRegistration.cs" />
     <Compile Include="Areas\Platform\Controllers\CommonFormController.cs" />
     <Compile Include="Areas\Platform\Controllers\FormPreviewController.cs" />
@@ -543,6 +544,7 @@
     <Content Include="Areas\NewBusiness\Views\MyTest\Index.cshtml" />
     <Content Include="Areas\NewBusiness\Views\ElectronicSealApplyApplication\Index.cshtml" />
     <Content Include="Areas\NewBusiness\Views\SocialSecurity\Index.cshtml" />
+    <Content Include="Areas\NewBusiness\Views\TrainCost\Index.cshtml" />
     <None Include="Discovery.xsd">
       <SubType>Designer</SubType>
     </None>

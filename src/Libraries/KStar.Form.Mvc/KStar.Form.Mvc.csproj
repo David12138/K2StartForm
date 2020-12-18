@@ -231,6 +231,7 @@
     <Compile Include="Form\NewBusiness\PaySalaryApplicationService.cs" />
     <Compile Include="Form\NewBusiness\RefundApplicationService.cs" />
     <Compile Include="Form\NewBusiness\SocialSecurityService.cs" />
+    <Compile Include="Form\NewBusiness\TrainCostService.cs" />
     <Compile Include="Helper\HttpHelper.cs" />
     <Compile Include="Helper\UtilityHelper.cs" />
     <Compile Include="Models\ResponseMode.cs" />
