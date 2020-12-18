@@ -45,8 +45,8 @@
     </el-row>
     <el-row>
         <el-col>
-            <el-form-item label="付款事由" prop="Reasons" :rules="{required: false, message: '请填写付款事由'}">
-                <el-input v-if="isFormCanBeEdit" type="text" placeholder="请填写付款事由" v-model="vmFormContent.Reasons"></el-input>
+            <el-form-item label="申请事由" prop="Reasons" :rules="{required: false, message: '请填写申请事由'}">
+                <el-input v-if="isFormCanBeEdit" type="text" placeholder="请填写申请事由" v-model="vmFormContent.Reasons"></el-input>
                 <div v-else class="form-item-div">{{ vmFormContent.Reasons }}</div>
             </el-form-item>
         </el-col>
@@ -123,7 +123,7 @@
     </el-row>
     <el-row>
         <el-col>
-            <el-form-item label="支付方式" prop="PayMethod" :rules="{required: true, message: '请填写付款事由'}">
+            <el-form-item label="支付方式" prop="PayMethod" :rules="{required: true, message: '请填写支付方式'}">
                 <el-select v-if="isFormCanBeEdit"
                            placeholder="请选择"
                            v-model="vmFormContent.PayMethod">
